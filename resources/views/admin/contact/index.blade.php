@@ -48,8 +48,8 @@
 
 
                                                         @if (Auth::guard('admin')->check() ||
-                                                                ($sideMenuPermissions->has('contact') && $sideMenuPermissions['contact']->contains('edit')))
-                                                            <a href="{{ route('contact.updateview',     $contact->id) }}"
+                                                                ($sideMenuPermissions->has('Contact us') && $sideMenuPermissions['Contact us']->contains('edit')))
+                                                            <a href="{{ route('contact.updateview', $contact->id) }}"
                                                                 class="btn btn-primary me-2"
                                                                 style="float: left; margin-right: 8px;"><span><i
                                                                         class="fa fa-edit"></i></span></a>

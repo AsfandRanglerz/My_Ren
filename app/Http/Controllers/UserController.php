@@ -98,8 +98,12 @@ protected function sendDeactivationEmail($user, $reason)
     {
         $request->validate([
             'name' => 'required',
-            'email' => 'required|email|unique:users,email',
-            'phone' => 'required',
+             'email' => [
+            'required',
+            'email',
+            'regex:/^[\w\.\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z]{2,6}$/'
+        ],
+        'phone' => 'required|regex:/^[0-9]+$/|max:15',
             'password' => 'required|min:6',
         ]);
     
@@ -119,11 +123,16 @@ protected function sendDeactivationEmail($user, $reason)
         $user = User::find($id);
         return view('users.edit', compact('user'));
     }
+    
    public function update(Request $request, $id) {
     $request->validate([
         'name' => 'required',
-        'email' => 'required|email',
-        // password ka validation optional rakhna hoga
+         'email' => [
+            'required',
+            'email',
+            'regex:/^[\w\.\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z]{2,6}$/'
+        ],
+        'phone' => 'required|regex:/^[0-9]+$/|max:15',
         'password' => 'nullable|min:6',
     ]);
 

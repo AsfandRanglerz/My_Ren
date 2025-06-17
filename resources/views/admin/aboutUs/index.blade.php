@@ -39,7 +39,7 @@
                                                 <div class="d-flex gap-4">
 
                                                     @if (Auth::guard('admin')->check() ||
-                                                            ($sideMenuPermissions->has('aboutus') && $sideMenuPermissions['aboutus']->contains('edit')))
+                                                            ($sideMenuPermissions->has('About us') && $sideMenuPermissions['About us']->contains('edit')))
                                                         <a href="{{ url('admin/about-us-edit') }}" class="btn btn-primary">
                                                             <span class="fa fa-edit"></span>
                                                         </a>

@@ -30,31 +30,26 @@
                                     <label>Password</label>
                                     <input type="password" placeholder="Enter Password" name="password" id="password"
                                         class="form-control" style="padding-right: 2.5rem;">
-                                    <span
-                                        onclick="
-                                        const passwordField = document.getElementById('password');
-                                        const icon = this;
-                                        if (passwordField.type === 'password') {
-                                            passwordField.type = 'text';
-                                            icon.classList.remove('fa-eye');
-                                            icon.classList.add('fa-eye-slash');
-                                        } else {
-                                            passwordField.type = 'password';
-                                            icon.classList.remove('fa-eye-slash');
-                                            icon.classList.add('fa-eye');
-                                        }
-                                    "
+                                    <span id="togglePasswordIcon"
+                                        onclick="(function(e){
+                                            const password = document.getElementById('password');
+                                            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                                            password.setAttribute('type', type);
+                                            e.target.classList.toggle('fa-eye-slash');
+                                            e.target.classList.toggle('fa-eye');
+                                        })(event)"
                                         class="fa fa-eye"
-                                        style="
-                                        position: absolute;
-                                        top: 2.67rem;
-                                        right: 0.5rem;
-                                        cursor: pointer;
-                                    "></span>
+                                        style="position: absolute; top: 2.67rem; right: 0.5rem; cursor: pointer;"></span>
                                     @error('password')
                                         <div style="color: red;">{{ $message }}</div>
                                     @enderror
                                 </div>
+
+                                <!-- For Login Button (if it exists in the same file) -->
+                                {{-- <button class="btn-login"
+                                    onclick="const eyeIcon = document.getElementById('togglePasswordIcon'); if (eyeIcon) { eyeIcon.classList.add('d-none'); }">
+                                    Login
+                                </button> --}}
 
                                 <!-- Forgot Password Link -->
                                 <div class="form-group">
@@ -67,7 +62,8 @@
 
                                 <!-- Submit Button -->
                                 <div class="form-group" style="margin-bottom: 0; margin-top: 1.25rem;">
-                                    <button type="submit" class="btn btn-primary btn-lg btn-block" tabindex="4">
+                                    <button type="submit " class="btn btn-primary btn-lg btn-block btn-login" tabindex="4"
+                                        onclick="const eyeIcon = document.getElementById('togglePasswordIcon'); if (eyeIcon) { eyeIcon.classList.add('d-none'); }">
                                         Login
                                     </button>
                                 </div>
@@ -82,3 +78,20 @@
     <!-- Font Awesome CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 @endsection
+
+<script>
+    document.getElementById('togglePasswordIcon').addEventListener('click', function(e) {
+        const password = document.getElementById('password');
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+        this.classList.toggle('fa-eye-slash');
+        this.classList.toggle('fa-eye');
+    });
+
+    document.querySelector('.btn-login').addEventListener('click', function() {
+        const eyeIcon = document.getElementById('togglePasswordIcon');
+        if (eyeIcon) {
+            eyeIcon.classList.add('d-none'); // Hide the eye icon when login is clicked
+        }
+    });
+</script>

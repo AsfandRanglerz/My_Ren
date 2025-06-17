@@ -46,8 +46,12 @@
                                     <div class="col-sm-12 pl-sm-0 pr-sm-3 w-100">
                                         <div class="form-group">
                                             <label for="Image">Image</label>
-                                            <input type="file" class="form-control" id="conent" name="image"
-                                                placeholder="Enter Image" required autofocus>
+                                            <input type="file" class="form-control @error('image') is-invalid @enderror"
+                                                id="conent" name="image" placeholder="Enter Image" required autofocus>
+
+                                            <!-- Small red note about 2MB limit -->
+                                            <small class="text-danger">Note: Maximum image size allowed is 2MB</small>
+
                                             @error('image')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror

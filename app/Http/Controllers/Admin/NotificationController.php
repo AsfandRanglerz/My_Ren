@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\User;
 use App\Models\Farmer;
+use App\Models\SubAdmin;
 use App\Models\Notification;
 use Illuminate\Http\Request;
 use App\Models\AuthorizedDealer;
@@ -16,8 +17,9 @@ class NotificationController extends Controller
 {
     public function index() 
     {
-        $data = Notification::all();
+        $notifications = Notification::all();
         $users = User::all();
+        $subadmin = SubAdmin::all();
 
          $sideMenuPermissions = collect();
 
@@ -41,7 +43,7 @@ class NotificationController extends Controller
     }
 
 
-        return view('admin.notification.index', compact('data', 'sideMenuPermissions' , 'users'));
+        return view('admin.notification.index', compact('notifications', 'sideMenuPermissions' , 'users' , 'subadmin'));
     }
     
     public function store(Request $request) 
@@ -132,5 +134,23 @@ class NotificationController extends Controller
     return redirect()->route('notification.index')->with('message', 'All notifications have been deleted.');
 }
 
+
+public function getUsersByType(Request $request)
+{
+    $type = $request->type;
+    $users = [];
+
+    switch ($type) {
+       
+        case 'subadmin':
+            $users = SubAdmin::select('id', 'name', 'email')->get();
+            break;
+        case 'web':
+            $users = User::select('id', 'name', 'email')->get();
+            break;
+    }
+
+    return response()->json($users);
+}
 
 }

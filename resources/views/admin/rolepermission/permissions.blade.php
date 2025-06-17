@@ -55,7 +55,6 @@
         <section class="section">
             <div class="section-body">
                 <h2>Edit Permissions for Role: {{ $roles->name }}</h2>
-
                 <form id="edit_permissions" action="{{ route('roles.permissions.store', $roles->id) }}" method="POST">
                     @csrf
                     <input type="hidden" name="role_id" value="{{ $roles->id }}">
@@ -72,12 +71,13 @@
                         @endphp
 
                         <div class="card mb-3">
-                            <div class="card-header d-flex align-items-center">
+                            <div class="border-bottom-0 card-header d-flex align-items-center"
+                                style="padding-bottom: 8px !important;padding-left: 40px!important">
                                 <input type="checkbox" class="form-check-input menu-toggle me-2"
                                     data-target="#perm-{{ $menu->id }}" id="menu-{{ $menu->id }}"
                                     @if ($hasPermission) checked @endif>
                                 <label class="form-check-label main-permission" for="menu-{{ $menu->id }}">
-                                    <strong>{{ $menu->id }} - {{ ucfirst($menu->name) }}</strong>
+                                    <strong>{{ $loop->iteration }} - {{ ucfirst($menu->name) }}</strong>
                                 </label>
                             </div>
 
@@ -101,13 +101,12 @@
                                                 $perm['permission']['name'] == $action;
                                         });
                                     @endphp
-
-                                    <div class="form-check sub-permissions">
+                                    <div class="p-0 form-check sub-permissions">
                                         <input type="checkbox" class="form-check-input"
                                             name="permissions[{{ $menu->id }}][]" value="{{ $action }}"
                                             id="{{ $action }}-{{ $menu->id }}"
                                             @if ($hasAction) checked @endif>
-                                        <label class="form-check-label" for="{{ $action }}-{{ $menu->id }}">
+                                        <label class="p-0 form-check-label" for="{{ $action }}-{{ $menu->id }}">
                                             {{ ucfirst($action) }}
                                         </label>
                                     </div>

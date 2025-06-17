@@ -14,7 +14,7 @@
                             <div class="card-body table-responsive">
 
                                 @if (Auth::guard('admin')->check() ||
-                                        ($sideMenuPermissions->has('users') && $sideMenuPermissions['users']->contains('create')))
+                                        ($sideMenuPermissions->has('Users') && $sideMenuPermissions['Users']->contains('create')))
                                     <a class="btn btn-primary mb-3 text-white"
                                         href="{{ url('/admin/user-create') }}">Create</a>
                                 @endif
@@ -32,7 +32,7 @@
                                             <th>Name</th>
                                             <th>Email</th>
                                             <th>Phone</th>
-                                            <th>Toogle</th>
+                                            <th>Toggle</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -56,8 +56,8 @@
                                                 </td>
                                                 <td>
                                                     @if (Auth::guard('admin')->check() ||
-                                                            ($sideMenuPermissions->has('users') && $sideMenuPermissions['users']->contains('edit')))
-                                                        <a href="{{ route('blog.edit', $user->id) }}"
+                                                            ($sideMenuPermissions->has('Users') && $sideMenuPermissions['Users']->contains('edit')))
+                                                        <a href="{{ route('user.edit', $user->id) }}"
                                                             class="btn btn-primary me-2"
                                                             style="float: left; margin-right: 8px;">
                                                             <i class="fa fa-edit"></i>
@@ -65,7 +65,7 @@
                                                     @endif
 
                                                     @if (Auth::guard('admin')->check() ||
-                                                            ($sideMenuPermissions->has('users') && $sideMenuPermissions['users']->contains('delete')))
+                                                            ($sideMenuPermissions->has('Users') && $sideMenuPermissions['Users']->contains('delete')))
                                                         <form id="delete-form-{{ $user->id }}"
                                                             action="{{ route('user.delete', $user->id) }}" method="POST">
                                                             @csrf

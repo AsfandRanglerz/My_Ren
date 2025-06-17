@@ -139,7 +139,7 @@ public function permissions($id)
 
     }
 
-    return redirect()->back()->with('success', 'Permissions saved successfully');
+    return redirect('/admin/roles')->with('success', 'Permissions saved successfully');
 }
 
 

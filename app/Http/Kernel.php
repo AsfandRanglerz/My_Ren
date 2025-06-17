@@ -72,6 +72,8 @@ class Kernel extends HttpKernel
         'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
         'check.subadmin.permission' => \App\Http\Middleware\CheckSubAdminPermission::class,
         'check.permission' => \App\Http\Middleware\CheckPermission::class,
+        'check.subadmin.status' => \App\Http\Middleware\CheckSubAdminStatus::class,
+
 
     ];
 }

@@ -18,7 +18,7 @@
                                     <div class="create-btn">
 
                                         @if (Auth::guard('admin')->check() ||
-                                                ($sideMenuPermissions->has('faq') && $sideMenuPermissions['faq']->contains('create')))
+                                                ($sideMenuPermissions->has('Faqs') && $sideMenuPermissions['Faqs']->contains('create')))
                                             <a class="btn btn-primary mb-3 text-white"
                                                 href="{{ url('admin/faq-create') }}">Create</a>
                                         @endif
@@ -47,7 +47,7 @@
                                                     <div class="d-flex gap-4">
 
                                                         @if (Auth::guard('admin')->check() ||
-                                                                ($sideMenuPermissions->has('faq') && $sideMenuPermissions['faq']->contains('edit')))
+                                                                ($sideMenuPermissions->has('Faqs') && $sideMenuPermissions['Faqs']->contains('edit')))
                                                             <a href="{{ route('faq.edit', $farmer->id) }}"
                                                                 class="btn btn-primary" style="margin-right: 10px">
                                                                 <span><i class="fa fa-edit"></i></span>
@@ -56,7 +56,7 @@
 
 
                                                         @if (Auth::guard('admin')->check() ||
-                                                                ($sideMenuPermissions->has('faq') && $sideMenuPermissions['faq']->contains('delete')))
+                                                                ($sideMenuPermissions->has('Faqs') && $sideMenuPermissions['Faqs']->contains('delete')))
                                                             <form id="delete-form-{{ $farmer->id }}"
                                                                 action="{{ route('faq.destroy', $farmer->id) }}"
                                                                 method="POST">
@@ -153,6 +153,8 @@
             }
         });
 
+
+        // Initialize SortableJS on the FAQ table
         new Sortable(document.getElementById('sortable-faqs'), {
             animation: 150,
             handle: '.sort-handler',

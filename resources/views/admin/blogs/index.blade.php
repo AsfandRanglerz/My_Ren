@@ -30,6 +30,7 @@
                                             <th></th>
                                             <th>Sr.</th>
                                             <th>Title</th>
+                                            <th>Slug</th>
                                             <th>Image</th>
                                             <th>Description</th>
                                             <th>Status</th>
@@ -44,13 +45,14 @@
                                                 </td>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $blog->title }}</td>
-
+                                                <td>{{ $blog->slug }}</td>
                                                 <td>
                                                     @if ($blog->image)
                                                         <img src="{{ asset('public/' . $blog->image) }}" alt="blog image"
                                                             width="80" height="60">
                                                     @else
-                                                        <span>No Image</span>
+                                                        <img src="{{ asset('public/admin/assets/images/default.png') }}"
+                                                            alt="blog image" width="80" height="60">
                                                     @endif
                                                 </td>
 
@@ -124,6 +126,16 @@
     <!-- SweetAlert -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
 
+    <script>
+        window.addEventListener('load', () => {
+            const message = localStorage.getItem('toastMessage');
+            if (message) {
+                toastr.success(message);
+                localStorage.removeItem('toastMessage');
+            }
+        });
+    </script>
+
     <!-- Toggle Status Script -->
     <script>
         $(document).ready(function() {
@@ -171,28 +183,7 @@
                 })
                 .then((willDelete) => {
                     if (willDelete) {
-                        $.ajax({
-                            url: form.action,
-                            type: 'POST',
-                            data: {
-                                _method: 'DELETE',
-                                _token: '{{ csrf_token() }}'
-                            },
-                            success: function(response) {
-                                swal({
-                                    title: "Success!",
-                                    text: "Blog deleted successfully",
-                                    icon: "success",
-                                    button: false,
-                                    timer: 3000
-                                }).then(() => {
-                                    location.reload();
-                                });
-                            },
-                            error: function(xhr) {
-                                swal("Error!", "Failed to delete record.", "error");
-                            }
-                        });
+                        form.submit();
                     }
                 });
         });
@@ -201,14 +192,6 @@
     <!-- SortableJS -->
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <script>
-        window.addEventListener('load', () => {
-            const message = localStorage.getItem('toastMessage');
-            if (message) {
-                toastr.success(message);
-                localStorage.removeItem('toastMessage');
-            }
-        });
-
         new Sortable(document.getElementById('sortable-faqs'), {
             animation: 150,
             handle: '.sort-handler',
@@ -221,7 +204,7 @@
                     });
                 });
 
-                fetch("{{ route('faq.reorder') }}", {
+                fetch("{{ route('blog.reorder') }}", {
                         method: 'POST',
                         headers: {
                             'X-CSRF-TOKEN': '{{ csrf_token() }}',

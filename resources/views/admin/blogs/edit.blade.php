@@ -40,14 +40,23 @@
                                     <div class="col-sm-12">
                                         <div class="form-group">
                                             <label for="image">Image</label>
-                                            <input type="file" class="form-control" id="image" name="image">
+                                            <input type="file" class="form-control @error('image') is-invalid @enderror"
+                                                id="image" name="image">
+
+                                            <!-- 2MB size note in red -->
+                                            <small class="text-danger" style="display: block;">Note: Maximum image size
+                                                allowed is 2MB</small>
+
+                                            @error('image')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+
                                             @if ($data->image)
                                                 <img src="{{ asset('public/' . $data->image) }}" alt="Blog Image"
                                                     width="150" height="100" class="mt-3">
                                             @endif
                                         </div>
                                     </div>
-
                                     {{-- Description --}}
                                     <div class="col-sm-12">
                                         <div class="form-group">

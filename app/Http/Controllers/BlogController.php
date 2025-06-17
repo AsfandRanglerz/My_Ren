@@ -6,6 +6,7 @@ use App\Models\blog;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\UserRolePermission;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -16,7 +17,7 @@ class BlogController extends Controller
 
     public function Index()
 {
-    $blogs = Blog::orderBy('id', 'asc')->get();
+    $blogs = Blog::orderBy('position', 'asc')->get();
 
     $sideMenuPermissions = collect();
 
@@ -166,5 +167,16 @@ public function store(Request $request)
             return redirect('/admin/blogs-index')->with('error', 'Blog not found');
         }
     }
+
+    // Method to reorder blogs based on position
+
+public function reorder(Request $request)
+{
+    foreach ($request->order as $item) {
+        blog::where('id', $item['id'])->update(['position' => $item['position']]);
+    }
+
+    return response()->json(['status' => 'success']);
+}
 
 }

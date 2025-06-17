@@ -44,7 +44,8 @@
                                                 <div class="d-flex gap-4">
 
                                                     @if (Auth::guard('admin')->check() ||
-                                                            ($sideMenuPermissions->has('termcondition') && $sideMenuPermissions['termcondition']->contains('edit')))
+                                                            ($sideMenuPermissions->has('Terms & Conditions') &&
+                                                                $sideMenuPermissions['Terms & Conditions']->contains('edit')))
                                                         <a href="{{ url('admin/term-condition-edit') }}"
                                                             class="btn btn-primary"><span class="fa fa-edit"></a>
                                                     @endif

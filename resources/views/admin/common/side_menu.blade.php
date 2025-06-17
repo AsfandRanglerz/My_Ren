@@ -18,7 +18,7 @@
             {{--  Roles --}}
 
             @if (Auth::guard('admin')->check() ||
-                    ($sideMenuPermissions->has('role') && $sideMenuPermissions['role']->contains('view')))
+                    ($sideMenuPermissions->has('Roles') && $sideMenuPermissions['Roles']->contains('view')))
                 {{-- FAQS --}}
                 <li class="dropdown {{ request()->is('admin/roles*') ? 'active' : '' }}">
                     <a href="{{ url('admin/roles') }}" class="nav-link"><i
@@ -31,18 +31,18 @@
             {{--  SubAdmin --}}
 
             @if (Auth::guard('admin')->check() ||
-                    ($sideMenuPermissions->has('subadmin') && $sideMenuPermissions['subadmin']->contains('view')))
+                    ($sideMenuPermissions->has('Sub Admins') && $sideMenuPermissions['Sub Admins']->contains('view')))
                 {{-- FAQS --}}
                 <li class="dropdown {{ request()->is('admin/subadmin*') ? 'active' : '' }}">
                     <a href="{{ url('admin/subadmin') }}" class="nav-link"><i data-feather="user"></i><span>Sub
-                            Admin</span></a>
+                            Admins</span></a>
                 </li>
             @endif
 
             {{--  Users --}}
 
             @if (Auth::guard('admin')->check() ||
-                    ($sideMenuPermissions->has('users') && $sideMenuPermissions['users']->contains('view')))
+                    ($sideMenuPermissions->has('Users') && $sideMenuPermissions['Users']->contains('view')))
                 <li class="dropdown {{ request()->is('admin/user*') ? 'active' : '' }}">
                     <a href="{{ url('admin/user') }}" class="nav-link">
                         <i data-feather="users"></i>
@@ -59,7 +59,7 @@
             {{--  FAQS --}}
 
             @if (Auth::guard('admin')->check() ||
-                    ($sideMenuPermissions->has('faq') && $sideMenuPermissions['faq']->contains('view')))
+                    ($sideMenuPermissions->has('Faqs') && $sideMenuPermissions['Faqs']->contains('view')))
                 {{-- FAQS --}}
                 <li class="dropdown {{ request()->is('admin/faq*') ? 'active' : '' }}">
                     <a href="{{ url('admin/faq-index') }}" class="nav-link"><i
@@ -70,7 +70,7 @@
             {{--  About Us --}}
 
             @if (Auth::guard('admin')->check() ||
-                    ($sideMenuPermissions->has('aboutus') && $sideMenuPermissions['aboutus']->contains('view')))
+                    ($sideMenuPermissions->has('About us') && $sideMenuPermissions['About us']->contains('view')))
                 {{-- About Us --}}
                 <li class="dropdown {{ request()->is('admin/about-us*') ? 'active' : '' }}">
                     <a href="{{ url('admin/about-us') }}" class="nav-link"><i
@@ -91,10 +91,37 @@
             @endif
 
 
+            {{--  Products --}}
+
+            @if (Auth::guard('admin')->check() ||
+                    ($sideMenuPermissions->has('Products') && $sideMenuPermissions['Products']->contains('view')))
+                <li class="dropdown {{ request()->is('admin/products*') ? 'active' : '' }}">
+                    <a href="{{ url('admin/products') }}" class="nav-link">
+                        <i data-feather="box"></i>
+                        <span>Products</span>
+                    </a>
+                </li>
+            @endif
+
+
+            {{--  Points Conversition --}}
+
+            @if (Auth::guard('admin')->check() ||
+                    ($sideMenuPermissions->has('Points Conversion') && $sideMenuPermissions['Points Conversion']->contains('view')))
+                <li class="dropdown {{ request()->is('admin/point-conversions*') ? 'active' : '' }}">
+                    <a href="{{ url('admin/point-conversions-index') }}" class="nav-link">
+                        <i data-feather="refresh-cw"></i>
+                        <span>Points Conversition</span>
+                    </a>
+                </li>
+            @endif
+
+
+
             {{--  Privacy Policy --}}
 
             @if (Auth::guard('admin')->check() ||
-                    ($sideMenuPermissions->has('privacypolicy') && $sideMenuPermissions['privacypolicy']->contains('view')))
+                    ($sideMenuPermissions->has('Privacy & Policy') && $sideMenuPermissions['Privacy & Policy']->contains('view')))
                 {{--  Privacy Policy --}}
                 <li class="dropdown {{ request()->is('admin/privacy-policy*') ? 'active' : '' }}">
                     <a href="{{ url('admin/privacy-policy') }}" class="nav-link"><i
@@ -106,7 +133,7 @@
             {{-- Notification --}}
 
             @if (Auth::guard('admin')->check() ||
-                    ($sideMenuPermissions->has('notification') && $sideMenuPermissions['notification']->contains('view')))
+                    ($sideMenuPermissions->has('Notifications') && $sideMenuPermissions['Notifications']->contains('view')))
                 {{-- Notification --}}
                 {{-- Notifications --}}
                 <li class="dropdown {{ request()->is('admin/notification*') ? 'active' : '' }}">
@@ -118,11 +145,22 @@
                 </li>
             @endif
 
+            {{--  Roles --}}
+
+            @if (Auth::guard('admin')->check() ||
+                    ($sideMenuPermissions->has('Seo') && $sideMenuPermissions['Seo']->contains('view')))
+                {{-- FAQS --}}
+                <li class="dropdown {{ request()->is('admin/seo*') ? 'active' : '' }}">
+                    <a href="{{ url('admin/seo') }}" class="nav-link"><i
+                            data-feather="trending-up"></i><span>SEO</span></a>
+                </li>
+            @endif
+
             {{-- Contact Us  --}}
 
 
             @if (Auth::guard('admin')->check() ||
-                    ($sideMenuPermissions->has('contact') && $sideMenuPermissions['contact']->contains('view')))
+                    ($sideMenuPermissions->has('Contact us') && $sideMenuPermissions['Contact us']->contains('view')))
                 {{-- Contact Us --}}
                 <li class="dropdown {{ request()->is('admin/admin/contact-us*') ? 'active' : '' }}">
                     <a href="{{ url('admin/admin/contact-us') }}" class="nav-link"><i
@@ -136,8 +174,8 @@
             {{--  Terms & Conditions --}}
 
             @if (Auth::guard('admin')->check() ||
-                    ($sideMenuPermissions->has('termcondition') && $sideMenuPermissions['termcondition']->contains('view')))
-                {{-- Terms and Conditions --}}
+                    ($sideMenuPermissions->has('Terms & Conditions') &&
+                        $sideMenuPermissions['Terms & Conditions']->contains('view')))
                 <li class="dropdown {{ request()->is('admin/term-condition*') ? 'active' : '' }}">
                     <a href="{{ url('admin/term-condition') }}" class="nav-link"><i
                             data-feather="file-text"></i><span>Terms

@@ -72,7 +72,7 @@
                             </div>
                             <div class="card-body table-responsive">
                                 @if (Auth::guard('admin')->check() ||
-                                        ($sideMenuPermissions->has('subadmin') && $sideMenuPermissions['subadmin']->contains('create')))
+                                        ($sideMenuPermissions->has('Sub Admins') && $sideMenuPermissions['Sub Admins']->contains('create')))
                                     <a class="btn btn-primary mb-3" href="{{ route('subadmin.create') }}">Create</a>
                                 @endif
 
@@ -97,8 +97,15 @@
                                                 <td>{{ $subAdmin->email }}</td>
                                                 <td>{{ $subAdmin->phone }}</td>
                                                 <td>{{ $subAdmin->roles->pluck('name')->join(', ') ?: 'No Role' }}</td>
-                                                <td><img src="{{ asset($subAdmin->image) }}" width="50" height="50"
-                                                        alt="Image"></td>
+                                                <td>
+                                                    @if ($subAdmin->image && file_exists($subAdmin->image))
+                                                        <img src="{{ asset($subAdmin->image) }}" width="50"
+                                                            height="50" alt="Image">
+                                                    @else
+                                                        <img src="{{ asset('public/admin/assets/images/avator.png') }}"
+                                                            width="50" height="50" alt="Default Image">
+                                                    @endif
+                                                </td>
                                                 <td>
                                                     <label class="custom-switch">
                                                         <input type="checkbox" class="custom-switch-input toggle-status"
@@ -113,7 +120,7 @@
                                                 <td>
                                                     <div class="d-flex">
                                                         @if (Auth::guard('admin')->check() ||
-                                                                ($sideMenuPermissions->has('subadmin') && $sideMenuPermissions['subadmin']->contains('edit')))
+                                                                ($sideMenuPermissions->has('Sub Admins') && $sideMenuPermissions['Sub Admins']->contains('edit')))
                                                             <a href="{{ route('subadmin.edit', $subAdmin->id) }}"
                                                                 class="btn btn-primary mr-1">
                                                                 <i class="fa fa-edit"></i>
@@ -121,15 +128,19 @@
                                                         @endif
 
                                                         @if (Auth::guard('admin')->check() ||
-                                                                ($sideMenuPermissions->has('subadmin') && $sideMenuPermissions['subadmin']->contains('delete')))
-                                                            <form action="{{ route('subadmin.destroy', $subAdmin->id) }}"
-                                                                method="POST" class="delete-form">
+                                                                ($sideMenuPermissions->has('Sub Admins') && $sideMenuPermissions['Sub Admins']->contains('delete')))
+                                                            <form id="delete-form-{{ $subAdmin->id }}"
+                                                                action="{{ route('subadmin.destroy', $subAdmin->id) }}"
+                                                                method="POST">
                                                                 @csrf
                                                                 @method('DELETE')
-                                                                <button type="submit" class="btn show_confirm"
-                                                                    style="background: #ff5608; "><i
-                                                                        class="fa fa-trash"></i></button>
                                                             </form>
+
+                                                            <button class="show_confirm btn d-flex gap-4"
+                                                                style="background-color: #ff5608;"
+                                                                data-form="delete-form-{{ $subAdmin->id }}" type="button">
+                                                                <span><i class="fa fa-trash"></i></span>
+                                                            </button>
                                                         @endif
                                                     </div>
                                                 </td>
@@ -151,27 +162,49 @@
 
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
-        $(document).ready(function() {
-            $('#table_id_events').DataTable();
+        $('.show_confirm').click(function(event) {
+            var formId = $(this).data("form");
+            var form = document.getElementById(formId);
+            event.preventDefault();
 
-            $('.show_confirm').click(function(event) {
-                event.preventDefault();
-                var form = $(this).closest("form");
-
-                swal({
-                    title: "Are you sure?",
-                    text: " If you delete this Subadmin record, it will be gone forever.",
+            swal({
+                    title: "Are you sure you want to delete this record?",
+                    text: "If you delete this Sub-Admin record, it will be gone forever.",
                     icon: "warning",
                     buttons: true,
                     dangerMode: true,
-                }).then((willDelete) => {
+                })
+                .then((willDelete) => {
                     if (willDelete) {
-                        form.submit();
-                        toastr.success('Subadmin deleted successfully');
+                        // Send AJAX request to delete
+                        $.ajax({
+                            url: form.action,
+                            type: 'POST',
+                            data: {
+                                _method: 'DELETE',
+                                _token: '{{ csrf_token() }}'
+                            },
+                            success: function(response) {
+                                swal({
+                                    title: "Success!",
+                                    text: "Record deleted successfully",
+                                    icon: "success",
+                                    button: false,
+                                    timer: 3000
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            },
+                            error: function(xhr) {
+                                swal("Error!", "Failed to delete record.", "error");
+                            }
+                        });
                     }
                 });
-            });
         });
+
+
+        // Toggle nested permissions visibility
 
         function toggleNestedPermissions(parentCheckbox, targetId) {
             const container = document.getElementById('nested-permissions-' + targetId);

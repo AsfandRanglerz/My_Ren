@@ -1,12 +1,7 @@
 @extends('admin.layout.app')
 @section('title', 'Dashboard')
 @section('content')
-    {{-- @php
-        // dd($sideMenuPermissions);
-        $user = Auth::guard('subadmin')->user()->load('roles');
-        dd($user->toArray());
 
-    @endphp --}}
 
     <!-- Main Content -->
     <div class="main-content">

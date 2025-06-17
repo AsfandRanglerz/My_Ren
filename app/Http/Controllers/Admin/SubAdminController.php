@@ -13,6 +13,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 
 
 class SubAdminController extends Controller
@@ -61,12 +62,27 @@ class SubAdminController extends Controller
    public function store(Request $request)
 {
     // return $request->all();
-    $request->validate([
+ $validator = Validator::make($request->all(), [
         'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:sub_admins,email',
-        'phone' => 'required|unique:sub_admins,phone',
-        'role' => 'required|exists:roles,id', // only role ID from roles table
+        'email' => [
+            'required',
+            'email',
+            'regex:/^[\w\.\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z]{2,6}$/'
+        ],
+        'phone' => 'required|regex:/^[0-9]+$/|max:15',
+        'role' => 'required|exists:roles,id',
+        'image' => 'nullable|image|max:2048',
+        'password' => 'nullable|min:6'
     ]);
+
+    if ($validator->fails()) {
+        return redirect()->back()
+                    ->withErrors($validator) // Pass validation errors
+                    ->withInput();
+    }
+// If validation passes
+$validatedData = $validator->validated();
+
 
     if ($request->hasFile('image')) {
         $file = $request->file('image');
@@ -121,12 +137,28 @@ public function edit($id)
 
     public function update(Request $request, $id)
     {
-        //  return ($request);
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email',
-            'phone' => 'required',
-        ]);
+    $validator = Validator::make($request->all(), [
+        'name' => 'required|string|max:255',
+        'email' => [
+            'required',
+            'email',
+            'regex:/^[\w\.\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z]{2,6}$/'
+        ],
+        'phone' => 'required|regex:/^[0-9]+$/|max:15',
+        'role' => 'required|exists:roles,id',
+        'image' => 'nullable|image|max:2048',
+        'password' => 'nullable|min:6', // Optional password field
+    ]);
+
+    if ($validator->fails()) {
+        return redirect()->back()
+                    ->withErrors($validator) // Pass validation errors
+                    ->withInput();
+    }
+
+// Only reached if validation passes
+$validatedData = $validator->validated();
+
 
         $subAdmin = SubAdmin::findOrFail($id);
 

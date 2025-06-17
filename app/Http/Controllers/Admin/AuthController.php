@@ -19,6 +19,8 @@ class AuthController extends Controller
     }
     public function Login(Request $request)
     {
+
+        
         // return $request->password;
         $request->validate([
             'email' => 'required',
@@ -51,20 +53,24 @@ class AuthController extends Controller
         }
 
         $subAdmin = SubAdmin::where('email', $request->email)->first();
+        
 
         if ($subAdmin && Hash::check($request->password, $subAdmin->password)) {
+           
 
            if ($subAdmin->status == 1) {
                 auth()->guard('subadmin')->login($subAdmin, $remember_me);
+                
                 return redirect('admin/dashboard')->with('success', 'Sub-Admin Login Successfully!');
             } else {
                 // Check if user is already logged in
-                if (auth()->guard('subadmin')->check()) {
-                    auth()->guard('subadmin')->logout(); // Logout if already logged in
-                }
+                
+                
                 return redirect('admin/')->with('error', 'Your account is deactivated. Please contact the admin.');
             }
         }
+
+       
 
         return back()->with('error', 'Invalid email or password');
     }

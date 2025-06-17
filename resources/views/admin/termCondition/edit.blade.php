@@ -20,8 +20,13 @@
                                             @if ($data)
 {{ $data->description }}
 @endif
+
                                             
                                         </textarea>
+                                        @error('description')
+                                            <div class="invalid-feedback d-block" id="description-error">{{ $message }}
+                                            </div>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="card-footer text-right">

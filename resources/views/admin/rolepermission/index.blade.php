@@ -14,7 +14,7 @@
                             </div>
                             <div class="card-body table-responsive">
                                 @if (Auth::guard('admin')->check() ||
-                                        ($sideMenuPermissions->has('role') && $sideMenuPermissions['role']->contains('create')))
+                                        ($sideMenuPermissions->has('Roles') && $sideMenuPermissions['Roles']->contains('create')))
                                     <a class="btn btn-primary mb-3 text-white"
                                         href="{{ url('admin/roles-create') }}">Create</a>
                                 @endif
@@ -40,19 +40,23 @@
                                                     <button class="btn btn-success">Active</button>
                                                 </td> --}}
                                                 <td>
-                                                    <a class="btn btn-success"
-                                                        href="{{ route('role.permissions', $role->id) }}">Permissions</a>
+                                                    @if (Auth::guard('admin')->check() ||
+                                                            ($sideMenuPermissions->has('Roles') && $sideMenuPermissions['Roles']->contains('edit')))
+                                                        <a class="btn btn-success"
+                                                            href="{{ route('role.permissions', $role->id) }}">Permissions</a>
+                                                    @endif
                                                 </td>
 
                                                 <td>
                                                     @if (Auth::guard('admin')->check() ||
-                                                            ($sideMenuPermissions->has('role') && $sideMenuPermissions['role']->contains('delete')))
+                                                            ($sideMenuPermissions->has('Roles') && $sideMenuPermissions['Roles']->contains('delete')))
                                                         <!-- Delete Form -->
                                                         <form id="delete-form-{{ $role->id }}"
                                                             action="{{ route('delete.role', $role->id) }}" method="POST">
                                                             @csrf
                                                             @method('DELETE') <!-- Spoof DELETE method -->
                                                         </form>
+
 
                                                         <!-- Delete Button -->
                                                         <button class="show_confirm btn d-flex gap-4"

@@ -1,5 +1,6 @@
 @extends('admin.layout.app')
 @section('title', 'Edit Sub Admin')
+
 @section('content')
     <div class="main-content">
         <section class="section">
@@ -8,106 +9,113 @@
                 <form id="edit_subadmin" action="{{ route('subadmin.update', $subAdmin->id) }}" method="POST"
                     enctype="multipart/form-data">
                     @csrf
-                    @method('POST') <!-- Use PUT method for editing -->
+                    @method('POST')
+
                     <div class="row">
                         <div class="col-12 col-md-12 col-lg-12">
                             <div class="card">
                                 <h4 class="text-center my-4">Edit SubAdmin</h4>
                                 <div class="row mx-0 px-4">
-                                    <!-- Name Field -->
-                                    <div class="col-sm-6 pl-sm-0 pr-sm-3">
+                                    {{-- Name --}}
+                                    <div class="col-sm-6">
                                         <div class="form-group">
                                             <label for="name">Name</label>
-                                            <input type="text" class="form-control" id="name" name="name"
-                                                value="{{ $subAdmin->name }}" required placeholder="Enter name" autofocus>
-                                            <div class="invalid-feedback"></div>
+                                            <input type="text" class="form-control @error('name') is-invalid @enderror"
+                                                name="name" id="name" value="{{ old('name', $subAdmin->name) }}"
+                                                placeholder="Enter name">
+                                            @error('name')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
 
-                                    <!-- Email Field -->
-                                    <div class="col-sm-6 pl-sm-0 pr-sm-3">
+                                    {{-- Email --}}
+                                    <div class="col-sm-6">
                                         <div class="form-group">
                                             <label for="email">Email</label>
-                                            <input type="text" class="form-control" id="email" name="email"
-                                                value="{{ $subAdmin->email }}" required placeholder="Enter email" autofocus>
-                                            <div class="invalid-feedback"></div>
+                                            <input type="text" class="form-control @error('email') is-invalid @enderror"
+                                                name="email" id="email" value="{{ old('email', $subAdmin->email) }}"
+                                                placeholder="Enter email">
+                                            @error('email')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
 
-                                    <!-- phone Field -->
-                                    <div class="col-sm-6 pl-sm-0 pr-sm-3">
+                                    {{-- Phone --}}
+                                    <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label for="tel">Phone</label>
-                                            <input type="text" class="form-control" id="phone" name="phone"
-                                                value="{{ $subAdmin->phone }}" required placeholder="Enter phone number"
-                                                autofocus>
-                                            <div class="invalid-feedback"></div>
+                                            <label for="phone">Phone</label>
+                                            <input type="text" class="form-control @error('phone') is-invalid @enderror"
+                                                name="phone" id="phone" value="{{ old('phone', $subAdmin->phone) }}"
+                                                placeholder="Enter phone">
+                                            @error('phone')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
+
                                     </div>
+
                                     {{-- Role --}}
-                                    <div class="col-sm-6 pl-sm-0 pr-sm-3">
+                                    <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label for="role">Select Role</label>
-                                            <select class="form-control" id="role" name="role">
+                                            <label for="role">Role</label>
+                                            <select name="role" id="role"
+                                                class="form-control @error('role') is-invalid @enderror">
                                                 <option value="">-- Select Role --</option>
                                                 @foreach ($roles as $role)
                                                     <option value="{{ $role->id }}"
-                                                        {{ isset($currentRoleId) && $currentRoleId == $role->id ? 'selected' : '' }}>
+                                                        {{ old('role', $currentRoleId) == $role->id ? 'selected' : '' }}>
                                                         {{ $role->name }}
                                                     </option>
                                                 @endforeach
                                             </select>
+                                            @error('role')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
 
-                                    <!-- Status Dropdown -->
-                                    {{-- <div class="col-sm-6 pl-sm-0 pr-sm-3">
-                                        <div class="form-group mb-2">
-                                            <label for="status">Status</label>
-                                            <select name="status" id="status" class="form-control">
-                                                <option value="" disabled>Select an Option</option>
-                                                <option value="1" {{ $subAdmin->status == 1 ? 'selected' : '' }}>Active</option>
-                                                <option value="0" {{ $subAdmin->status == 0 ? 'selected' : '' }}>Deactive</option>
-                                            </select>
-                                        </div>
-                                    </div> --}}
-
-                                    <!-- Image Upload -->
-                                    <div class="col-sm-6 pl-sm-0 pr-sm-3">
+                                    {{-- Image --}}
+                                    <div class="col-sm-6">
                                         <div class="form-group">
                                             <label for="image">Image</label>
-                                            <input type="file" class="form-control" id="image" name="image"
-                                                placeholder="Upload Image" autofocus>
-                                            <div class="mt-2">
-                                                @if ($subAdmin->image)
-                                                    <img src="{{ asset($subAdmin->image) }}" alt="Image" width="100">
-                                                @endif
-                                            </div>
-                                            <div class="invalid-feedback"></div>
+                                            <input type="file" class="form-control @error('image') is-invalid @enderror"
+                                                name="image" id="image">
+                                            <small class="text-danger">Note: Maximum size is 2MB</small>
+                                            @if ($subAdmin->image)
+                                                <div class="mt-2">
+                                                    <img src="{{ asset($subAdmin->image) }}" width="100">
+                                                </div>
+                                            @endif
+                                            @error('image')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
-                                    <!-- Password -->
+
+                                    <!-- Password Field -->
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group position-relative">
                                             <label for="password">Password</label>
-                                            <input type="password" class="form-control" id="password" name="password"
-                                                placeholder="Enter password" tabindex="2" autofocus>
+                                            <input type="password"
+                                                class="form-control @error('password') is-invalid @enderror" id="password"
+                                                name="password" placeholder="Leave blank to keep current">
                                             <span class="fa fa-eye position-absolute"
                                                 style="top: 42px; right: 15px; cursor: pointer;"
                                                 onclick="togglePassword()"></span>
+
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- Submit Button -->
-                                <div class="card-footer text-center row">
-                                    <div class="col-12">
-                                        <button type="submit" class="btn btn-primary mr-1 btn-bg" id="submit">Save
-                                            Changes</button>
-                                    </div>
+                                <div class="card-footer text-center">
+                                    <button type="submit" class="btn btn-primary">Save Changes</button>
                                 </div>
+
                             </div>
                         </div>
+                    </div>
                 </form>
             </div>
         </section>
@@ -121,6 +129,7 @@
         </script>
     @endif
     <script>
+        // Toggle password visibility
         function togglePassword() {
             const passwordInput = document.getElementById('password');
             const icon = event.target;
@@ -134,5 +143,19 @@
                 icon.classList.add('fa-eye');
             }
         }
+
+        // Automatically hide error message on focus
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    const feedback = this.parentElement.querySelector('.invalid-feedback');
+                    if (feedback) {
+                        feedback.style.display = 'none';
+                        this.classList.remove('is-invalid');
+                    }
+                });
+            });
+        });
     </script>
 @endsection
