@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\SeoController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\SalesController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SecurityController;
@@ -119,6 +120,8 @@ Route::delete('/users/{id}/force', [UserController::class, 'forceDelete'])->name
 
 Route::post('/users/toggle-status', [UserController::class, 'toggleStatus'])->name('user.toggle-status');
 
+    Route::get('/user-sales-details/{id}', [UserController::class, 'sales'])->name('user.saledetails') ->middleware('check.permission:Users,view');
+
 
     // ############ Products #################
 
@@ -172,21 +175,9 @@ Route::delete('admin/product-batch-delete/{id}', [ProductController::class, 'del
 
     });
 
+        // ############ Sales #################
 
-            // ############ Blogs #################
-
-    Route::get('/blogs-index', [BlogController::class, 'index'])->name('blog.index')->middleware('check.permission:Blogs,view');
-
-    Route::get('/blogs-create', [BlogController::class, 'create'])->name('blog.createview')->middleware('check.permission:Blogs,create');
-
-    Route::post('/blogs-store', [BlogController::class, 'store'])->name('blog.store')->middleware('check.permission:Blogs,create');
-
-    Route::get('/blogs-edit/{id}', [BlogController::class, 'edit'])->name('blog.edit')->middleware('check.permission:Blogs,edit');
-    Route::post('/blogs-update/{id}', [BlogController::class, 'update'])->name('blog.update')->middleware('check.permission:Blogs,edit');
-    Route::delete('/blogs-destroy/{id}', [BlogController::class, 'delete'])->name('blog.destroy')->middleware('check.permission:Blogs,delete');
-
-    Route::post('/blogs/toggle-status', [BlogController::class, 'toggleStatus'])->name('blog.toggle-status');
-Route::post('/blogs/reorder', [BlogController::class, 'reorder'])->name('blog.reorder');
+    Route::get('/sales', [SalesController::class, 'index'])->name('sales.index')->middleware('check.permission:Sales,view');
 
 
 

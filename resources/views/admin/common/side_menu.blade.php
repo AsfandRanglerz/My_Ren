@@ -79,18 +79,6 @@
                 </li>
             @endif
 
-            {{--  Blogs --}}
-
-            @if (Auth::guard('admin')->check() ||
-                    ($sideMenuPermissions->has('Blogs') && $sideMenuPermissions['Blogs']->contains('view')))
-                {{-- FAQS --}}
-                <li class="dropdown {{ request()->is('admin/blogs*') ? 'active' : '' }}">
-                    <a href="{{ url('admin/blogs-index') }}" class="nav-link"><i
-                            data-feather="book-open"></i><span>Blogs</span></a>
-                </li>
-            @endif
-
-
             {{--  Products --}}
 
             @if (Auth::guard('admin')->check() ||

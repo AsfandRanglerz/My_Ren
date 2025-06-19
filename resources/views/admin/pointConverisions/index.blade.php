@@ -18,12 +18,10 @@
                                 <div class="clearfix">
                                     <div class="create-btn">
 
-                                        @if (Auth::guard('admin')->check() ||
-                                                ($sideMenuPermissions->has('Points Conversion') &&
-                                                    $sideMenuPermissions['Points Conversion']->contains('create')))
+                                        {{-- @if (Auth::guard('admin')->check() || ($sideMenuPermissions->has('Points Conversion') && $sideMenuPermissions['Points Conversion']->contains('create')))
                                             <a class="btn btn-primary mb-3 text-white"
                                                 href="{{ url('admin/point-conversions-create') }}">Create</a>
-                                        @endif
+                                        @endif --}}
                                     </div>
                                 </div>
                                 <table class="table responsive" id="table_id_events">
@@ -39,7 +37,7 @@
                                         @foreach ($conversions as $conversion)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $conversion->point }}</td>
+                                                <td>{{ $conversion->points }}</td>
                                                 <td>{{ $conversion->price }} PKR </td>
                                                 <td>
                                                     <div class="d-flex ">

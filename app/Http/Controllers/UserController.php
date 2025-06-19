@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Sale;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\UserRolePermission;
@@ -186,6 +187,11 @@ protected function sendDeactivationEmail($user, $reason)
 //     return back()->with('success', 'User permanently deleted.');
 // }
 
+
+public function sales($id) {
+    $sales = Sale::where('user_id', $id)->get();
+    return view('admin.sales.index', compact('sales'));
+}
 
     
 }

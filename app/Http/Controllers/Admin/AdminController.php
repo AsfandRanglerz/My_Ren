@@ -2,20 +2,22 @@
 
 namespace App\Http\Controllers\admin;
 
-use App\Http\Controllers\Controller;
-use App\Mail\ResetPasswordMail;
+use App\Models\User;
 use App\Models\Admin;
-use App\Models\AuthorizedDealer;
-use App\Models\EnsuredCrop;
 use App\Models\Farmer;
+use App\Models\Product;
 use App\Models\SideMenu;
 use App\Models\SubAdmin;
-use App\Models\SubAdminPermission;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
+use App\Models\EnsuredCrop;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\Mail\ResetPasswordMail;
+use App\Models\AuthorizedDealer;
+use App\Models\SubAdminPermission;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class AdminController extends Controller
 {
@@ -35,7 +37,11 @@ class AdminController extends Controller
         //     $sideMenuName = $subAdminData['sideMenuName'];
         // }
         // dd($sideMenuName);
-        return view('admin.index');
+
+        $users = User::all()->count();
+        $Products = Product::all()->count() ;
+
+        return view('admin.index', compact('users', 'Products'));
     }
 
    public function getProfile()

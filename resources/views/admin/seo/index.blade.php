@@ -3,7 +3,7 @@
 <style>
     /* For the active tab */
     .nav-pills .nav-link.active {
-        background-color: #ff5608 !important;
+        background-color: #cb84fe !important;
         color: white !important;
         /* Optional: change text color for better contrast */
     }

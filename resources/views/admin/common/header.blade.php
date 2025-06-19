@@ -74,7 +74,7 @@
         </li> --}}
         <li class="dropdown"><a href="#" data-toggle="dropdown"
                 class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-                <img alt="image" src="{{ asset('public/admin/assets/img/logo.png') }}"
+                <img alt="image" src="{{ asset('public/admin/assets/images/avator.png') }}"
                     class="user-img-radious-style">
                 <span class="d-sm-none d-lg-inline-block"></span></a>
             <div class="dropdown-menu dropdown-menu-right pullDown">

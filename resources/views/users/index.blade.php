@@ -29,16 +29,29 @@
                                     <thead>
                                         <tr>
                                             <th>Sr.</th>
+                                            <th>Image</th>
                                             <th>Name</th>
                                             <th>Email</th>
                                             <th>Phone</th>
                                             <th>Toggle</th>
+                                            <th>Sales Details</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($users as $user)
                                             <tr>
+                                                <td>
+                                                    @if ($user->image)
+                                                        <img src="{{ asset('public/uploads/users/' . $user->image) }}"
+                                                            alt="User Image" class="rounded-circle"
+                                                            style="width: 50px; height: 50px;">
+                                                    @else
+                                                        <img src="{{ asset('public/uploads/users/default.png') }}"
+                                                            alt="Default Image" class="rounded-circle"
+                                                            style="width: 50px; height: 50px;">
+                                                    @endif
+                                                </td>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $user->name }}</td>
                                                 <td>{{ $user->email }}</td>
@@ -53,6 +66,12 @@
                                                             {{ $user->toggle ? 'Activated' : 'Deactivated' }}
                                                         </span>
                                                     </label>
+                                                </td>
+                                                <td>
+                                                    <a href="{{ route('user.saledetails', $user->id) }}"
+                                                        class="btn btn-info me-2" style="float: left; margin-right: 8px;">
+                                                        <i class="fa fa-eye"></i>
+                                                    </a>
                                                 </td>
                                                 <td>
                                                     @if (Auth::guard('admin')->check() ||
@@ -73,7 +92,7 @@
                                                         </form>
 
                                                         <button class="show_confirm btn d-flex gap-4"
-                                                            style="background-color: #ff5608;"
+                                                            style="background-color: #d881fb;"
                                                             data-form="delete-form-{{ $user->id }}" type="button">
                                                             <span><i class="fa fa-trash"></i></span>
                                                         </button>

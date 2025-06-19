@@ -3,9 +3,12 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\SaleController;
+use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Admin\SeoController;
 use App\Http\Controllers\SideMenueController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\Api\EmailOtpController;
 use App\Http\Controllers\SideMenuPermissionController;
 
 /*
@@ -33,6 +36,17 @@ Route::post('/permission-insert', [SideMenuPermissionController::class, 'assignP
 // seo routes
 Route::post('/seo-bulk', [SeoController::class, 'storeBulk'])
      ->name('seo.bulk-update');
+
+
+     //sales routes
+Route::post('/sales-store', [SaleController::class, 'store'])
+     ->name('sales.store');
+
+     // User Registration
+     Route::post('/send-otp', [EmailOtpController::class, 'sendOtp']);
+Route::post('/verify-otp', [EmailOtpController::class, 'verifyOtp']);
+Route::post('/user-register-complete', [UserController::class, 'completeRegistration']);
+
 
 
 
