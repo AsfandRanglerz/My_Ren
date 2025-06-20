@@ -13,15 +13,10 @@
                             </div>
                             <div class="card-body table-responsive">
 
-                                @if (Auth::guard('admin')->check() ||
+                                {{-- @if (Auth::guard('admin')->check() ||
                                         ($sideMenuPermissions->has('Withdraw Request') && $sideMenuPermissions['Withdraw Request']->contains('create')))
                                     <a class="btn btn-primary mb-3 text-white"
                                         href="{{ url('/admin/user-create') }}">Create</a>
-                                @endif
-
-                                {{-- @if (Auth::guard('admin')->check() || ($sideMenuPermissions->has('users') && $sideMenuPermissions['users']->contains('view')))
-                                    <a class="btn btn-primary mb-3 text-white" href="{{ url('admin/users/trashed') }}">View
-                                        Trashed</a>
                                 @endif --}}
 
 
@@ -42,50 +37,48 @@
                                         @foreach ($withdrawRequests as $withdrawRequest)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $user->name }}</td>
-                                                <td>{{ $user->withdrawal_amount	 }}</td>
-                                                <td>{{ $user->total_amount}}</td>
+                                                <td>{{ $withdrawRequest->name }}</td>
+                                                <td>{{ $withdrawRequest->withdrawal_amount	 }}</td>
+                                                <td>{{ $withdrawRequest->total_amount}}</td>
+                                                <td>{{ $withdrawRequest->withdrawal_method }}</td>
+                                                <td>{{ $withdrawRequest->withdrawal_details }}</td>
                                                 <td>
-                                                    <label class="custom-switch">
-                                                        <input type="checkbox" class="custom-switch-input toggle-status"
-                                                            data-id="{{ $user->id }}"
-                                                            {{ $user->toggle ? 'checked' : '' }}>
-                                                        <span class="custom-switch-indicator"></span>
-                                                        <span class="custom-switch-description">
-                                                            {{ $user->toggle ? 'Activated' : 'Deactivated' }}
-                                                        </span>
-                                                    </label>
-                                                </td>
-                                                <td>
-                                                    <a href="{{ route('user.saledetails', $user->id) }}"
-                                                        class="btn btn-info me-2" style="float: left; margin-right: 8px;">
-                                                        <i class="fa fa-eye"></i>
-                                                    </a>
+                                                    @if ($withdrawRequest->attachment)
+                                                        <a href="{{ asset('storage/' . $withdrawRequest->attachment) }}"
+                                                            target="_blank" class="btn btn-info">View Attachment</a>
+                                                    @else
+                                                        No Attachment
+                                                    @endif
                                                 </td>
                                                 <td>
                                                     @if (Auth::guard('admin')->check() ||
-                                                            ($sideMenuPermissions->has('Users') && $sideMenuPermissions['Users']->contains('edit')))
-                                                        <a href="{{ route('user.edit', $user->id) }}"
-                                                            class="btn btn-primary me-2"
+                                                            ($sideMenuPermissions->has('Withdraw Request') && $sideMenuPermissions['Withdraw Request']->contains('edit')))
+                                                        <button type="button"
+                                                            class="btn btn-primary me-2 open-edit-modal"
+                                                            data-id="{{ $withdrawRequest->id }}"
+                                                            data-name="{{ $withdrawRequest->name }}"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#editWithdrawModal"
                                                             style="float: left; margin-right: 8px;">
                                                             <i class="fa fa-edit"></i>
-                                                        </a>
+                                                        </button>
+
                                                     @endif
 
-                                                    @if (Auth::guard('admin')->check() ||
-                                                            ($sideMenuPermissions->has('Users') && $sideMenuPermissions['Users']->contains('delete')))
-                                                        <form id="delete-form-{{ $user->id }}"
-                                                            action="{{ route('user.delete', $user->id) }}" method="POST">
+                                                    {{-- @if (Auth::guard('admin')->check() ||
+                                                            ($sideMenuPermissions->has('Withdraw Request') && $sideMenuPermissions['Withdraw Request']->contains('delete')))
+                                                        <form id="delete-form-{{ $withdrawRequest->id }}"
+                                                            action="{{ route('withdrawRequest.delete', $withdrawRequest->id) }}" method="POST">
                                                             @csrf
                                                             @method('DELETE')
                                                         </form>
 
                                                         <button class="show_confirm btn d-flex gap-4"
                                                             style="background-color: #d881fb;"
-                                                            data-form="delete-form-{{ $user->id }}" type="button">
+                                                            data-form="delete-form-{{ $withdrawRequest->id }}" type="button">
                                                             <span><i class="fa fa-trash"></i></span>
                                                         </button>
-                                                    @endif
+                                                    @endif --}}
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -129,6 +122,40 @@
         </div>
     </div>
 @endsection
+<!-- Edit Withdraw Request Modal -->
+<div class="modal fade" id="editWithdrawModal" tabindex="-1" role="dialog" aria-labelledby="editWithdrawModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <form id="editWithdrawForm" method="POST" enctype="multipart/form-data">
+      @csrf
+      @method('PUT')
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Withdraw Request</h5>
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" name="id" id="editWithdrawId">
+
+            <div class="form-group">
+                <label for="editName">Name</label>
+                <input type="text" class="form-control" name="name" id="editName" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="attachment">Upload New Attachment</label>
+                <input type="file" class="form-control" name="attachment" id="attachment" accept="image/*">
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Save Changes</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
 
 @section('js')
     <!-- Initialize DataTable -->
@@ -185,68 +212,19 @@
                 });
         });
 
-        /// Toggle status
+        
+    $('.open-edit-modal').click(function () {
+        const id = $(this).data('id');
+        const name = $(this).data('name');
 
-        $(document).ready(function() {
-            let currentToggle = null;
-            let currentUserId = null;
+        $('#editWithdrawId').val(id);
+        $('#editName').val(name);
 
-            $('.toggle-status').change(function() {
-                let status = $(this).prop('checked') ? 1 : 0;
-                currentUserId = $(this).data('id');
-                currentToggle = $(this);
+        // Set the form action dynamically
+        const actionUrl = "{{ url('/withdrawrequest') }}/" + id;
+        $('#editWithdrawForm').attr('action', actionUrl);
+    });
 
-                if (status === 0) {
-                    // For deactivation - show modal
-                    $('#deactivatingUserId').val(currentUserId);
-                    $('#deactivationModal').modal('show');
-                } else {
-                    // For activation - proceed directly
-                    updateUserStatus(currentUserId, 1);
-                }
-            });
 
-            $('#confirmDeactivation').click(function() {
-                let reason = $('#deactivationReason').val();
-                if (reason.trim() === '') {
-                    toastr.error('Please provide a deactivation reason');
-                    return;
-                }
-
-                updateUserStatus(currentUserId, 0, reason);
-                $('#deactivationModal').modal('hide');
-                $('#deactivationReason').val(''); // Clear the reason field
-            });
-
-            function updateUserStatus(userId, status, reason = null) {
-                let $descriptionSpan = currentToggle.siblings('.custom-switch-description');
-
-                $.ajax({
-                    url: "{{ route('user.toggle-status') }}",
-                    type: 'POST',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        id: userId,
-                        status: status,
-                        reason: reason
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            $descriptionSpan.text(response.new_status);
-                            toastr.success(response.message);
-                        } else {
-                            // Reset the toggle if failed
-                            currentToggle.prop('checked', !status);
-                            toastr.error(response.message);
-                        }
-                    },
-                    error: function(xhr) {
-                        // Reset the toggle on error
-                        currentToggle.prop('checked', !status);
-                        toastr.error('Error updating status');
-                    }
-                });
-            }
-        });
-    </script>
+           </script>
 @endsection

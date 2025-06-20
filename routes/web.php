@@ -170,6 +170,7 @@ Route::delete('admin/product-batch-delete/{id}', [ProductController::class, 'del
 
 // ############ Withdraw Requests #################
 Route::get('/withdrawrequest', [WithdrawRequestController::class, 'withdrawRequests'])->name('withdraw.requests');
+Route::put('/withdrawrequest/{id}', [WithdrawRequestController::class, 'withdrawRequestcreate'])->name('withdrawRequest.create');
 
 
 
