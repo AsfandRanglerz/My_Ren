@@ -79,6 +79,18 @@
                 </li>
             @endif
 
+            {{--  Login Reward Rule --}}
+
+            @if (Auth::guard('admin')->check() ||
+                    ($sideMenuPermissions->has('Products') && $sideMenuPermissions['Products']->contains('view')))
+                <li class="dropdown {{ request()->is('admin/login-reward-rules*') ? 'active' : '' }}">
+                    <a href="{{ url('admin/login-reward-rules') }}" class="nav-link">
+                        <i data-feather="gift"></i>
+                        <span>Login Reward Rule</span>
+                    </a>
+                </li>
+            @endif
+
             {{--  Products --}}
 
             @if (Auth::guard('admin')->check() ||

@@ -10,14 +10,18 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory;
-    // use SoftDeletes;
-
-    // protected $dates = ['deleted_at'];
 
     protected $fillable = [
         'name',
         'email',
         'phone',
         'password',
+        'image',
+        'toggle',
     ];
+
+    public function sales()
+    {
+        return $this->hasMany(Sale::class);
+    }
 }

@@ -44,7 +44,7 @@
                                                 <td>{{ \Illuminate\Support\Str::limit(strip_tags($farmer->description), 150, '...') }}
                                                 </td>
                                                 <td>
-                                                    <div class="d-flex gap-4">
+                                                    <div class="d-flex ">
 
                                                         @if (Auth::guard('admin')->check() ||
                                                                 ($sideMenuPermissions->has('Faqs') && $sideMenuPermissions['Faqs']->contains('edit')))
@@ -64,9 +64,9 @@
                                                                 @method('DELETE')
                                                             </form>
 
-                                                            <button class="show_confirm btn d-flex gap-4"
+                                                            <button class="show_confirm btn d-flex "
                                                                 data-form="delete-form-{{ $farmer->id }}" type="button"
-                                                                style="background: #ff5608;">
+                                                                style="background: #cb84fe;">
                                                                 <span><i class="fa fa-trash"></i></span>
                                                             </button>
                                                         @endif

@@ -43,13 +43,11 @@
                                             <tr>
                                                 <td>
                                                     @if ($user->image)
-                                                        <img src="{{ asset('public/uploads/users/' . $user->image) }}"
-                                                            alt="User Image" class="rounded-circle"
-                                                            style="width: 50px; height: 50px;">
+                                                        <img src="{{ asset('public/' . $user->image) }}" alt="User Image"
+                                                            style="width: 70px; height: 70px; align-items: center; ">
                                                     @else
-                                                        <img src="{{ asset('public/uploads/users/default.png') }}"
-                                                            alt="Default Image" class="rounded-circle"
-                                                            style="width: 50px; height: 50px;">
+                                                        <img src="{{ asset('public/admin/assets/images/avator.png') }}"
+                                                            style="width: 70px; height: 70px; align-items: center; ">
                                                     @endif
                                                 </td>
                                                 <td>{{ $loop->iteration }}</td>

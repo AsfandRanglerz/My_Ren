@@ -10,7 +10,7 @@
                         <div class="card">
                             <!-- Card Header -->
                             <div class="card-header">
-                                <h4>Sales Point Details</h4>
+                                <h4> {{ $data->name ?? 'N/A' }} Point Details</h4>
                             </div>
 
                             <!-- Card Body -->
@@ -20,19 +20,16 @@
                                     <thead>
                                         <tr>
                                             <th>Sr.</th>
-                                            <th>Name</th>
                                             <th>Product</th>
                                             <th>Code</th>
                                             <th>Points per sale</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($sales as $sale)
+                                        @foreach ($data->sales as $sale)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
 
-                                                {{-- ✅ User ka naam --}}
-                                                <td>{{ $sale->user->name ?? 'N/A' }}</td>
 
                                                 {{-- ✅ Product ka naam --}}
                                                 <td>{{ $sale->product->name ?? 'N/A' }}</td>

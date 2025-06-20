@@ -19,6 +19,13 @@ class SaleController extends Controller
             'product_id' => 'required|exists:products,id',
             'scan_code' => 'required|string|max:255',
             'points_earned' => 'required|integer|min:0',
+        ], [
+            'user_id.required' => 'User ID is required.',
+            'product_id.required' => 'Product ID is required.',
+            'scan_code.required' => 'Code Should be unique.',
+            'points_earned.required' => 'Points earned are required.',
+            'points_earned.integer' => 'Points earned must be an integer.',
+            'points_earned.min' => 'Points earned must be at least 0.',
         ]);
 
         // Create a new sale record

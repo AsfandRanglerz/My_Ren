@@ -15,6 +15,7 @@ class UserController extends Controller
     public function Index()
     {
         $users = User::orderby('id', 'desc')->get();
+    
 
         
     $sideMenuPermissions = collect();
@@ -95,29 +96,71 @@ protected function sendDeactivationEmail($user, $reason)
         return view('users.create');
     }
 
-    public function create(Request $request)
-    {
-        $request->validate([
-            'name' => 'required',
-             'email' => [
-            'required',
-            'email',
-            'regex:/^[\w\.\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z]{2,6}$/'
-        ],
+   public function create(Request $request)
+{
+
+
+    $request->validate([
+        'name' => 'required',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Max 2MB
+           'email' => [
+        'required',
+        'email',
+        'regex:/^[\w\.\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z]{2,6}$/',
+        'unique:users,email',
+    ],
         'phone' => 'required|regex:/^[0-9]+$/|max:15',
-            'password' => 'required|min:6',
-        ]);
-    
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'password' => bcrypt($request->password),
-        ]);
-    
-        return redirect()->route('user.index')->with('success', 'User created successfully');
+        'password' => 'required|min:6',
+    ], [
+        'name.required' => 'Name is required',
+        'image.image' => 'Image must be a valid image file',
+        'image.mimes' => 'Image must be a jpeg, png, jpg, or gif file',
+        'image.max' => 'Image size must not exceed 2MB',
+        'email.required' => 'Email is required',
+        'email.email' => 'Email must be a valid email address',
+        'email.unique' => 'This email is already registered',
+        'email.regex' => 'Email format is invalid',
+        'phone.required' => 'Phone number is required',
+        'phone.regex' => 'Phone number must contain only digits',
+        'phone.max' => 'Phone number must not exceed 15 digits',
+        'password.required' => 'Password is required',
+        'password.min' => 'Password must be at least 6 characters long',
+    ]);
+
+    $imagePath = null;
+
+    // ✅ Check if image is uploaded
+    if ($request->hasFile('image')) {
+        $image = $request->file('image');
+
+        // Generate unique file name
+        $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+
+        // Save image to public/admin/assets/images/user
+        $image->move(public_path('admin/assets/images/users'), $imageName);
+
+        // Store path to save in database (if needed)
+        $imagePath = 'admin/assets/images/users/' . $imageName;
+        
+
+        
     }
-    
+
+     
+
+    // ✅ Save user
+    User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'phone' => $request->phone,
+        'password' => bcrypt($request->password),
+        'image' => $imagePath, // Make sure your users table has 'image' column
+    ]);
+
+
+    return redirect()->route('user.index')->with('success', 'User created successfully');
+}
+
 
 
     public function edit($id) {
@@ -125,35 +168,62 @@ protected function sendDeactivationEmail($user, $reason)
         return view('users.edit', compact('user'));
     }
     
-   public function update(Request $request, $id) {
-    $request->validate([
-        'name' => 'required',
-         'email' => [
-            'required',
-            'email',
-            'regex:/^[\w\.\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z]{2,6}$/'
-        ],
-        'phone' => 'required|regex:/^[0-9]+$/|max:15',
-        'password' => 'nullable|min:6',
-    ]);
-
-    // Pehle user ko find karo
+  public function update(Request $request, $id)
+{
     $user = User::findOrFail($id);
 
-    // Update fields
-    $user->name = $request->name;
-    $user->email = $request->email;
-    $user->phone = $request->phone;
+    $request->validate([
+        'name' => 'required',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+       'email' => [
+        'required',
+        'email',
+        'regex:/^[\w\.\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z]{2,6}$/',
+        
+    ],
+        'phone' => 'required|regex:/^[0-9]+$/|max:15',
+        'password' => 'nullable|min:6',
+    ], [
+        'name.required' => 'Name is required',
+        'image.image' => 'Image must be a valid image file',
+        'image.mimes' => 'Image must be a jpeg, png, jpg, or gif file',
+        'image.max' => 'Image size must not exceed 2MB',
+        'email.required' => 'Email is required',
+        'email.email' => 'Email must be a valid email address',
+        'email.regex' => 'Email format is invalid',
+        'phone.required' => 'Phone number is required',
+        'phone.regex' => 'Phone number must contain only digits',
+        'phone.max' => 'Phone number must not exceed 15 digits',
+        'password.min' => 'Password must be at least 6 characters long',
+    ]);
 
-    // Agar password diya gaya hai toh update karo
-    if ($request->filled('password')) {
-        $user->password = bcrypt($request->password);
+    $imagePath = $user->image;
+
+    // ✅ Image update (if provided)
+    if ($request->hasFile('image')) {
+        $image = $request->file('image');
+        $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+        $image->move(public_path('admin/assets/images/users'), $imageName);
+        $imagePath = 'admin/assets/images/users/' . $imageName;
+
+        // ✅ Optional: Delete old image file (if exists)
+        if ($user->image && file_exists(public_path($user->image))) {
+            unlink(public_path($user->image));
+        }
     }
 
-    $user->save();
+    // ✅ Update user
+    $user->update([
+        'name' => $request->name,
+        'email' => $request->email,
+        'phone' => $request->phone,
+        'image' => $imagePath,
+        'password' => $request->password ? bcrypt($request->password) : $user->password,
+    ]);
 
-    return redirect('/admin/user')->with('success', 'User updated successfully');
+    return redirect()->route('user.index')->with('success', 'User updated successfully');
 }
+
 
 
     public function delete($id) {
@@ -189,8 +259,9 @@ protected function sendDeactivationEmail($user, $reason)
 
 
 public function sales($id) {
-    $sales = Sale::where('user_id', $id)->get();
-    return view('admin.sales.index', compact('sales'));
+$data = User::with('sales')->where('id',$id)->first(); 
+// return $sales;  
+    return view('admin.sales.index', compact('data'));
 }
 
     
