@@ -28,6 +28,11 @@ class PointConversionController extends Controller
     $request->validate([
         'points' => 'required|numeric',
         'price' => 'required|numeric',
+    ], [
+        'points.required' => 'Points are required.',
+        'price.required' => 'Price is required.',
+        'points.numeric' => 'Points must be a number.',
+        'price.numeric' => 'Price must be a number.',
     ]);
 
     // Save record

@@ -1,7 +1,6 @@
 @extends('admin.layout.app')
 @section('title', 'Create Product')
 @section('content')
-
     <div class="main-content">
         <section class="section">
             <div class="section-body">
@@ -25,8 +24,6 @@
                                     @enderror
                                 </div>
                             </div>
-
-
 
                             <!-- Points Per Sale -->
                             <div class="col-sm-6">
@@ -77,4 +74,20 @@
         </section>
     </div>
 
+
+    <script>
+        // Auto hide validation error when field is focused
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('input, select');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    const errorDiv = this.parentElement.querySelector('.invalid-feedback');
+                    if (errorDiv) {
+                        errorDiv.style.display = 'none';
+                        this.classList.remove('is-invalid');
+                    }
+                });
+            });
+        });
+    </script>
 @endsection

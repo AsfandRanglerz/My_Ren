@@ -62,7 +62,9 @@
 
                                 <!-- Submit Button -->
                                 <div class="form-group" style="margin-bottom: 0; margin-top: 1.25rem;">
-                                    <button type="submit " class="btn btn-primary btn-lg btn-block btn-login" tabindex="4"
+                                    <button type="submit " style="margin-bottom: 0; padding: 0"
+                                        class="btn btn-primary btn-lg btn-block btn-login mb-0;" style="margin-bottom: 0"
+                                        tabindex="4"
                                         onclick="const eyeIcon = document.getElementById('togglePasswordIcon'); if (eyeIcon) { eyeIcon.classList.add('d-none'); }">
                                         Login
                                     </button>

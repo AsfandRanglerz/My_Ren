@@ -27,6 +27,14 @@ class SeoController extends Controller
             'pages.*.og_title' => 'nullable|string|max:255',
             'pages.*.og_description' => 'nullable|string|max:500',
             'pages.*.keywords' => 'nullable|string|max:255',
+        ] , [
+            'pages.required' => 'The pages field is required.',
+            'pages.*.page.required' => 'The page field is required.',
+            'pages.*.title.max' => 'The title may not be greater than 255 characters.',
+            'pages.*.description.max' => 'The description may not be greater than 500 characters.',
+            'pages.*.og_title.max' => 'The Open Graph title may not be greater than 255 characters.',
+            'pages.*.og_description.max' => 'The Open Graph description may not be greater than 500 characters.',
+            'pages.*.keywords.max' => 'The keywords may not be greater than 255 characters.',
         ]);
 
         try {

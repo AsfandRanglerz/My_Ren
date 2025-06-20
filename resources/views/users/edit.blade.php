@@ -57,7 +57,29 @@
                                         </div>
                                     </div>
 
-                                    <!-- Password Field (optional) -->
+                                    <!-- Image -->
+                                    <div class="col-sm-6 pl-sm-0 pr-sm-3">
+                                        <div class="form-group position-relative">
+                                            <label for="image">Image</label>
+                                            <input type="file" class="form-control @error('image') is-invalid @enderror"
+                                                id="image" name="image" placeholder="Enter image">
+                                            @error('image')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                            <div class="mt-3">
+                                                @if ($user->image)
+                                                    <img src="{{ asset('public/' . $user->image) }}" alt="User Image"
+                                                        style="width: 70px; height: 70px; align-items: center; ">
+                                                @else
+                                                    <img src="{{ asset('public/admin/assets/images/avator.png') }}"
+                                                        style="width: 70px; height: 70px; align-items: center; ">
+                                                @endif
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Password Field  -->
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group position-relative">
                                             <label for="password">Password</label>

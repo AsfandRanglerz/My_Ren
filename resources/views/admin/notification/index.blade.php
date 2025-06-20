@@ -24,7 +24,7 @@
 
                                 @if (Auth::guard('admin')->check() ||
                                         ($sideMenuPermissions->has('Notifications') && $sideMenuPermissions['Notifications']->contains('create')))
-                                    <a class="btn btn-success mb-3 text-white" data-toggle="modal"
+                                    <a class="btn mb-3 text-white" data-toggle="modal" style="background-color: #cb84fe;"
                                         data-target="#createUserModal">
                                         Create
                                     </a>
@@ -64,7 +64,8 @@
                                                         </form>
 
                                                         <button class="show_confirm btn d-flex gap-4"
-                                                            style="background-color: #ff5608;"
+                                                            style="background-color: #cb84fe
+;"
                                                             data-form="delete-form-{{ $notification->id }}" type="button">
                                                             <span><i class="fa fa-trash"></i></span>
                                                         </button>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\User;
 use App\Models\Product;
 use App\Models\ProductBatch;
 use Illuminate\Http\Request;
@@ -31,6 +32,11 @@ class ProductController extends Controller
         'demissions' => 'required|string',
         'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         'points' => 'required|integer|min:0',
+    ], [
+        'name.required' => 'Product name is required.',
+        'demissions.required' => 'Demissions are required.',
+        'image.required' => 'Product image is required.',
+        'points.required' => 'Points per sale are required.',
     ]);
 
     // $imagePath = null;
@@ -66,6 +72,11 @@ public function update(Request $request, $id)
         'demissions' => 'required|string',
         'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         'points' => 'required|integer|min:0',
+    ], [
+        'name.required' => 'Product name is required.',
+        'demissions.required' => 'Demissions are required.',
+        'image.image' => 'The image must be an image file.',
+        'points.required' => 'Points per sale are required.',
     ]);
 
     $product = Product::findOrFail($id);

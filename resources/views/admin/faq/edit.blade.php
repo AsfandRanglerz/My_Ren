@@ -8,7 +8,7 @@
                 <form action="{{ url('admin/faq-update', $data->id) }}" method="POST">
                     @csrf
 
-                    <a href="{{ url('/admin/faq-index') }}" class="btn mb-3" style="background: #ff5608;">Back</a>
+                    <a href="{{ url('/admin/faq-index') }}" class="btn mb-3" style="background: #cb84fe;">Back</a>
                     <div class="row">
 
                         <div class="col-12 col-md-12 col-lg-12">
