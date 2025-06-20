@@ -20,6 +20,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SecurityController;
 use App\Http\Controllers\Admin\SubAdminController;
 use App\Http\Controllers\PointConversionController;
+use App\Http\Controllers\WithdrawRequestController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\RolePermissionController;
 
@@ -152,8 +153,8 @@ Route::delete('admin/product-batch-delete/{id}', [ProductController::class, 'del
 
     Route::post('/point-conversions-update/{id}', [PointConversionController::class, 'update'])->name('point-conversions.update')->middleware('check.permission:Points Conversion,edit');
 
-
-
+// ############ Withdraw Requests #################
+Route::get('/withdrawrequest', [WithdrawRequestController::class, 'withdrawRequests'])->name('withdraw.requests');
 
 
 

@@ -104,7 +104,15 @@
                 </li>
             @endif
 
-
+            @if (Auth::guard('admin')->check() ||
+                    ($sideMenuPermissions->has('Withdraw Request') && $sideMenuPermissions['Withdraw Request']->contains('view')))
+                <li class="dropdown {{ request()->is('admin/withdraw-request*') ? 'active' : '' }}">
+                    <a href="{{ url('admin/withdrawrequest') }}" class="nav-link">
+                        <i data-feather="arrow-down-left"></i>
+                        <span>Withdraw Requests</span>
+                    </a>
+                </li>
+            @endif
 
             {{--  Privacy Policy --}}
 
