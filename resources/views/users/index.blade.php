@@ -41,6 +41,8 @@
                                     <tbody>
                                         @foreach ($users as $user)
                                             <tr>
+
+                                                <td>{{ $loop->iteration }}</td>
                                                 <td>
                                                     @if ($user->image)
                                                         <img src="{{ asset('public/' . $user->image) }}" alt="User Image"
@@ -50,7 +52,6 @@
                                                             style="width: 70px; height: 70px; align-items: center; ">
                                                     @endif
                                                 </td>
-                                                <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $user->name }}</td>
                                                 <td>{{ $user->email }}</td>
                                                 <td>{{ $user->phone }}</td>
