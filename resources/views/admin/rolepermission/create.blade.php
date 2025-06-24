@@ -15,7 +15,7 @@
                                     <!-- Name Field -->
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group">
-                                            <label for="name">Name</label>
+                                            <label for="name">Name<span style="color: red;">*</span></label>
                                             <input type="text" class="form-control" id="name" name="name"
                                                 value="{{ old('name') }}" required placeholder="Enter Role Name">
                                             <div class="invalid-feedback"></div>

@@ -17,7 +17,7 @@
                         <div class="card">
                             <div class="card-header">
                                 <div class="col-12">
-                                    <h4>{{ $product->name }} Scan Codes</h4>
+                                    <h4>{{ $product->name }} - Scan Codes</h4>
                                 </div>
                             </div>
                             <div class="card-body table-striped table-bordered table-responsive">
@@ -37,7 +37,7 @@
                                         <tr>
                                             <th>Sr.</th>
                                             <th>Scan Code</th>
-                                            <th scope="col">Actions</th>
+                                            <th scope="col">Action</th>
 
 
                                         </tr>

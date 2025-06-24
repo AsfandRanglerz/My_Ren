@@ -12,19 +12,6 @@
                                 <h4>Users</h4>
                             </div>
                             <div class="card-body table-responsive">
-
-                                @if (Auth::guard('admin')->check() ||
-                                        ($sideMenuPermissions->has('Users') && $sideMenuPermissions['Users']->contains('create')))
-                                    <a class="btn btn-primary mb-3 text-white"
-                                        href="{{ url('/admin/user-create') }}">Create</a>
-                                @endif
-
-                                {{-- @if (Auth::guard('admin')->check() || ($sideMenuPermissions->has('users') && $sideMenuPermissions['users']->contains('view')))
-                                    <a class="btn btn-primary mb-3 text-white" href="{{ url('admin/users/trashed') }}">View
-                                        Trashed</a>
-                                @endif --}}
-
-
                                 <table class="table table-striped" id="table_id_events">
                                     <thead>
                                         <tr>
@@ -34,7 +21,7 @@
                                             <th>Email</th>
                                             <th>Phone</th>
                                             <th>Toggle</th>
-                                            <th>Sales Details</th>
+                                            <th>Sale Detail</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>

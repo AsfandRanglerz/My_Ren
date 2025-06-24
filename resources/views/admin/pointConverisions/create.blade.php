@@ -15,7 +15,7 @@
                             <!-- Points -->
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="points">Points</label>
+                                    <label for="points">Points<span style="color: red;">*</span></label>
                                     <input type="number" name="points" id="points"
                                         class="form-control @error('points') is-invalid @enderror"
                                         value="{{ old('points') }}" placeholder="Enter points" required>
@@ -28,7 +28,7 @@
                             <!-- Price -->
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="price">Price</label>
+                                    <label for="price">Price<span style="color: red;">*</span></label>
                                     <div class="input-group">
 
                                         <input type="number" step="0.01" name="price" id="price"

@@ -94,7 +94,8 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $subAdmin->name }}</td>
-                                                <td>{{ $subAdmin->email }}</td>
+                                                <td><a href="mailto:{{ $subAdmin->email }}">{{ $subAdmin->email }}</a>
+                                                </td>
                                                 <td>{{ $subAdmin->phone }}</td>
                                                 <td>{{ $subAdmin->roles->pluck('name')->join(', ') ?: 'No Role' }}</td>
                                                 <td>

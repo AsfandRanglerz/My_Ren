@@ -15,7 +15,7 @@
                             <!-- Name -->
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="name">Name</label>
+                                    <label for="name">Name<span style="color: red;">*</span></label>
                                     <input type="text" name="name" id="name"
                                         class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}"
                                         placeholder="Enter product name" required>
@@ -28,7 +28,7 @@
                             <!-- Points Per Sale -->
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="points">Points Per Sale</label>
+                                    <label for="points">Points Per Sale<span style="color: red;">*</span></label>
                                     <input type="number" name="points" id="points"
                                         class="form-control @error('points') is-invalid @enderror"
                                         value="{{ old('points') }}" placeholder="Enter points" required>
@@ -41,7 +41,7 @@
                             <!-- Dimensions -->
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="demissions">Dimensions</label>
+                                    <label for="demissions">Dimensions<span style="color: red;">*</span></label>
                                     <input type="text" name="demissions" id="demissions"
                                         class="form-control @error('demissions') is-invalid @enderror"
                                         value="{{ old('demissions') }}" placeholder="Enter dimensions" required>
@@ -54,7 +54,7 @@
                             <!-- Image -->
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="image">Image</label>
+                                    <label for="image">Image<span style="color: red;">*</span></label>
                                     <input type="file" name="image" id="image"
                                         class="form-control @error('image') is-invalid @enderror" required>
                                     @error('image')

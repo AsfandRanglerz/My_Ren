@@ -112,13 +112,6 @@ $validatedData = $validator->validated();
 
     $subAdmin->roles()->attach($request->role);
  
-    $message = [
-        'name' => $request->name,
-        'email' => $request->email,
-        'password' => $password,
-        'role' => Role::find($request->role)->name ?? 'N/A',
-    ];
-    Mail::to($request->email)->send(new SubAdminLoginPassword($message));
 
     return redirect()->route('subadmin.index')->with(['success' => 'Sub-Admin created successfully']);
 }

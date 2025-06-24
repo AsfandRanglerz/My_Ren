@@ -55,6 +55,7 @@ class FaqController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'description' => 'required',
+            'questions' => 'required',
         ]);
 
         // If validation fails
@@ -91,7 +92,10 @@ class FaqController extends Controller
     public function FaqsUpdate(Request $request, $id)
     {
         $request->validate([
-            'description' => 'required'
+            'description' => 'required',
+             'questions' => 'required',
+
+        
         ]);
         
 

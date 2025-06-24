@@ -26,7 +26,7 @@
                                             <th>Name</th>
                                             {{-- <th>Status</th> --}}
                                             <th>Permissions</th>
-                                            <th>Actions</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>

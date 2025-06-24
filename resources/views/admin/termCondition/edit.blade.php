@@ -15,7 +15,7 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="form-group">
-                                        <label>Description</label>
+                                        <label>Description<span style="color: red;">*</span></label>
                                         <textarea name="description" class="form-control">
                                             @if ($data)
 {{ $data->description }}

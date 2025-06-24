@@ -105,13 +105,13 @@
                     ($sideMenuPermissions->has('Notifications') && $sideMenuPermissions['Notifications']->contains('view')))
                 {{-- Notification --}}
                 {{-- Notifications --}}
-                <li class="dropdown {{ request()->is('admin/notification*') ? 'active' : '' }}">
+                {{-- <li class="dropdown {{ request()->is('admin/notification*') ? 'active' : '' }}">
                     <a href="
                 {{ route('notification.index') }}
                 " class="nav-link">
                         <i data-feather="bell"></i><span>Notifications</span>
                     </a>
-                </li>
+                </li> --}}
             @endif
 
 

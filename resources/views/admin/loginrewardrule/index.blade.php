@@ -26,7 +26,7 @@
                                             <th>Sr.</th>
                                             <th>Day</th>
                                             <th>Points</th>
-                                            <th scope="col">Actions</th>
+                                            <th scope="col">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>

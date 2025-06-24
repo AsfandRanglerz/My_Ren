@@ -16,7 +16,7 @@
                                     <!-- Name Field -->
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group">
-                                            <label for="name">Name</label>
+                                            <label for="name">Name <span style="color: red;">*</span></label>
                                             <input type="text" class="form-control @error('name') is-invalid @enderror"
                                                 id="name" name="name" value="{{ old('name') }}" required
                                                 placeholder="Enter name">
@@ -29,7 +29,7 @@
                                     <!-- Email Field -->
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group">
-                                            <label for="email">Email</label>
+                                            <label for="email">Email <span style="color: red;">*</span></label>
                                             <input type="email" class="form-control @error('email') is-invalid @enderror"
                                                 id="email" name="email" value="{{ old('email') }}" required
                                                 placeholder="Enter email">
@@ -42,7 +42,7 @@
                                     <!-- Phone Field -->
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group">
-                                            <label for="phone">Phone</label>
+                                            <label for="phone">Phone <span style="color: red;">*</span></label>
                                             <input type="tel" class="form-control @error('phone') is-invalid @enderror"
                                                 id="phone" name="phone" value="{{ old('phone') }}" required
                                                 placeholder="Enter phone number">
@@ -55,7 +55,7 @@
                                     <!-- Password Field -->
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group position-relative">
-                                            <label for="password">Password</label>
+                                            <label for="password">Password <span style="color: red;">*</span></label>
                                             <input type="password"
                                                 class="form-control @error('password') is-invalid @enderror" id="password"
                                                 name="password" required placeholder="Enter password">
@@ -71,7 +71,7 @@
                                     <!-- Image Upload -->
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group">
-                                            <label for="image">Image</label>
+                                            <label for="image">Image <span style="color: red;">*</span></label>
                                             <input type="file" class="form-control @error('image') is-invalid @enderror"
                                                 id="image" name="image" required>
                                             {{-- <small class="text-danger">Note: Maximum image size allowed is 2MB</small> --}}
@@ -85,7 +85,7 @@
                                     <!-- Role Field -->
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group">
-                                            <label for="role">Select Role</label>
+                                            <label for="role">Select Role <span style="color: red;">*</span></label>
                                             <select class="form-control @error('role') is-invalid @enderror" id="role"
                                                 name="role" required>
                                                 <option value="">-- Select Role --</option>

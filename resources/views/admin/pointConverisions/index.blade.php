@@ -1,5 +1,5 @@
 @extends('admin.layout.app')
-@section('title', 'Point Conversions')
+@section('title', 'Points Conversion')
 @section('content')
 
     <div class="main-content" style="min-height: 562px;">
@@ -10,7 +10,7 @@
                         <div class="card">
                             <div class="card-header">
                                 <div class="col-12">
-                                    <h4>Point Conversions</h4>
+                                    <h4>Points Conversion</h4>
                                 </div>
                             </div>
                             <div class="card-body table-striped table-bordered table-responsive">
@@ -30,7 +30,7 @@
                                             <th>Sr.</th>
                                             <th>Points</th>
                                             <th>Price</th>
-                                            <th scope="col">Actions</th>
+                                            <th scope="col">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>

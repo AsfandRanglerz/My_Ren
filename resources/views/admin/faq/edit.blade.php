@@ -1,5 +1,5 @@
 @extends('admin.layout.app')
-@section('title', 'FAQS')
+@section('title', "Edit FAQ")
 @section('content')
     <!-- Main Content -->
     <div class="main-content">
@@ -14,12 +14,20 @@
                         <div class="col-12 col-md-12 col-lg-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h4>FAQS</h4>
+                                    <h4>Edit FAQ</h4>
                                 </div>
 
                                 <div class="card-body">
                                     <div class="form-group">
-                                        <label>Description</label>
+                                        <label>Question<span style="color: red;">*</span></label>
+                                        <input name="questions" class="form-control" value="{{ $data->questions }}">
+                                        {{-- <input name="questions" class="form-control"> --}}
+                                        @error('question')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Answer<span style="color: red;">*</span></label>
                                         <textarea name="description" class="form-control">
                                             @if ($data)
 {{ $data->description }}

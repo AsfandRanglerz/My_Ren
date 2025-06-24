@@ -1,5 +1,5 @@
 @extends('admin.layout.app')
-@section('title', 'FAQs')
+@section('title', "FAQ's")
 @section('content')
 
     <div class="main-content" style="min-height: 562px;">
@@ -30,7 +30,8 @@
                                         <tr>
                                             <th></th> <!-- Sort handle column -->
                                             <th>Sr.</th>
-                                            <th>Description</th>
+                                            <th>Question</th>
+                                            <th>Answer</th>
                                             <th scope="col">Actions</th>
                                         </tr>
                                     </thead>
@@ -41,6 +42,7 @@
                                                     <i class="fas fa-th"></i>
                                                 </td>
                                                 <td>{{ $loop->iteration }}</td>
+                                                <td>{{ $farmer->questions }}</td>
                                                 <td>{{ \Illuminate\Support\Str::limit(strip_tags($farmer->description), 150, '...') }}
                                                 </td>
                                                 <td>

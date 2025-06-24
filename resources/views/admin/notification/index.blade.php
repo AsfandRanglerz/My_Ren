@@ -98,7 +98,7 @@
 
                         <!-- User Type Dropdown -->
                         <div class="form-group">
-                            <label for="user_type">Select User Type</label>
+                            <label for="user_type">Select User Type<span style="color: red;">*</span></label>
                             <select class="form-control" id="user_type" name="user_type" required>
                                 <option value="" selected disabled>-- Select User Type --</option>
                                 <option value="subadmin">Sub Admin</option>
@@ -108,7 +108,7 @@
 
                         <!-- Users Dropdown with Select All and Select2 -->
                         <div class="form-group">
-                            <label for="user_ids">Select User(s)</label>
+                            <label for="user_ids">Select User(s) <span style="color: red;">*</span></label>
                             <div class="d-flex mb-2">
                                 <button type="button" class="btn btn-sm btn-success" id="select_all_users_btn">Select All
                                     Users</button>
@@ -122,7 +122,7 @@
 
                         <!-- Image -->
                         <div class="form-group">
-                            <label for="userImage">Image</label>
+                            <label for="userImage">Image<span style="color: red;">*</span></label>
                             <input type="file" class="form-control-file" id="userImage" name="image" accept="image/*"
                                 required>
                             <small class="text-danger">Max 2MB image size allowed.</small>
@@ -130,7 +130,7 @@
 
                         <!-- Description -->
                         <div class="form-group">
-                            <label for="userDescription">Description</label>
+                            <label for="userDescription">Description<span style="color: red;">*</span></label>
                             <textarea class="form-control" id="userDescription" name="description" rows="3" required></textarea>
                         </div>
 

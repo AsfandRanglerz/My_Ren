@@ -16,7 +16,7 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="form-group">
-                                        <label>Description</label>
+                                        <label>Description<span style="color: red;">*</span></label>
                                         <textarea name="description" id="description" class="form-control @error('description') is-invalid @enderror">
                                             {{ old('description', $data->description ?? '') }}
                                         </textarea>
