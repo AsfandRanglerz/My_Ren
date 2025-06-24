@@ -17,14 +17,14 @@
 
                                 <div class="card-body">
                                     <div class="form-group">
-                                        <label>Question<span style="color: red;">*</span></label>
+                                        <label>Question <span style="color: red;">*</span></label>
                                         <input name="questions" class="form-control">
                                         @error('question')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
                                     <div class="form-group">
-                                        <label>Answer<span style="color: red;">*</span></label>
+                                        <label>Answer <span style="color: red;">*</span></label>
                                         <textarea name="description" class="form-control">
                                             @error('description')
 <div class="invalid-feedback">{{ $message }}</div>

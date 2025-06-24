@@ -1,5 +1,5 @@
 @extends('admin.layout.app')
-@section('title', 'Terms & Conditions')
+@section('title', 'Edit Terms & Conditions')
 @section('content')
     <!-- Main Content -->
     <div class="main-content">
@@ -11,11 +11,11 @@
                         <div class="col-12 col-md-12 col-lg-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h4>Terms & Conditions</h4>
+                                    <h4>Edit Terms & Conditions</h4>
                                 </div>
                                 <div class="card-body">
                                     <div class="form-group">
-                                        <label>Description<span style="color: red;">*</span></label>
+                                        <label>Description <span style="color: red;">*</span></label>
                                         <textarea name="description" class="form-control">
                                             @if ($data)
 {{ $data->description }}

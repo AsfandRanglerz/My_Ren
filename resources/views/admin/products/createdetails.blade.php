@@ -1,25 +1,29 @@
 @extends('admin.layout.app')
-@section('title', 'Create Role')
+@section('title', 'Create Scan Code')
 @section('content')
     <div class="main-content">
         <section class="section">
             <div class="section-body">
-                <a class="btn btn-primary mb-3" href="{{ url('admin/roles') }}">Back</a>
-                <form id="add_department" action="{{ route('store.role') }}" method="POST" enctype="multipart/form-data">
+                <a class="btn btn-primary mb-3" href="{{ url('admin/products') }}">Back</a>
+                <form id="add_department" action="{{ route('product.batch.store') }}" method="POST"
+                    enctype="multipart/form-data">
                     @csrf
                     <div class="row">
                         <div class="col-12 col-md-12 col-lg-12">
                             <div class="card">
-                                <h4 class="text-center my-4">Create Role</h4>
+                                <h4 class="text-center my-4"> Scan Code</h4>
                                 <div class="row mx-0 px-4">
                                     <!-- Name Field -->
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
+                                        <input type="hidden" name="product_id" value="{{ $id }}">
+
                                         <div class="form-group">
-                                            <label for="name">Name <span style="color: red;">*</span></label>
-                                            <input type="text" id="name" name="name" value="{{ old('name') }}"
-                                                required placeholder="Enter Role Name"
-                                                class="form-control @error('name') is-invalid @enderror">
-                                            @error('name')
+                                            <label for="name">Scan Code <span style="color: red;">*</span></label>
+                                            <input type="text"
+                                                class="form-control  @error('scan_code') is-invalid @enderror "
+                                                id="scan_code" name="scan_code" value="{{ old('name') }}" required
+                                                placeholder="Enter Scan Code">
+                                            @error('scan_code')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
@@ -34,6 +38,7 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
                 </form>
             </div>
         </section>
@@ -41,8 +46,14 @@
 @endsection
 
 @section('js')
+    @if (\Illuminate\Support\Facades\Session::has('message'))
+        <script>
+            toastr.success('{{ \Illuminate\Support\Facades\Session::get('message') }}');
+        </script>
+    @endif
 
     <script>
+        // Hide validation errors on focus
         document.addEventListener('DOMContentLoaded', function() {
             const inputs = document.querySelectorAll('input, select, textarea');
             inputs.forEach(input => {
@@ -56,5 +67,4 @@
             });
         });
     </script>
-
 @endsection

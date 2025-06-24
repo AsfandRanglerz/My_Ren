@@ -1,5 +1,5 @@
 @extends('admin.layout.app')
-@section('title', 'Login Reward Rule Edit')
+@section('title', 'Edit Reward Settings')
 @section('content')
 
     <div class="main-content">
@@ -32,7 +32,7 @@
                             <!-- Points -->
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="points">Points<span style="color: red;">*</span></label>
+                                    <label for="points">Points <span style="color: red;">*</span></label>
                                     <input type="number" name="points" id="points" value="{{ $data->points }}"
                                         class="form-control @error('points') is-invalid @enderror"
                                         value="{{ old('points') }}" placeholder="Enter points" required>
@@ -44,7 +44,7 @@
                         </div>
 
                         <div class="card-footer text-center">
-                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
                         </div>
                     </div>
                 </form>

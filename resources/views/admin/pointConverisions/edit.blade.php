@@ -1,5 +1,5 @@
 @extends('admin.layout.app')
-@section('title', 'edit Point Conversion')
+@section('title', 'Edit Points Conversion')
 @section('content')
 
     <div class="main-content">
@@ -10,7 +10,7 @@
                 <form action="{{ url('admin/point-conversions-update', $conversion->id) }}" method="POST">
                     @csrf
                     <div class="card">
-                        <h4 class="text-center my-4">Edit Point Conversion</h4>
+                        <h4 class="text-center my-4">Edit Points Conversion</h4>
                         <div class="row px-4">
                             <!-- Points -->
                             <div class="col-sm-6">
@@ -47,7 +47,7 @@
                         </div>
 
                         <div class="card-footer text-center">
-                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
                         </div>
                     </div>
                 </form>

@@ -10,7 +10,7 @@
                     <div class="row">
                         <div class="col-12 col-md-12 col-lg-12">
                             <div class="card">
-                                <h4 class="text-center my-4">Add SubAdmin</h4>
+                                <h4 class="text-center my-4">Create SubAdmin</h4>
                                 <div class="row mx-0 px-4">
 
                                     <!-- Name Field -->
@@ -88,7 +88,7 @@
                                             <label for="role">Select Role <span style="color: red;">*</span></label>
                                             <select class="form-control @error('role') is-invalid @enderror" id="role"
                                                 name="role" required>
-                                                <option value="">-- Select Role --</option>
+                                                <option value="" disabled selected>-- Select Role --</option>
                                                 @foreach ($roles as $role)
                                                     <option value="{{ $role->id }}"
                                                         {{ old('role') == $role->id ? 'selected' : '' }}>

@@ -1,6 +1,7 @@
 @extends('admin.layout.app')
 @section('title', 'Product Details')
 @section('content')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
     <style>
         /* Toastr text color to black */
@@ -25,8 +26,9 @@
                                     <div class="create-btn">
                                         @if (Auth::guard('admin')->check() ||
                                                 ($sideMenuPermissions->has('Products') && $sideMenuPermissions['Products']->contains('create')))
-                                            <a class="btn btn-primary text-white" data-toggle="modal"
-                                                data-target="#addScanCodeModal">Add</a>
+                                            <a class="btn  text-white" href="{{ route('product.createdetails', $id) }}"
+                                                style="background-color: #cb84fe;
+">Create</a>
                                         @endif
 
 
@@ -84,52 +86,22 @@
                 </div>
             </div>
         </section>
-        <!-- Add Scan Code Modal -->
-        <div class="modal fade" id="addScanCodeModal" tabindex="-1" role="dialog" aria-labelledby="addScanCodeModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <form action="{{ route('product.batch.store') }}" method="POST">
-                    @csrf
-                    <input type="hidden" name="product_id" value="{{ $id }}">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="addScanCodeModalLabel">Add Scan Code</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label for="scan_code">Scan Code</label>
-                                <input type="text" class="form-control" name="scan_code" required>
-                            </div>
-                        </div>
-
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">Save</button>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-
     </div>
 
 @endsection
 
-<!-- CSS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-
-<!-- JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
-<!-- SweetAlert CDN -->
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
-
 @section('js')
+    <!-- CSS -->
+
+    <!-- JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <!-- SweetAlert CDN -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+
+
+
     <script>
         $(document).ready(function() {
             $('#table_id_events').DataTable();
@@ -149,6 +121,29 @@
                 toastr.error("{{ $error }}");
             @endforeach
         @endif
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get modal element
+            var modal = document.getElementById('addScanCodeModal');
+
+            // Close modal when clicking the × icon
+            document.getElementById('modalCloseIcon').addEventListener('click', function() {
+                $(modal).modal('hide');
+            });
+
+            // Close modal when clicking the Close button
+            document.getElementById('modalCloseButton').addEventListener('click', function() {
+                $(modal).modal('hide');
+            });
+
+            // Optional: Also close when clicking outside the modal
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    $(modal).modal('hide');
+                }
+            });
+        });
     </script>
     <script type="text/javascript">
         $('.show_confirm').click(function(event) {

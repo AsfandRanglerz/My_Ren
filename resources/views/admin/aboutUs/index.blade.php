@@ -21,7 +21,7 @@
                                     <thead>
                                         <tr>
                                             <th>Sr.</th>
-                                            <th>Details</th>
+                                            <th>Description</th>
                                             <th scope="col">Action</th>
                                         </tr>
                                     </thead>

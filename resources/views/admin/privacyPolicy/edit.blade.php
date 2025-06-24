@@ -1,5 +1,5 @@
 @extends('admin.layout.app')
-@section('title', 'Privacy Policy')
+@section('title', 'Edit Privacy Policy')
 
 @section('content')
     <!-- Main Content -->
@@ -12,11 +12,11 @@
                         <div class="col-12 col-md-12 col-lg-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h4>Privacy Policy</h4>
+                                    <h4>Edit Privacy Policy</h4>
                                 </div>
                                 <div class="card-body">
                                     <div class="form-group">
-                                        <label>Description<span style="color: red;">*</span></label>
+                                        <label>Description <span style="color: red;">*</span></label>
                                         <textarea name="description" id="description" class="form-control @error('description') is-invalid @enderror">
                                             {{ old('description', $data->description ?? '') }}
                                         </textarea>

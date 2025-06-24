@@ -7,6 +7,8 @@ use App\Models\Product;
 use App\Models\ProductBatch;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
+
 
 class ProductController extends Controller
 {
@@ -114,6 +116,13 @@ public function ProductDetails($id)
 }
 
 
+public function CreateProductDetails($id)
+{
+    $details = ProductBatch::where('product_id',$id)->latest()->get();
+    $product = Product::find($id);
+    return view('admin.products.createdetails', compact('details','id' , 'product'));
+}
+
 public function ScanStore(Request $request) {
     $request->validate([
         'scan' => 'required|string|max:255', // Now matches the column size
@@ -131,20 +140,28 @@ public function ScanStore(Request $request) {
 
 public function storeBatch(Request $request)
 {
-    $request->validate([
+   $validator = Validator::make($request->all(), [
         'product_id' => 'required|exists:products,id',
-        'scan_code' => 'required|string|max:255|unique:product_batches,scan_code', 
+        'scan_code' => 'required|string|max:255|unique:product_batches,scan_code',
     ], [
         'scan_code.unique' => 'This scan code already exists.',
         'scan_code.required' => 'The scan code field is required.',
     ]);
 
+    // Agar validation fail ho jaye to back with error
+    if ($validator->fails()) {
+        return redirect()->back()
+                         ->withErrors($validator)
+                         ->withInput();
+    }
+
+    
     $batch = new ProductBatch();
     $batch->product_id = $request->product_id;
     $batch->scan_code = $request->scan_code;
     $batch->save();
 
-    return redirect()->back()->with('success', 'Product scan code added successfully.');
+    return redirect()->route('product.index')->with('success', 'Product scan code added successfully.');
 }
 
 public function deleteBatch($id)

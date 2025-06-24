@@ -18,7 +18,7 @@
                             <!-- Name -->
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="name">Name<span style="color: red;">*</span></label>
+                                    <label for="name">Name <span style="color: red;">*</span></label>
                                     <input type="text" name="name" id="name"
                                         class="form-control @error('name') is-invalid @enderror"
                                         value="{{ old('name', $product->name) }}" required placeholder="Enter product name">
@@ -33,7 +33,7 @@
                             <!-- Points per Sale -->
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="points">Points per Sale<span style="color: red;">*</span></label>
+                                    <label for="points">Points per Sale <span style="color: red;">*</span></label>
                                     <input type="number" name="points" id="points"
                                         class="form-control @error('points') is-invalid @enderror"
                                         value="{{ old('points', $product->points_per_sale) }}" placeholder="Enter points"
@@ -47,7 +47,7 @@
                             <!-- Demissions -->
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="demissions">Dimensions<span style="color: red;">*</span></label>
+                                    <label for="demissions">Dimension <span style="color: red;">*</span></label>
                                     <input type="text" name="demissions" id="demissions"
                                         class="form-control @error('demissions') is-invalid @enderror"
                                         value="{{ old('demissions', $product->demissions) }}" placeholder="Enter dimensions"
@@ -61,7 +61,7 @@
                             <!-- Image -->
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="image">Image<span style="color: red;">*</span></label>
+                                    <label for="image">Image <span style="color: red;">*</span></label>
                                     <input type="file" name="image" id="image"
                                         class="form-control @error('image') is-invalid @enderror"
                                         placeholder="Upload image">

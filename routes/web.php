@@ -154,6 +154,8 @@ Route::post('/users/toggle-status', [UserController::class, 'toggleStatus'])->na
 Route::post('admin/product-batch-store', [ProductController::class, 'storeBatch'])->name('product.batch.store')->middleware('check.permission:Products,create');
 Route::delete('admin/product-batch-delete/{id}', [ProductController::class, 'deleteBatch'])->name('bactches.delete')->middleware('check.permission:Products,create');;
 
+    Route::get('/products-createdetails/{id}', [ProductController::class, 'CreateProductDetails'])->name('product.createdetails')->middleware('check.permission:Products,edit');
+
     // ############ Points Conversions #################
 
     Route::get('/point-conversions-index', [PointConversionController::class, 'index'])->name('point-conversions.index')->middleware('check.permission:Points Conversion,view');
@@ -186,7 +188,7 @@ Route::delete('admin/product-batch-delete/{id}', [ProductController::class, 'del
 
         Route::post('/subadmin-StatusChange', 'StatusChange')->name('subadmin.StatusChange')->middleware('check.permission:Sub Admins,edit');
 
-        Route::post('/admin/subadmin/toggle-status', [SubAdminController::class, 'toggleStatus'])->name('admin.subadmin.toggleStatus');
+           Route::post('/toggle-status', [SubAdminController::class, 'toggleStatus'])->name('admin.subadmin.toggleStatus');
 
     });
 

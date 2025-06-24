@@ -1,5 +1,5 @@
 @extends('admin.layout.app')
-@section('title', 'Login Reward Rule')
+@section('title', 'Reward Settings')
 @section('content')
 
     <div class="main-content" style="min-height: 562px;">
@@ -10,8 +10,9 @@
                         <div class="card">
                             <div class="card-header">
                                 <div class="col-12">
-                                    <h4>Reward Settings(According to the details provided on the index page below, customers
-                                        will receive points for staying consistently active on the app.)</h4>
+                                    <h4>Reward Settings <small class="font-weight-bold text-danger">(Points will be awarded
+                                            to users who remain active for the number of consecutive days specified
+                                            below.)</small></h4>
                                 </div>
                             </div>
                             <div class="card-body table-striped table-bordered table-responsive">

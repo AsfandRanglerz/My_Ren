@@ -12,14 +12,14 @@
                             <div class="card-header">
                                 <h4>Roles</h4>
                             </div>
-                            <div class="card-body table-responsive">
+                            <div class="card-body table-striped table-bordered table-responsive">
                                 @if (Auth::guard('admin')->check() ||
                                         ($sideMenuPermissions->has('Roles') && $sideMenuPermissions['Roles']->contains('create')))
                                     <a class="btn btn-primary mb-3 text-white"
                                         href="{{ url('admin/roles-create') }}">Create</a>
                                 @endif
 
-                                <table class="table table-striped" id="table_id_events">
+                                <table class="table responsive" id="table_id_events">
                                     <thead>
                                         <tr>
                                             <th>Sr.</th>
@@ -141,5 +141,8 @@
                     }
                 });
         });
+
+        // Hide validation errors on focus
+       
     </script>
 @endsection

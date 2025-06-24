@@ -65,7 +65,7 @@
                                             <label for="role">Role <span style="color: red;">*</span></label>
                                             <select name="role" id="role"
                                                 class="form-control @error('role') is-invalid @enderror">
-                                                <option value="">-- Select Role --</option>
+                                                <option value="" disabled>-- Select Role --</option>
                                                 @foreach ($roles as $role)
                                                     <option value="{{ $role->id }}"
                                                         {{ old('role', $currentRoleId) == $role->id ? 'selected' : '' }}>
@@ -82,7 +82,7 @@
                                     {{-- Image --}}
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label for="image">Image<span style="color: red;">*</span></label>
+                                            <label for="image">Image <span style="color: red;">*</span></label>
                                             <input type="file" class="form-control @error('image') is-invalid @enderror"
                                                 name="image" id="image">
                                             {{-- <small class="text-danger">Note: Maximum size is 2MB</small> --}}

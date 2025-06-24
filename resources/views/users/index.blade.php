@@ -11,8 +11,8 @@
                             <div class="card-header">
                                 <h4>Users</h4>
                             </div>
-                            <div class="card-body table-responsive">
-                                <table class="table table-striped" id="table_id_events">
+                            <div class="card-body table-striped table-bordered table-responsive">
+                                <table class="table responsive" id="table_id_events">
                                     <thead>
                                         <tr>
                                             <th>Sr.</th>
@@ -28,19 +28,18 @@
                                     <tbody>
                                         @foreach ($users as $user)
                                             <tr>
-
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>
                                                     @if ($user->image)
-                                                        <img src="{{ asset('public/' . $user->image) }}" alt="User Image"
-                                                            style="width: 70px; height: 70px; align-items: center; ">
+                                                        <img src="{{ asset('public/' . $user->image) }}"
+                                                            style="width: 70px; height: 70px;">
                                                     @else
                                                         <img src="{{ asset('public/admin/assets/images/avator.png') }}"
-                                                            style="width: 70px; height: 70px; align-items: center; ">
+                                                            style="width: 70px; height: 70px;">
                                                     @endif
                                                 </td>
                                                 <td>{{ $user->name }}</td>
-                                                <td>{{ $user->email }}</td>
+                                                <td><a href="mailto:{{ $user->email }}">{{ $user->email }}</a></td>
                                                 <td>{{ $user->phone }}</td>
                                                 <td>
                                                     <label class="custom-switch">
@@ -55,35 +54,39 @@
                                                 </td>
                                                 <td>
                                                     <a href="{{ route('user.saledetails', $user->id) }}"
-                                                        class="btn btn-info me-2" style="float: left; margin-right: 8px;">
+                                                        class="btn btn-info">
                                                         <i class="fa fa-eye"></i>
                                                     </a>
                                                 </td>
-                                                <td>
-                                                    @if (Auth::guard('admin')->check() ||
-                                                            ($sideMenuPermissions->has('Users') && $sideMenuPermissions['Users']->contains('edit')))
-                                                        <a href="{{ route('user.edit', $user->id) }}"
-                                                            class="btn btn-primary me-2"
-                                                            style="float: left; margin-right: 8px;">
-                                                            <i class="fa fa-edit"></i>
-                                                        </a>
-                                                    @endif
+                                                <td style="vertical-align: middle;">
+                                                    <div class="d-flex align-items-center" style="gap: 6px;">
+                                                        @if (Auth::guard('admin')->check() ||
+                                                                ($sideMenuPermissions->has('Users') && $sideMenuPermissions['Users']->contains('edit')))
+                                                            <a href="{{ route('user.edit', $user->id) }}"
+                                                                class="btn btn-primary p-2"
+                                                                style="background-color: #cb84fe;">
+                                                                <i class="fa fa-edit"></i>
+                                                            </a>
+                                                        @endif
 
-                                                    @if (Auth::guard('admin')->check() ||
-                                                            ($sideMenuPermissions->has('Users') && $sideMenuPermissions['Users']->contains('delete')))
-                                                        <form id="delete-form-{{ $user->id }}"
-                                                            action="{{ route('user.delete', $user->id) }}" method="POST">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                        </form>
+                                                        @if (Auth::guard('admin')->check() ||
+                                                                ($sideMenuPermissions->has('Users') && $sideMenuPermissions['Users']->contains('delete')))
+                                                            <form id="delete-form-{{ $user->id }}"
+                                                                action="{{ route('user.delete', $user->id) }}"
+                                                                method="POST">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                            </form>
 
-                                                        <button class="show_confirm btn d-flex gap-4"
-                                                            style="background-color: #d881fb;"
-                                                            data-form="delete-form-{{ $user->id }}" type="button">
-                                                            <span><i class="fa fa-trash"></i></span>
-                                                        </button>
-                                                    @endif
+                                                            <button class="show_confirm btn p-2"
+                                                                style="background-color: #cb84fe;"
+                                                                data-form="delete-form-{{ $user->id }}" type="button">
+                                                                <i class="fa fa-trash"></i>
+                                                            </button>
+                                                        @endif
+                                                    </div>
                                                 </td>
+
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -96,16 +99,15 @@
         </section>
     </div>
 
-
-    <!-- Deactivation Reason Modal -->
+    <!-- Deactivation Modal -->
     <div class="modal fade" id="deactivationModal" tabindex="-1" role="dialog" aria-labelledby="deactivationModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="deactivationModalLabel">Deactivation Reason</h5>
+                    <h5 class="modal-title">Deactivation Reason</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                        <span>&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
@@ -113,8 +115,8 @@
                         @csrf
                         <input type="hidden" name="user_id" id="deactivatingUserId">
                         <div class="form-group">
-                            <label for="deactivationReason">Please specify the reason for deactivation:</label>
-                            <textarea class="form-control" id="deactivationReason" name="reason" rows="3" required></textarea>
+                            <label>Reason for deactivation:</label>
+                            <textarea class="form-control" id="deactivationReason" name="reason" rows="3"></textarea>
                         </div>
                     </form>
                 </div>
@@ -128,77 +130,25 @@
 @endsection
 
 @section('js')
-    <!-- Initialize DataTable -->
+    {{-- ✅ SweetAlert CDN --}}
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
     <script>
         $(document).ready(function() {
-            if ($.fn.DataTable.isDataTable('#table_id_events')) {
-                $('#table_id_events').DataTable().destroy();
-            }
             $('#table_id_events').DataTable();
-        });
-    </script>
 
-    <!-- Include SweetAlert -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
-    <script type="text/javascript">
-        $('.show_confirm').click(function(event) {
-            var formId = $(this).data("form");
-            var form = document.getElementById(formId);
-            event.preventDefault();
-
-            swal({
-                    title: "Are you sure you want to delete this record?",
-                    text: "If you delete this User record, it will be gone forever.",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true,
-                })
-                .then((willDelete) => {
-                    if (willDelete) {
-                        // Send AJAX request to delete
-                        $.ajax({
-                            url: form.action,
-                            type: 'POST',
-                            data: {
-                                _method: 'DELETE',
-                                _token: '{{ csrf_token() }}'
-                            },
-                            success: function(response) {
-                                swal({
-                                    title: "Success!",
-                                    text: "Record deleted successfully",
-                                    icon: "success",
-                                    button: false,
-                                    timer: 3000
-                                }).then(() => {
-                                    location.reload();
-                                });
-                            },
-                            error: function(xhr) {
-                                swal("Error!", "Failed to delete record.", "error");
-                            }
-                        });
-                    }
-                });
-        });
-
-        /// Toggle status
-
-        $(document).ready(function() {
             let currentToggle = null;
             let currentUserId = null;
 
             $('.toggle-status').change(function() {
-                let status = $(this).prop('checked') ? 1 : 0;
-                currentUserId = $(this).data('id');
+                let status = $(this).is(':checked') ? 1 : 0;
                 currentToggle = $(this);
+                currentUserId = $(this).data('id');
 
                 if (status === 0) {
-                    // For deactivation - show modal
                     $('#deactivatingUserId').val(currentUserId);
                     $('#deactivationModal').modal('show');
                 } else {
-                    // For activation - proceed directly
                     updateUserStatus(currentUserId, 1);
                 }
             });
@@ -207,43 +157,94 @@
                 let reason = $('#deactivationReason').val();
                 if (reason.trim() === '') {
                     toastr.error('Please provide a deactivation reason');
+                    setTimeout(() => {
+                        location.reload();
+                    }, 800);
                     return;
                 }
 
-                updateUserStatus(currentUserId, 0, reason);
                 $('#deactivationModal').modal('hide');
-                $('#deactivationReason').val(''); // Clear the reason field
+                $('#deactivationReason').val('');
+                updateUserStatus(currentUserId, 0, reason);
+            });
+
+            $('#deactivationModal').on('hidden.bs.modal', function() {
+                if ($('#deactivationReason').val().trim() === '') {
+                    setTimeout(() => {
+                        location.reload();
+                    }, 500);
+                }
             });
 
             function updateUserStatus(userId, status, reason = null) {
                 let $descriptionSpan = currentToggle.siblings('.custom-switch-description');
-
                 $.ajax({
                     url: "{{ route('user.toggle-status') }}",
-                    type: 'POST',
+                    type: "POST",
                     data: {
                         _token: '{{ csrf_token() }}',
                         id: userId,
                         status: status,
                         reason: reason
                     },
-                    success: function(response) {
-                        if (response.success) {
-                            $descriptionSpan.text(response.new_status);
-                            toastr.success(response.message);
+                    success: function(res) {
+                        if (res.success) {
+                            $descriptionSpan.text(res.new_status);
+                            toastr.success(res.message);
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1000);
                         } else {
-                            // Reset the toggle if failed
                             currentToggle.prop('checked', !status);
-                            toastr.error(response.message);
+                            toastr.error(res.message);
                         }
                     },
-                    error: function(xhr) {
-                        // Reset the toggle on error
+                    error: function() {
                         currentToggle.prop('checked', !status);
                         toastr.error('Error updating status');
                     }
                 });
             }
+
+            $('.show_confirm').click(function(event) {
+                var formId = $(this).data("form");
+                var form = document.getElementById(formId);
+                event.preventDefault();
+
+                swal({
+                        title: "Are you sure you want to delete this record?",
+                        text: "If you delete this Role record, it will be gone forever.",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
+                    })
+                    .then((willDelete) => {
+                        if (willDelete) {
+                            $.ajax({
+                                url: form.action,
+                                type: 'POST',
+                                data: {
+                                    _method: 'DELETE',
+                                    _token: '{{ csrf_token() }}'
+                                },
+                                success: function(response) {
+                                    swal({
+                                        title: "Success!",
+                                        text: "Record deleted successfully",
+                                        icon: "success",
+                                        button: false,
+                                        timer: 3000
+                                    }).then(() => {
+                                        location.reload();
+                                    });
+                                },
+                                error: function(xhr) {
+                                    swal("Error!", "Failed to delete record.", "error");
+                                }
+                            });
+                        }
+                    });
+            });
         });
     </script>
 @endsection

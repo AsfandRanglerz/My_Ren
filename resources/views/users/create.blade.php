@@ -18,7 +18,7 @@
                                     <!-- Name -->
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group">
-                                            <label for="name">Name<span style="color: red;">*</span></label>
+                                            <label for="name">Name <span style="color: red;">*</span></label>
                                             <input type="text" class="form-control @error('name') is-invalid @enderror"
                                                 id="name" name="name" value="{{ old('name') }}"
                                                 placeholder="Enter name" required autofocus>
@@ -31,7 +31,7 @@
                                     <!-- Email -->
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group">
-                                            <label for="email">Email<span style="color: red;">*</span></label>
+                                            <label for="email">Email <span style="color: red;">*</span></label>
                                             <input type="email" class="form-control @error('email') is-invalid @enderror"
                                                 id="email" name="email" value="{{ old('email') }}"
                                                 placeholder="example@gmail.com" required autofocus>
@@ -44,7 +44,7 @@
                                     <!-- Phone -->
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group">
-                                            <label for="phone">Phone<span style="color: red;">*</span></label>
+                                            <label for="phone">Phone <span style="color: red;">*</span></label>
                                             <input type="text" class="form-control @error('phone') is-invalid @enderror"
                                                 id="phone" name="phone" value="{{ old('phone') }}"
                                                 placeholder="Enter phone" required autofocus>
@@ -57,7 +57,7 @@
                                     <!-- Image -->
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group position-relative">
-                                            <label for="image">Image<span style="color: red;">*</span></label>
+                                            <label for="image">Image <span style="color: red;">*</span></label>
                                             <input type="file" class="form-control @error('image') is-invalid @enderror"
                                                 id="image" name="image" placeholder="Enter image" required>
                                             @error('image')
@@ -68,7 +68,7 @@
                                     <!-- Password -->
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group position-relative">
-                                            <label for="password">Password<span style="color: red;">*</span></label>
+                                            <label for="password">Password <span style="color: red;">*</span></label>
                                             <input type="password"
                                                 class="form-control @error('password') is-invalid @enderror" id="password"
                                                 name="password" placeholder="Password" required>

@@ -31,9 +31,9 @@
                                             <th>Sr.</th>
                                             <th>Image</th>
                                             <th>Name</th>
-                                            <th>Demissions</th>
-                                            <th>Points per sale</th>
-                                            <th scope="col">View Details</th>
+                                            <th>Dimension</th>
+                                            <th>Points Per Sale</th>
+                                            <th scope="col">View Detail</th>
                                             <th scope="col">Actions</th>
                                         </tr>
                                     </thead>

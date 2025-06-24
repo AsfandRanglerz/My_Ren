@@ -26,7 +26,7 @@
                                     <!-- Email Field -->
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group">
-                                            <label for="email">Email<span style="color: red;">*</span></label>
+                                            <label for="email">Email <span style="color: red;">*</span></label>
                                             <input type="email" class="form-control @error('email') is-invalid @enderror"
                                                 id="email" name="email" value="{{ old('email', $find->email) }}"
                                                 placeholder="Enter email" required>
@@ -39,7 +39,7 @@
                                     <!-- Phone Field -->
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group">
-                                            <label for="phone">Phone<span style="color: red;">*</span></label>
+                                            <label for="phone">Phone <span style="color: red;">*</span></label>
                                             <input type="text" class="form-control @error('phone') is-invalid @enderror"
                                                 id="phone" name="phone" value="{{ old('phone', $find->phone) }}"
                                                 placeholder="Enter phone number" required>

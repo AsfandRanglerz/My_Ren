@@ -232,18 +232,28 @@ $validatedData = $validator->validated();
         return response()->json(['success' => true]);
     }
 
-
-    public function toggleStatus(Request $request)
+public function toggleStatus(Request $request)
 {
-    $subAdmin = SubAdmin::findOrFail($request->id);
-    $subAdmin->status = $request->status;
-    $subAdmin->save();
-
-    return response()->json([
-        'success' => true,
-        'message' => $request->status ? 'Status activated successfully' : 'Status deactivated successfully',
+    $request->validate([
+        'id' => 'required|exists:sub_admins,id',
+        'status' => 'required|boolean'
     ]);
-}
 
+    try {
+        $subAdmin = SubAdmin::findOrFail($request->id);
+        $subAdmin->status = $request->status;
+        $subAdmin->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => $request->status ? 'Status activated successfully' : 'Status deactivated successfully',
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to update status: ' . $e->getMessage()
+        ], 500);
+    }
+}
 
 }

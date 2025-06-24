@@ -60,11 +60,11 @@ class AdminController extends Controller
 
     public function update_profile(Request $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required',
-            'phone' => 'required'
-        ]);
+        // $request->validate([
+        //     'name' => 'required',
+        //     'email' => 'required',
+        //     'phone' => 'required'
+        // ]);
         $data = $request->only(['name', 'email', 'phone']);
 
         if ($request->hasFile('image')) {
