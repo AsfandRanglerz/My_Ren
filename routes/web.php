@@ -125,17 +125,17 @@ Route::post('/users/toggle-status', [UserController::class, 'toggleStatus'])->na
 
         // ############ Login Rewards Points #################
 
-    Route::get('/login-reward-rules', [\App\Http\Controllers\Admin\LoginRewardRuleController::class, 'index'])->name('login-reward-rules.index')->middleware('check.permission:Login Rewards Points,view');
+    Route::get('/login-reward-rules', [\App\Http\Controllers\Admin\LoginRewardRuleController::class, 'index'])->name('login-reward-rules.index')->middleware('check.permission:Login Reward Rule,view');
 
-    Route::get('/login-reward-rules-create', [\App\Http\Controllers\Admin\LoginRewardRuleController::class, 'create'])->name('login-reward-rules.create')->middleware('check.permission:Login Rewards Points,create');
+    Route::get('/login-reward-rules-create', [\App\Http\Controllers\Admin\LoginRewardRuleController::class, 'create'])->name('login-reward-rules.create')->middleware('check.permission:Login Reward Rule,create');
 
-    Route::post('/login-reward-rules-store', [\App\Http\Controllers\Admin\LoginRewardRuleController::class, 'store'])->name('loginrewardrules.store')->middleware('check.permission:Login Rewards Points,create');
+    Route::post('/login-reward-rules-store', [\App\Http\Controllers\Admin\LoginRewardRuleController::class, 'store'])->name('loginrewardrules.store')->middleware('check.permission:Login Reward Rule,create');
 
-    Route::get('/login-reward-rules-edit/{id}', [\App\Http\Controllers\Admin\LoginRewardRuleController::class, 'edit'])->name('login-reward-rules.edit')->middleware('check.permission:Login Rewards Points,edit');
+    Route::get('/login-reward-rules-edit/{id}', [\App\Http\Controllers\Admin\LoginRewardRuleController::class, 'edit'])->name('login-reward-rules.edit')->middleware('check.permission:Login Reward Rule,edit');
 
-    Route::post('/login-reward-rules-update/{id}', [\App\Http\Controllers\Admin\LoginRewardRuleController::class, 'update'])->name('login-reward-rules.update')->middleware('check.permission:Login Rewards Points,edit');
+    Route::post('/login-reward-rules-update/{id}', [\App\Http\Controllers\Admin\LoginRewardRuleController::class, 'update'])->name('login-reward-rules.update')->middleware('check.permission:Login Reward Rule,edit');
 
-    Route::delete('/login-reward-rules-destroy/{id}', [\App\Http\Controllers\Admin\LoginRewardRuleController::class, 'destroy'])->name('login-reward-rules.destroy')->middleware('check.permission:Login Rewards Points,delete');
+    Route::delete('/login-reward-rules-destroy/{id}', [\App\Http\Controllers\Admin\LoginRewardRuleController::class, 'destroy'])->name('login-reward-rules.destroy')->middleware('check.permission:Login Reward Rule,delete');
 
 
     // ############ Products #################
@@ -206,12 +206,7 @@ Route::delete('admin/product-batch-delete/{id}', [ProductController::class, 'del
     
     });
 
-    // ############ Seo Routes #################
 
-     Route::get('/seo', [SeoController::class, 'index'])->name('seo.index');
-    Route::get('/seo/{id}/edit', [SeoController::class, 'edit'])->name('seo.edit');
-    Route::post('/seo/{id}', [SeoController::class, 'update'])->name('seo.update');
-    Route::get('/admin/seo/page/{id}', [SeoController::class, 'getPage'])->name('seo.page');
 
 
     // ############ Web Routes #################

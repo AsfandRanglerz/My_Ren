@@ -117,7 +117,7 @@ class AdminController extends Controller
             ]);
 
             $data['url'] = url('change_password', $token);
-            // Mail::to($emailToUse)->send(new ResetPasswordMail($data));
+            Mail::to($emailToUse)->send(new ResetPasswordMail($data));
             return back()->with('success', 'Reset Password Link Send Successfully');
         }
     }

@@ -51,6 +51,11 @@ class SecurityController extends Controller
 
     public function PrivacyPolicyEdit()
     {
+        $request->validate([
+            'description' => 'required'
+        ]);
+
+
         $data = PrivacyPolicy::first();
         
         return view('admin.privacyPolicy.edit', compact('data'));
@@ -176,6 +181,8 @@ if(!$validator) {
         $request->validate([
             'description' => 'required'
         ]);
+
+       
         
 
         $data = AboutUs::first();

@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\SaleController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Admin\SeoController;
+use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\SideMenueController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\Api\EmailOtpController;
@@ -46,12 +47,14 @@ Route::post('/sales-store', [SaleController::class, 'store'])
      Route::post('/send-otp', [EmailOtpController::class, 'sendOtp']);
 Route::post('/verify-otp', [EmailOtpController::class, 'verifyOtp']);
 Route::post('/user-register-complete', [UserController::class, 'completeRegistration']);
+//user login
+Route::post('/user-login', [LoginController::class, 'login'])->name('user.login');
+Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth:sanctum');
 
 
 
 
 
-Route::post('farmer/login', [AuthController::class, 'login'])->name('login');
 
 
 Route::middleware('auth:sanctum')->group(function () {

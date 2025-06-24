@@ -20,8 +20,12 @@
                                             @if ($data)
 {{ $data->description }}
 @endif
-                                            
+                                           
                                         </textarea>
+                                        @error('description')
+                                            <div class="invalid-feedback d-block" id="description-error">{{ $message }}
+                                            </div>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="card-footer text-right">
@@ -40,5 +44,19 @@
     <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
     <script>
         CKEDITOR.replace('description');
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    const feedback = this.parentElement.querySelector('.invalid-feedback');
+                    if (feedback) {
+                        feedback.style.display = 'none';
+                        this.classList.remove('is-invalid');
+                    }
+                });
+            });
+        });
     </script>
 @endsection

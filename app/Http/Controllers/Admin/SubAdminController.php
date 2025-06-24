@@ -64,12 +64,14 @@ class SubAdminController extends Controller
     // return $request->all();
  $validator = Validator::make($request->all(), [
         'name' => 'required|string|max:255',
-        'email' => [
-            'required',
-            'email',
-            'regex:/^[\w\.\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z]{2,6}$/'
-        ],
-        'phone' => 'required|regex:/^[0-9]+$/|max:15',
+       'email' => [
+    'required',
+    'email',
+    'regex:/^[\w\.\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z]{2,6}$/',
+    'unique:sub_admins,email',
+],
+
+'phone' => 'required|regex:/^[0-9]+$/|max:15|unique:sub_admins,phone',
         'role' => 'required|exists:roles,id',
         'image' => 'nullable|image|max:2048',
         'password' => 'nullable|min:6'
@@ -116,7 +118,7 @@ $validatedData = $validator->validated();
         'password' => $password,
         'role' => Role::find($request->role)->name ?? 'N/A',
     ];
-    // Mail::to($request->email)->send(new SubAdminLoginPassword($message));
+    Mail::to($request->email)->send(new SubAdminLoginPassword($message));
 
     return redirect()->route('subadmin.index')->with(['success' => 'Sub-Admin created successfully']);
 }

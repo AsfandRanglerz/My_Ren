@@ -47,10 +47,10 @@
                                     <!-- Phone Field -->
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group">
-                                            <label for="phone">Phone</label>
+                                            <label for="phone">Phone(Optional)</label>
                                             <input type="text" class="form-control @error('phone') is-invalid @enderror"
                                                 id="phone" name="phone" value="{{ old('phone', $user->phone) }}"
-                                                placeholder="Enter your phone" required>
+                                                placeholder="Enter Phone" required>
                                             @error('phone')
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror

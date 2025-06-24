@@ -9,10 +9,10 @@
                     <div class="card card-primary">
                         <div class="card-header" style="display: flex; justify-content: center;">
                             <img src="{{ asset('public/admin/assets/img/logo.png') }}" style="width: 50%; height: 50%;"
-                                class="img-fluid rounded-circle" alt="Logo">
+                                class="img-fluid" alt="Logo">
                         </div>
                         <div class="card-body">
-                            <form method="POST" action="{{ url('login') }}" class="needs-validation" novalidate>
+                            <form method="POST" action="{{ url('login') }}" class="mb-0 needs-validation" novalidate>
                                 @csrf
 
                                 <!-- Email Field -->

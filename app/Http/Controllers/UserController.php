@@ -7,6 +7,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\UserRolePermission;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+
 
 class UserController extends Controller
 {
@@ -237,25 +239,6 @@ protected function sendDeactivationEmail($user, $reason)
     }
 
 
-//    public function trashed()
-// {
-//     $users = User::onlyTrashed()->get();
-//     return view('users.trashed', compact('users'));
-// }
-
-// // Restore user
-// public function restore($id)
-// {
-//     User::withTrashed()->findOrFail($id)->restore();
-//     return back()->with('success', 'User restored.');
-// }
-
-// // Force delete
-// public function forceDelete($id)
-// {
-//     User::withTrashed()->findOrFail($id)->forceDelete();
-//     return back()->with('success', 'User permanently deleted.');
-// }
 
 
 public function sales($id) {

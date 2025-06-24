@@ -1,6 +1,6 @@
 <div class="main-sidebar sidebar-style-2">
     <aside" id="sidebar-wrapper">
-        <div class="sidebar-brand">
+        <div class="mt-4 sidebar-brand">
             <a href="{{ url('/admin/dashboard') }}">
                 <img alt="image" src="{{ asset('public/admin/assets/img/logo.png') }}" class="header-logo" />
                 {{-- <span class="logo-name">Crop Secure</span> --}}
@@ -21,8 +21,8 @@
                     ($sideMenuPermissions->has('Roles') && $sideMenuPermissions['Roles']->contains('view')))
                 {{-- FAQS --}}
                 <li class="dropdown {{ request()->is('admin/roles*') ? 'active' : '' }}">
-                    <a href="{{ url('admin/roles') }}" class="nav-link"><i
-                            data-feather="user"></i><span>Roles</span></a>
+                    <a href="{{ url('admin/roles') }}" class="nav-link"><i data-feather="lock"></i>
+                        </i><span>Roles</span></a>
                 </li>
             @endif
 
@@ -56,37 +56,17 @@
 
 
 
-            {{--  FAQS --}}
+
+
+
+            {{--  Reward Settings --}}
 
             @if (Auth::guard('admin')->check() ||
-                    ($sideMenuPermissions->has('Faqs') && $sideMenuPermissions['Faqs']->contains('view')))
-                {{-- FAQS --}}
-                <li class="dropdown {{ request()->is('admin/faq*') ? 'active' : '' }}">
-                    <a href="{{ url('admin/faq-index') }}" class="nav-link"><i
-                            data-feather="settings"></i><span>FAQ's</span></a>
-                </li>
-            @endif
-
-            {{--  About Us --}}
-
-            @if (Auth::guard('admin')->check() ||
-                    ($sideMenuPermissions->has('About us') && $sideMenuPermissions['About us']->contains('view')))
-                {{-- About Us --}}
-                <li class="dropdown {{ request()->is('admin/about-us*') ? 'active' : '' }}">
-                    <a href="{{ url('admin/about-us') }}" class="nav-link"><i
-                            data-feather="help-circle"></i><span>About
-                            Us</span></a>
-                </li>
-            @endif
-
-            {{--  Login Reward Rule --}}
-
-            @if (Auth::guard('admin')->check() ||
-                    ($sideMenuPermissions->has('Products') && $sideMenuPermissions['Products']->contains('view')))
+                    ($sideMenuPermissions->has('Login Reward Rule') && $sideMenuPermissions['Login Reward Rule']->contains('view')))
                 <li class="dropdown {{ request()->is('admin/login-reward-rules*') ? 'active' : '' }}">
                     <a href="{{ url('admin/login-reward-rules') }}" class="nav-link">
                         <i data-feather="gift"></i>
-                        <span>Login Reward Rule</span>
+                        <span>Reward Settings</span>
                     </a>
                 </li>
             @endif
@@ -118,17 +98,6 @@
 
 
 
-            {{--  Privacy Policy --}}
-
-            @if (Auth::guard('admin')->check() ||
-                    ($sideMenuPermissions->has('Privacy & Policy') && $sideMenuPermissions['Privacy & Policy']->contains('view')))
-                {{--  Privacy Policy --}}
-                <li class="dropdown {{ request()->is('admin/privacy-policy*') ? 'active' : '' }}">
-                    <a href="{{ url('admin/privacy-policy') }}" class="nav-link"><i
-                            data-feather="shield"></i><span>Privacy
-                            & Policy</span></a>
-                </li>
-            @endif
 
             {{-- Notification --}}
 
@@ -145,16 +114,21 @@
                 </li>
             @endif
 
-            {{--  Roles --}}
+
+            {{--  About Us --}}
 
             @if (Auth::guard('admin')->check() ||
-                    ($sideMenuPermissions->has('Seo') && $sideMenuPermissions['Seo']->contains('view')))
-                {{-- FAQS --}}
-                <li class="dropdown {{ request()->is('admin/seo*') ? 'active' : '' }}">
-                    <a href="{{ url('admin/seo') }}" class="nav-link"><i
-                            data-feather="trending-up"></i><span>SEO</span></a>
+                    ($sideMenuPermissions->has('About us') && $sideMenuPermissions['About us']->contains('view')))
+                {{-- About Us --}}
+                <li class="dropdown {{ request()->is('admin/about-us*') ? 'active' : '' }}">
+                    <a href="{{ url('admin/about-us') }}" class="nav-link"><i
+                            data-feather="help-circle"></i><span>About
+                            Us</span></a>
                 </li>
             @endif
+
+
+
 
             {{-- Contact Us  --}}
 
@@ -169,6 +143,29 @@
                 </li>
             @endif
 
+
+            {{--  FAQS --}}
+
+            @if (Auth::guard('admin')->check() ||
+                    ($sideMenuPermissions->has('Faqs') && $sideMenuPermissions['Faqs']->contains('view')))
+                {{-- FAQS --}}
+                <li class="dropdown {{ request()->is('admin/faq*') ? 'active' : '' }}">
+                    <a href="{{ url('admin/faq-index') }}" class="nav-link"><i
+                            data-feather="settings"></i><span>FAQ's</span></a>
+                </li>
+            @endif
+
+            {{--  Privacy Policy --}}
+
+            @if (Auth::guard('admin')->check() ||
+                    ($sideMenuPermissions->has('Privacy & Policy') && $sideMenuPermissions['Privacy & Policy']->contains('view')))
+                {{--  Privacy Policy --}}
+                <li class="dropdown {{ request()->is('admin/privacy-policy*') ? 'active' : '' }}">
+                    <a href="{{ url('admin/privacy-policy') }}" class="nav-link"><i
+                            data-feather="shield"></i><span>Privacy
+                            & Policy</span></a>
+                </li>
+            @endif
 
 
             {{--  Terms & Conditions --}}

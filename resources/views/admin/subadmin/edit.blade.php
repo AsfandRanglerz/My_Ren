@@ -82,7 +82,7 @@
                                             <label for="image">Image</label>
                                             <input type="file" class="form-control @error('image') is-invalid @enderror"
                                                 name="image" id="image">
-                                            <small class="text-danger">Note: Maximum size is 2MB</small>
+                                            {{-- <small class="text-danger">Note: Maximum size is 2MB</small> --}}
                                             @if ($subAdmin->image)
                                                 <div class="mt-2">
                                                     <img src="{{ asset($subAdmin->image) }}" width="100">

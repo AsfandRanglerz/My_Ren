@@ -10,7 +10,8 @@
                         <div class="card">
                             <div class="card-header">
                                 <div class="col-12">
-                                    <h4>Login Reward Rule</h4>
+                                    <h4>Reward Settings(According to the details provided on the index page below, customers
+                                        will receive points for staying consistently active on the app.)</h4>
                                 </div>
                             </div>
                             <div class="card-body table-striped table-bordered table-responsive">
@@ -45,7 +46,7 @@
 
 
                                                         @if (Auth::guard('admin')->check() ||
-                                                                ($sideMenuPermissions->has('Products') && $sideMenuPermissions['Products']->contains('edit')))
+                                                                ($sideMenuPermissions->has('Login Reward Rule') && $sideMenuPermissions['Login Reward Rule']->contains('edit')))
                                                             <a href="{{ route('login-reward-rules.edit', $data->id) }}"
                                                                 class="btn btn-primary me-2"
                                                                 style="float: left; margin-right: 8px;"><span><i
