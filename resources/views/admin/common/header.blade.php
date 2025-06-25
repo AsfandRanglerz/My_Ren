@@ -74,13 +74,21 @@
         </li> --}}
         <li class="dropdown"><a href="#" data-toggle="dropdown"
                 class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-                @if (Auth::guard('admin')->user()->image)
-                    <img alt="image" src="{{ asset(Auth::guard('admin')->user()->image) }}"
-                        class="user-img-radious-style">
+                @php
+                    $user = Auth::guard('admin')->check()
+                        ? Auth::guard('admin')->user()
+                        : (Auth::guard('subadmin')->check()
+                            ? Auth::guard('subadmin')->user()
+                            : null);
+                @endphp
+
+                @if ($user && $user->image)
+                    <img alt="image" src="{{ asset($user->image) }}" class="user-img-radious-style">
                 @else
                     <img alt="image" src="{{ asset('public/admin/assets/images/avator.png') }}"
                         class="user-img-radious-style">
                 @endif
+
                 <span class="d-sm-none d-lg-inline-block"></span>
             </a>
             <div class="dropdown-menu dropdown-menu-right pullDown">

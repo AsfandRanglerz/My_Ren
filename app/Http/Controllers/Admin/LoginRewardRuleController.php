@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Models\LoginRewardRule;
+use App\Models\UserRolePermission;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class LoginRewardRuleController extends Controller
 {
@@ -13,7 +15,28 @@ class LoginRewardRuleController extends Controller
     public function index()
     {
         $data = LoginRewardRule::all();
-        return view('admin.loginrewardrule.index' , compact('data'));
+
+        $sideMenuPermissions = collect();
+
+    // ✅ Check if user is not admin (normal subadmin)
+    if (!Auth::guard('admin')->check()) {
+        $user =Auth::guard('subadmin')->user()->load('roles');
+
+
+        // ✅ 1. Get role_id of subadmin
+        $roleId = $user->role_id;
+
+        // ✅ 2. Get all permissions assigned to this role
+        $permissions = UserRolePermission::with(['permission', 'sideMenue'])
+            ->where('role_id', $roleId)
+            ->get();
+
+        // ✅ 3. Group permissions by side menu
+        $sideMenuPermissions = $permissions->groupBy('sideMenue.name')->map(function ($items) {
+            return $items->pluck('permission.name'); // ['view', 'create']
+        });
+    }
+        return view('admin.loginrewardrule.index' , compact('data' , 'sideMenuPermissions'));
     }
 
     public function create()
@@ -58,7 +81,7 @@ class LoginRewardRuleController extends Controller
         $data->points = $request->points;
         $data->save();
 
-        return redirect()->route('login-reward-rules.index')->with('success', 'Login reward rule updated successfully.');
+        return redirect()->route('login-reward-rules.index')->with('success', 'Reward settings updated successfully.');
     }
 
 
@@ -67,6 +90,6 @@ class LoginRewardRuleController extends Controller
         $data = LoginRewardRule::findOrFail($id);
         $data->delete();
 
-        return redirect()->route('login-reward-rules.index')->with('success', 'Login reward rule deleted successfully.');
+        return redirect()->route('login-reward-rules.index')->with('success', 'Reward Setting deleted successfully.');
     }
 }

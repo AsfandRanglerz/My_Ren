@@ -120,7 +120,7 @@
             event.preventDefault();
             swal({
                     title: "Are you sure?",
-                    text: "If you delete this product record, it will be gone forever.",
+                    text: "If you delete this Product record, it will be gone forever.",
                     icon: "warning",
                     buttons: true,
                     dangerMode: true,

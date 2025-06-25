@@ -67,6 +67,6 @@ class PointConversionController extends Controller
             'price' => $request->price,
         ]);
 
-        return redirect()->route('point-conversions.index')->with('success', 'Point conversion updated successfully.');
+        return redirect()->route('point-conversions.index')->with('success', 'Points conversion updated successfully.');
     }
 }

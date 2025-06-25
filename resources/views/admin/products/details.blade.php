@@ -152,7 +152,7 @@
             event.preventDefault();
             swal({
                     title: "Are you sure?",
-                    text: "If you delete this product scan code, it will be gone forever.",
+                    text: "If you delete this Product Scan Code, it will be gone forever.",
                     icon: "warning",
                     buttons: true,
                     dangerMode: true,

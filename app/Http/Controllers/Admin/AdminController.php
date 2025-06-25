@@ -79,7 +79,7 @@ class AdminController extends Controller
         } else {
             SubAdmin::find(Auth::guard('subadmin')->id())->update($data);
         }
-        return back()->with(['status' => true, 'message' => 'Profile Updated Successfully']);
+        return back()->with('success', 'Profile updated successfully');
     }
     public function forgetPassword()
     {

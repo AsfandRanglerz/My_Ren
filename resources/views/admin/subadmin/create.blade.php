@@ -39,19 +39,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Phone Field -->
-                                    <div class="col-sm-6 pl-sm-0 pr-sm-3">
-                                        <div class="form-group">
-                                            <label for="phone">Phone <span style="color: red;">*</span></label>
-                                            <input type="tel" class="form-control @error('phone') is-invalid @enderror"
-                                                id="phone" name="phone" value="{{ old('phone') }}" required
-                                                placeholder="Enter phone number">
-                                            @error('phone')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-
                                     <!-- Password Field -->
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group position-relative">
@@ -71,9 +58,9 @@
                                     <!-- Image Upload -->
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group">
-                                            <label for="image">Image <span style="color: red;">*</span></label>
+                                            <label for="image">Image (Optional)</label>
                                             <input type="file" class="form-control @error('image') is-invalid @enderror"
-                                                id="image" name="image" required>
+                                                id="image" name="image">
                                             {{-- <small class="text-danger">Note: Maximum image size allowed is 2MB</small> --}}
                                             @error('image')
                                                 <div class="invalid-feedback">{{ $message }}</div>

@@ -41,7 +41,7 @@
                                                 </td> --}}
                                                 <td>
                                                     @if (Auth::guard('admin')->check() ||
-                                                            ($sideMenuPermissions->has('Roles') && $sideMenuPermissions['Roles']->contains('edit')))
+                                                            ($sideMenuPermissions->has('Roles') && $sideMenuPermissions['Roles']->contains('view')))
                                                         <a class="btn" style="background-color: #cb84fe;"
                                                             href="{{ route('role.permissions', $role->id) }}"><i
                                                                 class="fa fa-eye"></i></a>
@@ -143,6 +143,5 @@
         });
 
         // Hide validation errors on focus
-       
     </script>
 @endsection

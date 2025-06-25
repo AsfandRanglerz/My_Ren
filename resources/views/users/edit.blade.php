@@ -79,7 +79,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- Password Field  -->
+                                    {{-- <!-- Password Field  -->
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group position-relative">
                                             <label for="password">Password (Optional)</label>
@@ -93,7 +93,7 @@
                                                 <div class="invalid-feedback">{{ $message }}</div>
                                             @enderror
                                         </div>
-                                    </div>
+                                    </div> --}}
 
                                 </div>
 

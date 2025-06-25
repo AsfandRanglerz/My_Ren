@@ -21,7 +21,7 @@
                                             <th>Email</th>
                                             <th>Phone</th>
                                             <th>Toggle</th>
-                                            <th>Sale Detail</th>
+                                            <th>Installations Detail</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -213,7 +213,7 @@
 
                 swal({
                         title: "Are you sure you want to delete this record?",
-                        text: "If you delete this Role record, it will be gone forever.",
+                        text: "If you delete this User record, it will be gone forever.",
                         icon: "warning",
                         buttons: true,
                         dangerMode: true,

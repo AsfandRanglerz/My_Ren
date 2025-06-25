@@ -71,7 +71,6 @@ class SubAdminController extends Controller
     'unique:sub_admins,email',
 ],
 
-'phone' => 'required|regex:/^[0-9]+$/|max:15|unique:sub_admins,phone',
         'role' => 'required|exists:roles,id',
         'image' => 'nullable|image|max:2048',
         'password' => 'nullable|min:6'
@@ -102,10 +101,10 @@ $validatedData = $validator->validated();
     $subAdmin = SubAdmin::create([
         'name' => $request->name,
         'email' => $request->email,
-        'phone' => $request->phone,
         'password' => bcrypt($password),
         'status' => $request->status ?? 1,
         'image' => $image,
+        'plain_password' => $password,
     ]);
 
     // Attach role to pivot table
@@ -139,7 +138,6 @@ public function edit($id)
             'email',
             'regex:/^[\w\.\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z]{2,6}$/'
         ],
-        'phone' => 'required|regex:/^[0-9]+$/|max:15',
         'role' => 'required|exists:roles,id',
         'image' => 'nullable|image|max:2048',
         'password' => 'nullable|min:6', // Optional password field
@@ -176,10 +174,11 @@ $validatedData = $validator->validated();
         $subAdmin->update([
             'name' => $request->name,
             'email' => $request->email,
-            'phone' => $request->phone,
             // 'status' => $request->status,
             'image' => $image,
             'password' => $request->password ? bcrypt($request->password) : $subAdmin->password,
+            'plain_password' => $request->password,
+
         ]);
 
          // Single role update

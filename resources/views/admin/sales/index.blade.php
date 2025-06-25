@@ -10,7 +10,7 @@
                         <div class="card">
                             <!-- Card Header -->
                             <div class="card-header">
-                                <h4> {{ $data->name ?? 'N/A' }} - Points Detail</h4>
+                                <h4> {{ $data->name ?? 'N/A' }} - Installations Detail</h4>
                             </div>
 
                             <!-- Card Body -->

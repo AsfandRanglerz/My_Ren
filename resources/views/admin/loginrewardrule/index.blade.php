@@ -2,6 +2,7 @@
 @section('title', 'Reward Settings')
 @section('content')
 
+
     <div class="main-content" style="min-height: 562px;">
         <section class="section">
             <div class="section-body">
@@ -47,7 +48,7 @@
 
 
                                                         @if (Auth::guard('admin')->check() ||
-                                                                ($sideMenuPermissions->has('Login Reward Rule') && $sideMenuPermissions['Login Reward Rule']->contains('edit')))
+                                                                ($sideMenuPermissions->has('Reward Settings') && $sideMenuPermissions['Reward Settings']->contains('edit')))
                                                             <a href="{{ route('login-reward-rules.edit', $data->id) }}"
                                                                 class="btn btn-primary me-2"
                                                                 style="float: left; margin-right: 8px;"><span><i

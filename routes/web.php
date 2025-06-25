@@ -62,29 +62,28 @@ Route::prefix('admin')->middleware(['admin', 'check.subadmin.status'])->group(fu
 
             // ############ Roles #################
 
-        Route::get('/roles', [RoleController::class, 'index'])->name('roles.index')->middleware('check.permission:Roles,view');
+        Route::get('/roles', [RoleController::class, 'index'])->name('Roles.index')->middleware('check.permission:Roles,view');
 
         Route::get('/roles-create', [RoleController::class, 'create'])->name('create.role')->middleware('check.permission:Roles,create');
 
         Route::post('/store-role', [RoleController::class, 'store'])->name('store.role')->middleware('check.permission:Roles,create');
 
 
-        Route::get('/roles-permissions/{id}', [RoleController::class, 'permissions'])->name('role.permissions')->middleware('check.permission:Roles,edit');
+        Route::get('/roles-permissions/{id}', [RoleController::class, 'permissions'])->name('role.permissions')->middleware('check.permission:Roles,view');
 
 
         //////////////////////////////////////////
-        Route::post('/admin/roles/{id}/permissions/store', [RoleController::class, 'storePermissions'])->name('roles.permissions.store')->middleware('check.permission:role,create');
+        Route::post('/admin/roles/{id}/permissions/store', [RoleController::class, 'storePermissions'])->name('roles.permissions.store')->middleware('check.permission:Roles,create');
 
 
-        Route::delete('/delete-role/{id}', [RoleController::class, 'delete'])->name('delete.role')->middleware('check.permission:role,delete');
+        Route::delete('/delete-role/{id}', [RoleController::class, 'delete'])->name('delete.role')->middleware('check.permission:Roles,delete');
 
     
 
     // ############ Term & Condition #################
     Route::get('term-condition', [SecurityController::class, 'TermCondition']) ->middleware('check.permission:Terms & Conditions,view');
     Route::get('term-condition-edit', [SecurityController::class, 'TermConditionEdit']) ->middleware('check.permission:Terms & Conditions,edit');
-    Route::post('term-condition-update', [SecurityController::class, 'TermConditionUpdate']) ->middleware('check.permission:Terms & Conditions
-,edit');
+    Route::post('term-condition-update', [SecurityController::class, 'TermConditionUpdate']) ;
     Route::get('term-condition-view', [SecurityController::class, 'TermConditionView']) ->middleware('check.permission:Terms & Conditions
 ,view');
 
@@ -125,17 +124,17 @@ Route::post('/users/toggle-status', [UserController::class, 'toggleStatus'])->na
 
         // ############ Login Rewards Points #################
 
-    Route::get('/login-reward-rules', [\App\Http\Controllers\Admin\LoginRewardRuleController::class, 'index'])->name('login-reward-rules.index')->middleware('check.permission:Login Reward Rule,view');
+    Route::get('/login-reward-rules', [\App\Http\Controllers\Admin\LoginRewardRuleController::class, 'index'])->name('login-reward-rules.index')->middleware('check.permission:Reward Settings,view');
 
-    Route::get('/login-reward-rules-create', [\App\Http\Controllers\Admin\LoginRewardRuleController::class, 'create'])->name('login-reward-rules.create')->middleware('check.permission:Login Reward Rule,create');
+    Route::get('/login-reward-rules-create', [\App\Http\Controllers\Admin\LoginRewardRuleController::class, 'create'])->name('login-reward-rules.create')->middleware('check.permission:Reward Settings,create');
 
-    Route::post('/login-reward-rules-store', [\App\Http\Controllers\Admin\LoginRewardRuleController::class, 'store'])->name('loginrewardrules.store')->middleware('check.permission:Login Reward Rule,create');
+    Route::post('/login-reward-rules-store', [\App\Http\Controllers\Admin\LoginRewardRuleController::class, 'store'])->name('loginrewardrules.store')->middleware('check.permission:Reward Settings,create');
 
-    Route::get('/login-reward-rules-edit/{id}', [\App\Http\Controllers\Admin\LoginRewardRuleController::class, 'edit'])->name('login-reward-rules.edit')->middleware('check.permission:Login Reward Rule,edit');
+    Route::get('/login-reward-rules-edit/{id}', [\App\Http\Controllers\Admin\LoginRewardRuleController::class, 'edit'])->name('login-reward-rules.edit')->middleware('check.permission:Reward Settings,edit');
 
-    Route::post('/login-reward-rules-update/{id}', [\App\Http\Controllers\Admin\LoginRewardRuleController::class, 'update'])->name('login-reward-rules.update')->middleware('check.permission:Login Reward Rule,edit');
+    Route::post('/login-reward-rules-update/{id}', [\App\Http\Controllers\Admin\LoginRewardRuleController::class, 'update'])->name('login-reward-rules.update');
 
-    Route::delete('/login-reward-rules-destroy/{id}', [\App\Http\Controllers\Admin\LoginRewardRuleController::class, 'destroy'])->name('login-reward-rules.destroy')->middleware('check.permission:Login Reward Rule,delete');
+    Route::delete('/login-reward-rules-destroy/{id}', [\App\Http\Controllers\Admin\LoginRewardRuleController::class, 'destroy'])->name('login-reward-rules.destroy')->middleware('check.permission:Reward Settings,delete');
 
 
     // ############ Products #################

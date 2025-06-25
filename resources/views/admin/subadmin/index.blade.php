@@ -22,7 +22,6 @@
                                             <th>Sr.</th>
                                             <th>Name</th>
                                             <th>Email</th>
-                                            <th>Contact</th>
                                             <th>Role</th>
                                             <th>Image</th>
                                             <th>Status</th>
@@ -35,7 +34,6 @@
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $subAdmin->name }}</td>
                                                 <td><a href="mailto:{{ $subAdmin->email }}">{{ $subAdmin->email }}</a></td>
-                                                <td>{{ $subAdmin->phone }}</td>
                                                 <td>{{ $subAdmin->roles->pluck('name')->join(', ') ?: 'No Role' }}</td>
                                                 <td>
                                                     @if ($subAdmin->image && file_exists($subAdmin->image))

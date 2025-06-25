@@ -45,20 +45,6 @@
                                         </div>
                                     </div>
 
-                                    {{-- Phone --}}
-                                    <div class="col-sm-6">
-                                        <div class="form-group">
-                                            <label for="phone">Phone <span style="color: red;">*</span></label>
-                                            <input type="text" class="form-control @error('phone') is-invalid @enderror"
-                                                name="phone" id="phone" value="{{ old('phone', $subAdmin->phone) }}"
-                                                placeholder="Enter phone">
-                                            @error('phone')
-                                                <div class="invalid-feedback">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-
-                                    </div>
-
                                     {{-- Role --}}
                                     <div class="col-sm-6">
                                         <div class="form-group">
@@ -82,7 +68,7 @@
                                     {{-- Image --}}
                                     <div class="col-sm-6">
                                         <div class="form-group">
-                                            <label for="image">Image <span style="color: red;">*</span></label>
+                                            <label for="image">Image (Optional)</label>
                                             <input type="file" class="form-control @error('image') is-invalid @enderror"
                                                 name="image" id="image">
                                             {{-- <small class="text-danger">Note: Maximum size is 2MB</small> --}}
@@ -101,7 +87,7 @@
                                     <div class="col-sm-6 pl-sm-0 pr-sm-3">
                                         <div class="form-group position-relative">
                                             <label for="password">Password (Optional)</label>
-                                            <input type="password"
+                                            <input type="password" value="{{ $subAdmin->plain_password }}"
                                                 class="form-control @error('password') is-invalid @enderror" id="password"
                                                 name="password" placeholder="Password">
                                             <span class="fa fa-eye position-absolute"
