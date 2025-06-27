@@ -1,5 +1,5 @@
 @extends('admin.layout.app')
-@section('title', 'Points Details')
+@section('title', 'Installations Detail')
 
 @section('content')
     <div class="main-content" style="min-height: 562px;">

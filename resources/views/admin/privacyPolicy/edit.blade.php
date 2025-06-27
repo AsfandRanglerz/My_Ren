@@ -52,8 +52,8 @@
         </script>
     @endif
 
-    <!-- CKEditor -->
-    <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
+   
+    
     <script>
         const editor = CKEDITOR.replace('description');
 
@@ -63,6 +63,17 @@
             if (errorEl) {
                 errorEl.style.display = 'none';
             }
+        });
+
+        // Hide validation errors on focus
+        $(document).ready(function() {
+            $('input, select, textarea').on('focus', function() {
+                const $feedback = $(this).parent().find('.invalid-feedback');
+                if ($feedback.length) {
+                    $feedback.hide();
+                    $(this).removeClass('is-invalid');
+                }
+            });
         });
     </script>
 @endsection

@@ -73,12 +73,15 @@
                                                                 @csrf
                                                                 @method('DELETE')
                                                             </form>
+
+                                                            <!-- Delete Button -->
                                                             <button class="show_confirm btn d-flex gap-4"
                                                                 style="background-color: #cb84fe;"
                                                                 data-form="delete-form-{{ $subAdmin->id }}" type="button">
                                                                 <span><i class="fa fa-trash"></i></span>
                                                             </button>
                                                         @endif
+
                                                     </div>
                                                 </td>
                                             </tr>
@@ -96,19 +99,18 @@
 
 @section('js')
     <!-- Initialize DataTable -->
-    <script>
+    <script type="text/javascript">
         $(document).ready(function() {
             if ($.fn.DataTable.isDataTable('#table_id_events')) {
                 $('#table_id_events').DataTable().destroy();
             }
             $('#table_id_events').DataTable();
         });
-    </script>
 
-    <!-- Include SweetAlert -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
-    <script type="text/javascript">
-        $('.show_confirm').click(function(event) {
+
+        //delet alter
+
+        $(document).on('click', '.show_confirm', function(event) {
             var formId = $(this).data("form");
             var form = document.getElementById(formId);
             event.preventDefault();
@@ -122,7 +124,30 @@
                 })
                 .then((willDelete) => {
                     if (willDelete) {
-                        form.submit();
+                        // Send AJAX request to delete
+                        $.ajax({
+                            url: form.action,
+                            type: 'POST',
+                            data: {
+                                _method: 'DELETE',
+                                _token: '{{ csrf_token() }}'
+                            },
+                            success: function(response) {
+                                swal({
+                                    title: "Success!",
+                                    text: "Record deleted successfully",
+                                    icon: "success",
+                                    button: false,
+                                    timer: 3000
+
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            },
+                            error: function(xhr) {
+                                swal("Error!", "Failed to delete record.", "error");
+                            }
+                        });
                     }
                 });
         });

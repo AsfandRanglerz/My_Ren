@@ -125,6 +125,10 @@
                             <label for="userImage">Image<span style="color: red;">*</span></label>
                             <input type="file" class="form-control-file" id="userImage" name="image" accept="image/*"
                                 required>
+
+                            @error('image')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                             <small class="text-danger">Max 2MB image size allowed.</small>
                         </div>
 
@@ -132,6 +136,10 @@
                         <div class="form-group">
                             <label for="userDescription">Description<span style="color: red;">*</span></label>
                             <textarea class="form-control" id="userDescription" name="description" rows="3" required></textarea>
+
+                            @error('description')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
 
                     </div>
@@ -147,22 +155,16 @@
 
 @section('js')
     <!-- Include DataTable -->
-    <script>
+    <script type="text/javascript">
         $(document).ready(function() {
             if ($.fn.DataTable.isDataTable('#table_id_events')) {
                 $('#table_id_events').DataTable().destroy();
             }
             $('#table_id_events').DataTable();
         });
-    </script>
 
-    <!-- Include SweetAlert -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
+        ///////////////////////////
 
-    <!-- Include Select2 -->
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <script type="text/javascript">
         $(document).ready(function() {
             // ✅ Initialize Select2
             $('#user_ids').select2({

@@ -76,18 +76,17 @@
 
 
     <script>
-        // Auto hide validation error when field is focused
-        document.addEventListener('DOMContentLoaded', function() {
-            const inputs = document.querySelectorAll('input, select');
-            inputs.forEach(input => {
-                input.addEventListener('focus', function() {
-                    const errorDiv = this.parentElement.querySelector('.invalid-feedback');
-                    if (errorDiv) {
-                        errorDiv.style.display = 'none';
-                        this.classList.remove('is-invalid');
-                    }
-                });
+        // Hide validation errors on focus
+        $(document).ready(function() {
+            $('input, select, textarea').on('focus', function() {
+                const $feedback = $(this).parent().find('.invalid-feedback');
+                if ($feedback.length) {
+                    $feedback.hide();
+                    $(this).removeClass('is-invalid');
+                }
             });
         });
     </script>
-@endsection
+
+        
+    @endsection

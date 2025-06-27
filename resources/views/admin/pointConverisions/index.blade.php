@@ -68,13 +68,14 @@
 
 @section('js')
 
-    <script>
+    <script type="text/javascript">
         $(document).ready(function() {
             $('#table_id_events').DataTable()
         })
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
-    <script type="text/javascript">
+
+
+        // delete alert
+    
         $('.show_confirm').click(function(event) {
             var formId = $(this).data("form");
             var form = document.getElementById(formId);

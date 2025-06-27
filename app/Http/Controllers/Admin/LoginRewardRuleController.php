@@ -7,6 +7,8 @@ use App\Models\LoginRewardRule;
 use App\Models\UserRolePermission;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+
 
 class LoginRewardRuleController extends Controller
 {
@@ -71,10 +73,17 @@ class LoginRewardRuleController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'day' => 'required|string|max:255',
-            'points' => 'required|integer|min:0',
-        ]);
+       
+$validator = Validator::make($request->all(), [
+    'day' => 'required|string|max:255',
+        'points' => 'required|numeric|min:1|max:999',
+]);
+
+if ($validator->fails()) {
+    return redirect()->back()
+        ->withErrors($validator)
+        ->withInput();
+}
 
         $data = LoginRewardRule::findOrFail($id);
         $data->day = $request->day;

@@ -32,9 +32,9 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="points">Points</label>
-                                    <input type="number" name="points" id="points"
-                                        class="form-control @error('points') is-invalid @enderror"
-                                        value="{{ old('points') }}" placeholder="Enter points" required>
+                                    <input type="file" class="form-control @error('image') is-invalid @enderror"
+                                        id="image" name="image">
+                                    {{-- <small class="text-danger">Note: Maximum image size allowed is 2MB</small> --}}
                                     @error('points')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -50,5 +50,18 @@
             </div>
         </section>
     </div>
+
+    <script>
+        // Hide validation errors on focus
+        $(document).ready(function() {
+            $('input, select, textarea').on('focus', function() {
+                const $feedback = $(this).parent().find('.invalid-feedback');
+                if ($feedback.length) {
+                    $feedback.hide();
+                    $(this).removeClass('is-invalid');
+                }
+            });
+        });
+    </script>
 
 @endsection

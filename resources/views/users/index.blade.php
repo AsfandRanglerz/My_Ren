@@ -130,8 +130,6 @@
 @endsection
 
 @section('js')
-    {{-- ✅ SweetAlert CDN --}}
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
     <script>
         $(document).ready(function() {
@@ -206,45 +204,74 @@
                 });
             }
 
-            $('.show_confirm').click(function(event) {
-                var formId = $(this).data("form");
-                var form = document.getElementById(formId);
-                event.preventDefault();
 
-                swal({
+            //deleting alert
+
+            $(document).ready(function() {
+                $(document).on('click', '.show_confirm', function(event) {
+                    event.preventDefault();
+
+                    // Get form ID and form element
+                    var formId = $(this).data("form");
+                    console.log("Form ID:", formId); // Debug
+
+                    var form = document.getElementById(formId);
+                    console.log("Form Element:", form); // Debug
+
+                    if (!form) {
+                        swal("Error", "Form not found. Please check data-form attribute.", "error");
+                        return;
+                    }
+
+                    // Get CSRF token from meta tag
+                    var csrfToken = $('meta[name="csrf-token"]').attr('content');
+                    console.log("CSRF Token:", csrfToken); // Debug
+
+                    // SweetAlert confirmation
+                    swal({
                         title: "Are you sure you want to delete this record?",
-                        text: "If you delete this User record, it will be gone forever.",
+                        text: "If you delete this User, it will be gone forever.",
                         icon: "warning",
                         buttons: true,
                         dangerMode: true,
-                    })
-                    .then((willDelete) => {
+                    }).then((willDelete) => {
                         if (willDelete) {
+                            // AJAX request to delete
                             $.ajax({
                                 url: form.action,
                                 type: 'POST',
                                 data: {
                                     _method: 'DELETE',
-                                    _token: '{{ csrf_token() }}'
+                                },
+                                headers: {
+                                    'X-CSRF-TOKEN': csrfToken
                                 },
                                 success: function(response) {
+                                    console.log("Delete Response:",
+                                        response); // Debug
                                     swal({
                                         title: "Success!",
-                                        text: "Record deleted successfully",
+                                        text: "Record deleted successfully.",
                                         icon: "success",
                                         button: false,
-                                        timer: 3000
+                                        timer: 2000
                                     }).then(() => {
                                         location.reload();
                                     });
                                 },
-                                error: function(xhr) {
-                                    swal("Error!", "Failed to delete record.", "error");
+                                error: function(xhr, status, error) {
+                                    console.error("AJAX Error:", xhr
+                                        .responseText); // Debug
+                                    swal("Error!",
+                                        "Failed to delete record.\n" + xhr
+                                        .responseText, "error");
                                 }
                             });
                         }
                     });
+                });
             });
+
         });
     </script>
 @endsection

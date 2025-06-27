@@ -1,7 +1,6 @@
 @extends('admin.layout.app')
 @section('title', 'Product Details')
 @section('content')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 
     <style>
         /* Toastr text color to black */
@@ -94,19 +93,9 @@
     <!-- CSS -->
 
     <!-- JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
-    <!-- SweetAlert CDN -->
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 
 
-
-    <script>
-        $(document).ready(function() {
-            $('#table_id_events').DataTable();
-        });
-    </script>
     <script>
         @if (Session::has('success'))
             toastr.success("{{ Session::get('success') }}");
@@ -122,31 +111,16 @@
             @endforeach
         @endif
     </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Get modal element
-            var modal = document.getElementById('addScanCodeModal');
 
-            // Close modal when clicking the × icon
-            document.getElementById('modalCloseIcon').addEventListener('click', function() {
-                $(modal).modal('hide');
-            });
-
-            // Close modal when clicking the Close button
-            document.getElementById('modalCloseButton').addEventListener('click', function() {
-                $(modal).modal('hide');
-            });
-
-            // Optional: Also close when clicking outside the modal
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    $(modal).modal('hide');
-                }
-            });
-        });
-    </script>
     <script type="text/javascript">
-        $('.show_confirm').click(function(event) {
+        //datatables
+        $(document).ready(function() {
+            $('#table_id_events').DataTable();
+        });
+
+
+        //delete sweetalert
+        $(document).on('click', '.show_confirm', function(event) {
             var formId = $(this).data("form");
             var form = document.getElementById(formId);
             event.preventDefault();

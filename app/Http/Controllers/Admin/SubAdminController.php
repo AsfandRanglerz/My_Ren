@@ -20,14 +20,14 @@ class SubAdminController extends Controller
 {
     public function index()
     {
-        $subAdmins = SubAdmin::with(['permissions.side_menu', 'roles'])
+        $subAdmins = SubAdmin::with(['roles.rolePermissions.sideMenue'])
                      ->orderBy('status', 'desc')
                      ->latest()
                      ->get();
         $sideMenus = SideMenu::all();
 
          $sideMenuPermissions = collect();
-
+       
     // ✅ Check if user is not admin (normal subadmin)
     if (!Auth::guard('admin')->check()) {
         $user =Auth::guard('subadmin')->user()->load('roles');
@@ -40,7 +40,7 @@ class SubAdminController extends Controller
         $permissions = UserRolePermission::with(['permission', 'sideMenue'])
             ->where('role_id', $roleId)
             ->get();
-
+       
         // ✅ 3. Group permissions by side menu
         $sideMenuPermissions = $permissions->groupBy('sideMenue.name')->map(function ($items) {
             return $items->pluck('permission.name'); // ['view', 'create']

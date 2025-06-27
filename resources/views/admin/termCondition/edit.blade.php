@@ -44,40 +44,20 @@
 
 @endsection
 @section('js')
-    <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
+  
     <script>
         CKEDITOR.replace('description');
     </script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Normal input, select, and textarea fields
-            const inputs = document.querySelectorAll('input, select, textarea');
-            inputs.forEach(input => {
-                input.addEventListener('focus', function() {
-                    const feedback = this.parentElement.querySelector('.invalid-feedback');
-                    if (feedback) {
-                        feedback.style.display = 'none';
-                        this.classList.remove('is-invalid');
-                    }
-                });
-            });
-
-            // CKEditor handling
-            if (typeof CKEDITOR === '') {
-                for (const instanceName in CKEDITOR.instances) {
-                    if (CKEDITOR.instances.hasOwnProperty(instanceName)) {
-                        const editor = CKEDITOR.instances[instanceName];
-                        editor.on('focus', function() {
-                            const textarea = document.getElementById(editor.name);
-                            const feedback = textarea.parentElement.querySelector('.invalid-feedback');
-                            if (feedback) {
-                                feedback.style.display = 'none';
-                                textarea.classList.remove('is-invalid');
-                            }
-                        });
-                    }
+        // Hide validation errors on focus
+        $(document).ready(function() {
+            $('input, select, textarea').on('focus', function() {
+                const $feedback = $(this).parent().find('.invalid-feedback');
+                if ($feedback.length) {
+                    $feedback.hide();
+                    $(this).removeClass('is-invalid');
                 }
-            }
+            });
         });
     </script>
 
