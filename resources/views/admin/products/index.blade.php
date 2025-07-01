@@ -31,9 +31,9 @@
                                             <th>Sr.</th>
                                             <th>Image</th>
                                             <th>Name</th>
-                                            <th>Demissions</th>
-                                            <th>Points per sale</th>
-                                            <th scope="col">View Details</th>
+                                            <th>Dimension</th>
+                                            <th>Points Per Sale</th>
+                                            <th scope="col">View Detail</th>
                                             <th scope="col">Actions</th>
                                         </tr>
                                     </thead>
@@ -107,20 +107,20 @@
 
 @section('js')
 
-    <script>
+    <script type="text/javascript">
         $(document).ready(function() {
             $('#table_id_events').DataTable()
         })
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
-    <script type="text/javascript">
-        $('.show_confirm').click(function(event) {
+
+
+        //delete alert
+        $(document).on('click', '.show_confirm', function(event) {
             var formId = $(this).data("form");
             var form = document.getElementById(formId);
             event.preventDefault();
             swal({
                     title: "Are you sure?",
-                    text: "If you delete this product record, it will be gone forever.",
+                    text: "If you delete this Product record, it will be gone forever.",
                     icon: "warning",
                     buttons: true,
                     dangerMode: true,

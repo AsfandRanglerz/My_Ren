@@ -12,21 +12,21 @@
                             <div class="card-header">
                                 <h4>Roles</h4>
                             </div>
-                            <div class="card-body table-responsive">
+                            <div class="card-body table-striped table-bordered table-responsive">
                                 @if (Auth::guard('admin')->check() ||
                                         ($sideMenuPermissions->has('Roles') && $sideMenuPermissions['Roles']->contains('create')))
                                     <a class="btn btn-primary mb-3 text-white"
                                         href="{{ url('admin/roles-create') }}">Create</a>
                                 @endif
 
-                                <table class="table table-striped" id="table_id_events">
+                                <table class="table responsive" id="table_id_events">
                                     <thead>
                                         <tr>
                                             <th>Sr.</th>
                                             <th>Name</th>
                                             {{-- <th>Status</th> --}}
                                             <th>Permissions</th>
-                                            <th>Actions</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -41,9 +41,10 @@
                                                 </td> --}}
                                                 <td>
                                                     @if (Auth::guard('admin')->check() ||
-                                                            ($sideMenuPermissions->has('Roles') && $sideMenuPermissions['Roles']->contains('edit')))
-                                                        <a class="btn btn-success"
-                                                            href="{{ route('role.permissions', $role->id) }}">Permissions</a>
+                                                            ($sideMenuPermissions->has('Roles') && $sideMenuPermissions['Roles']->contains('view')))
+                                                        <a class="btn" style="background-color: #cb84fe;"
+                                                            href="{{ route('role.permissions', $role->id) }}"><i
+                                                                class="fa fa-eye"></i></a>
                                                     @endif
                                                 </td>
 
@@ -60,7 +61,7 @@
 
                                                         <!-- Delete Button -->
                                                         <button class="show_confirm btn d-flex gap-4"
-                                                            style="background-color: #ff5608;"
+                                                            style="background-color: #cb84fe;"
                                                             data-form="delete-form-{{ $role->id }}" type="button">
                                                             <span><i class="fa fa-trash"></i></span>
 
@@ -88,18 +89,17 @@
         </script>
     @endif
     <!-- Initialize DataTable -->
-    <script>
+    <script type="text/javascript">
         $(document).ready(function() {
             if ($.fn.DataTable.isDataTable('#table_id_events')) {
                 $('#table_id_events').DataTable().destroy();
             }
             $('#table_id_events').DataTable();
         });
-    </script>
-    <!-- Include SweetAlert -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
-    <script type="text/javascript">
-        $('.show_confirm').click(function(event) {
+
+
+        //delete alert
+        $(document).on('click', '.show_confirm', function(event) {
             var formId = $(this).data("form");
             var form = document.getElementById(formId);
             event.preventDefault();
@@ -140,5 +140,7 @@
                     }
                 });
         });
+
+        // Hide validation errors on focus
     </script>
 @endsection

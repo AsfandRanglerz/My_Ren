@@ -1,5 +1,5 @@
 @extends('admin.layout.app')
-@section('title', 'Withdraw Requests')
+@section('title', 'Withdrawal Requests')
 
 @section('content')
     <div class="main-content" style="min-height: 562px;">
@@ -7,29 +7,33 @@
             <div class="section-body">
                 <div class="row">
                     <div class="col-12">
+
+                        <!-- Card Starts -->
                         <div class="card">
                             <div class="card-header">
-                                <h4>Withdraw Requests</h4>
+                                <h4>Withdrawal Requests</h4>
                             </div>
                             <div class="card-body table-responsive">
-
-                                {{-- @if (Auth::guard('admin')->check() ||
+                                {{-- Optional "Create" button --}}
+                                {{-- Uncomment if needed --}}
+                                {{-- 
+                                @if (Auth::guard('admin')->check() ||
                                         ($sideMenuPermissions->has('Withdraw Request') && $sideMenuPermissions['Withdraw Request']->contains('create')))
                                     <a class="btn btn-primary mb-3 text-white"
                                         href="{{ url('/admin/user-create') }}">Create</a>
-                                @endif --}}
-
+                                @endif 
+                                --}}
 
                                 <table class="table table-striped" id="table_id_events">
                                     <thead>
                                         <tr>
                                             <th>Sr.</th>
                                             <th>Name</th>
-                                            <th>Withdrawal Amount</th>
+                                            <th>Requested Amount</th>
                                             <th>Total Amount</th>
-                                            <th>Withdrawal Method</th>
-                                            <th>Withdrawal Details</th>
-                                            <th>Attachment</th>
+                                            <th>Payment Method</th>
+                                            <th>Account Number</th>
+                                            <th>Bank Details</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -38,47 +42,50 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $withdrawRequest->name }}</td>
-                                                <td>{{ $withdrawRequest->withdrawal_amount	 }}</td>
-                                                <td>{{ $withdrawRequest->total_amount}}</td>
+                                                <td>{{ $withdrawRequest->withdrawal_amount }}</td>
+                                                <td>{{ $withdrawRequest->total_amount }}</td>
                                                 <td>{{ $withdrawRequest->withdrawal_method }}</td>
+                                                <td>{{ $withdrawRequest->account_number }}</td>
                                                 <td>{{ $withdrawRequest->withdrawal_details }}</td>
-                                                <td>
+                                                {{-- <td>
                                                     @if ($withdrawRequest->attachment)
                                                         <a href="{{ asset('storage/' . $withdrawRequest->attachment) }}"
-                                                            target="_blank" class="btn btn-info">View Attachment</a>
+                                                            target="_blank" class="btn btn-info btn-sm">View</a>
                                                     @else
-                                                        No Attachment
+                                                        <span class="text-muted">No Attachment</span>
                                                     @endif
-                                                </td>
-                                                <td>
+                                                </td> --}}
+                                                <td>    
                                                     @if (Auth::guard('admin')->check() ||
                                                             ($sideMenuPermissions->has('Withdraw Request') && $sideMenuPermissions['Withdraw Request']->contains('edit')))
                                                         <button type="button"
-                                                            class="btn btn-primary me-2 open-edit-modal"
+                                                            class="btn btn-sm btn-primary open-edit-modal"
                                                             data-id="{{ $withdrawRequest->id }}"
                                                             data-name="{{ $withdrawRequest->name }}"
                                                             data-bs-toggle="modal"
-                                                            data-bs-target="#editWithdrawModal"
-                                                            style="float: left; margin-right: 8px;">
-                                                            <i class="fa fa-edit"></i>
+                                                            data-bs-target="#editWithdrawModal">
+                                                            <span>Pay</span>
                                                         </button>
-
                                                     @endif
-
+                                                    {{-- Delete button (optional) --}}
+                                                    
                                                     {{-- @if (Auth::guard('admin')->check() ||
                                                             ($sideMenuPermissions->has('Withdraw Request') && $sideMenuPermissions['Withdraw Request']->contains('delete')))
                                                         <form id="delete-form-{{ $withdrawRequest->id }}"
-                                                            action="{{ route('withdrawRequest.delete', $withdrawRequest->id) }}" method="POST">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                        </form>
-
-                                                        <button class="show_confirm btn d-flex gap-4"
-                                                            style="background-color: #d881fb;"
-                                                            data-form="delete-form-{{ $withdrawRequest->id }}" type="button">
-                                                            <span><i class="fa fa-trash"></i></span>
+                                                        action="{{ route('withdrawRequest.delete', $withdrawRequest->id) }}"
+                                                        method="POST" class="d-inline">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="button"
+                                                            class="btn btn-sm show_confirm"
+                                                            style="background-color: #cb84fe;"
+                                                            data-form="delete-form-{{ $withdrawRequest->id }}">
+                                                            <i class="fa fa-trash" ></i>
                                                         </button>
-                                                    @endif --}}
+                                                    </form>
+
+                                                    @endif  --}}
+                                                   
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -86,11 +93,13 @@
                                 </table>
                             </div> <!-- /.card-body -->
                         </div> <!-- /.card -->
-                    </div> <!-- /.col -->
+
+                    </div> <!-- /.col-12 -->
                 </div> <!-- /.row -->
             </div> <!-- /.section-body -->
         </section>
     </div>
+
 
 
     <!-- Deactivation Reason Modal -->
@@ -121,7 +130,7 @@
             </div>
         </div>
     </div>
-@endsection
+
 <!-- Edit Withdraw Request Modal -->
 <div class="modal fade" id="editWithdrawModal" tabindex="-1" role="dialog" aria-labelledby="editWithdrawModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -156,6 +165,7 @@
     </form>
   </div>
 </div>
+@endsection
 
 @section('js')
     <!-- Initialize DataTable -->
@@ -171,47 +181,51 @@
     <!-- Include SweetAlert -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
     <script type="text/javascript">
-        $('.show_confirm').click(function(event) {
-            var formId = $(this).data("form");
-            var form = document.getElementById(formId);
-            event.preventDefault();
+       $('.show_confirm').click(function(event) {
+        event.preventDefault();
+        var formId = $(this).data("form");
+        var form = document.getElementById(formId);
 
-            swal({
-                    title: "Are you sure you want to delete this record?",
-                    text: "If you delete this User record, it will be gone forever.",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true,
-                })
-                .then((willDelete) => {
-                    if (willDelete) {
-                        // Send AJAX request to delete
-                        $.ajax({
-                            url: form.action,
-                            type: 'POST',
-                            data: {
-                                _method: 'DELETE',
-                                _token: '{{ csrf_token() }}'
-                            },
-                            success: function(response) {
-                                swal({
-                                    title: "Success!",
-                                    text: "Record deleted successfully",
-                                    icon: "success",
-                                    button: false,
-                                    timer: 3000
-                                }).then(() => {
-                                    location.reload();
-                                });
-                            },
-                            error: function(xhr) {
-                                swal("Error!", "Failed to delete record.", "error");
-                            }
+        if (!form) {
+            console.error("Form not found for ID:", formId);
+            return;
+        }
+
+        swal({
+            title: "Are you sure you want to delete this record?",
+            text: "If you delete this record, it will be gone forever.",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    url: form.action,
+                    type: 'POST',
+                    data: {
+                        _method: 'DELETE',
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        
+                        // toastr.success('Withdraw request deleted successfully');
+                        swal({
+                            title: "Success!",
+                            text: "Record deleted successfully",
+                            icon: "success",
+                            button: false,
+                            timer: 2000
+                        }).then(() => {
+                            location.reload();
                         });
+                    },
+                    error: function(xhr) {
+                        swal("Error!", "Failed to delete record.", "error");
                     }
                 });
+            }
         });
-
+    });
         
     $('.open-edit-modal').click(function () {
         const id = $(this).data('id');

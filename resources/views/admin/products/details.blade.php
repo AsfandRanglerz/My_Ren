@@ -17,7 +17,7 @@
                         <div class="card">
                             <div class="card-header">
                                 <div class="col-12">
-                                    <h4>{{ $product->name }} Scan Codes</h4>
+                                    <h4>{{ $product->name }} - Scan Codes</h4>
                                 </div>
                             </div>
                             <div class="card-body table-striped table-bordered table-responsive">
@@ -25,8 +25,9 @@
                                     <div class="create-btn">
                                         @if (Auth::guard('admin')->check() ||
                                                 ($sideMenuPermissions->has('Products') && $sideMenuPermissions['Products']->contains('create')))
-                                            <a class="btn btn-primary text-white" data-toggle="modal"
-                                                data-target="#addScanCodeModal">Add</a>
+                                            <a class="btn  text-white" href="{{ route('product.createdetails', $id) }}"
+                                                style="background-color: #cb84fe;
+">Create</a>
                                         @endif
 
 
@@ -37,7 +38,7 @@
                                         <tr>
                                             <th>Sr.</th>
                                             <th>Scan Code</th>
-                                            <th scope="col">Actions</th>
+                                            <th scope="col">Action</th>
 
 
                                         </tr>
@@ -84,57 +85,17 @@
                 </div>
             </div>
         </section>
-        <!-- Add Scan Code Modal -->
-        <div class="modal fade" id="addScanCodeModal" tabindex="-1" role="dialog" aria-labelledby="addScanCodeModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <form action="{{ route('product.batch.store') }}" method="POST">
-                    @csrf
-                    <input type="hidden" name="product_id" value="{{ $id }}">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="addScanCodeModalLabel">Add Scan Code</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <label for="scan_code">Scan Code</label>
-                                <input type="text" class="form-control" name="scan_code" required>
-                            </div>
-                        </div>
-
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">Save</button>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-
     </div>
 
 @endsection
 
-<!-- CSS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-
-<!-- JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
-<!-- SweetAlert CDN -->
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
-
 @section('js')
-    <script>
-        $(document).ready(function() {
-            $('#table_id_events').DataTable();
-        });
-    </script>
+    <!-- CSS -->
+
+    <!-- JS -->
+
+
+
     <script>
         @if (Session::has('success'))
             toastr.success("{{ Session::get('success') }}");
@@ -150,14 +111,22 @@
             @endforeach
         @endif
     </script>
+
     <script type="text/javascript">
-        $('.show_confirm').click(function(event) {
+        //datatables
+        $(document).ready(function() {
+            $('#table_id_events').DataTable();
+        });
+
+
+        //delete sweetalert
+        $(document).on('click', '.show_confirm', function(event) {
             var formId = $(this).data("form");
             var form = document.getElementById(formId);
             event.preventDefault();
             swal({
                     title: "Are you sure?",
-                    text: "If you delete this product scan code, it will be gone forever.",
+                    text: "If you delete this Product Scan Code, it will be gone forever.",
                     icon: "warning",
                     buttons: true,
                     dangerMode: true,

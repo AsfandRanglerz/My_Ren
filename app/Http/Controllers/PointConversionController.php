@@ -53,20 +53,19 @@ class PointConversionController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
-        // Validate the request
-        $request->validate([
-            'points' => 'required|numeric',
-            'price' => 'required|numeric',
-        ]);
+{
+    $request->validate([
+        'points' => 'required|numeric|max:9999999999', // 10 digit max
+        'price' => 'required|numeric|max:9999999999.99', // 10 digit max before decimal
+    ]);
 
-        // Find the point conversion and update it
-        $conversion = PointConversion::findOrFail($id);
-        $conversion->update([
-            'points' => $request->points,
-            'price' => $request->price,
-        ]);
+    $conversion = PointConversion::findOrFail($id);
+    $conversion->update([
+        'points' => $request->points,
+        'price' => $request->price,
+    ]);
 
-        return redirect()->route('point-conversions.index')->with('success', 'Point conversion updated successfully.');
-    }
+    return redirect()->route('point-conversions.index')->with('success', 'Points conversion updated successfully.');
+}
+
 }

@@ -34,7 +34,15 @@ class WithdrawRequestController extends Controller
     ]);
     
 
-    return redirect()->back()->with('message', 'Withdraw request updated successfully');
+    return redirect()->route('withdraw.requests')->with('success', 'Withdraw request updated successfully');
 }
+
+    public function withdrawRequestdelete($id)
+    {
+        $withdrawRequest = WithdrawRequest::findOrFail($id);
+        $withdrawRequest->delete();
+
+        return redirect()->route('withdraw.requests')->with('success', 'Withdraw request deleted successfully');
+    }
 
 }

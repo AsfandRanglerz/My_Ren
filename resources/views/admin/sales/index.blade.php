@@ -1,5 +1,5 @@
 @extends('admin.layout.app')
-@section('title', 'Points Details')
+@section('title', 'Installations Detail')
 
 @section('content')
     <div class="main-content" style="min-height: 562px;">
@@ -10,7 +10,7 @@
                         <div class="card">
                             <!-- Card Header -->
                             <div class="card-header">
-                                <h4> {{ $data->name ?? 'N/A' }} Point Details</h4>
+                                <h4> {{ $data->name ?? 'N/A' }} - Installations Detail</h4>
                             </div>
 
                             <!-- Card Body -->
@@ -22,7 +22,7 @@
                                             <th>Sr.</th>
                                             <th>Product</th>
                                             <th>Code</th>
-                                            <th>Points per sale</th>
+                                            <th>Points Per Sale</th>
                                         </tr>
                                     </thead>
                                     <tbody>

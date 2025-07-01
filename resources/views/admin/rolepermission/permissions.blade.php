@@ -106,7 +106,8 @@
                                             name="permissions[{{ $menu->id }}][]" value="{{ $action }}"
                                             id="{{ $action }}-{{ $menu->id }}"
                                             @if ($hasAction) checked @endif>
-                                        <label class="p-0 form-check-label" for="{{ $action }}-{{ $menu->id }}">
+                                        <label class="p-0  form-check-label" style="display: flex; margin-left:15px;"
+                                            for="{{ $action }}-{{ $menu->id }}">
                                             {{ ucfirst($action) }}
                                         </label>
                                     </div>

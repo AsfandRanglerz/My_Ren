@@ -6817,7 +6817,6 @@ body.layout-3 .main-footer {
     width: 100%;
     letter-spacing: 0.3px;
     color: #60686f;
-    font-weight: 600;
     text-decoration: none
 }
 
@@ -6825,6 +6824,10 @@ body.layout-3 .main-footer {
     float: right;
     padding: 5px 10px;
     margin-top: 2px
+}
+
+.swal-title {
+    font-size: 18px !important;
 }
 
 .main-sidebar .sidebar-menu li a i {
