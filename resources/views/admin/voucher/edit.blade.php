@@ -1,6 +1,6 @@
 @extends('admin.layout.app')
 
-@section('title', 'Create Voucher')
+@section('title', 'Edit Voucher')
 
 @section('content')
     <div class="main-content">
@@ -8,21 +8,22 @@
             <div class="section-body">
                 <a class="btn btn-primary mb-3" href="{{ url('admin/voucher-index') }}">Back</a>
 
-                <form action="{{ route('voucher.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('voucher.update', $voucher->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
+                    @method('POST') <!-- Using POST method as requested -->
 
                     <div class="card">
-                        <h4 class="text-center my-4">Create Voucher</h4>
+                        <h4 class="text-center my-4">Edit Voucher</h4>
                         <div class="row px-4">
                             <!-- Required Points -->
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="points">Required Points <span style="color: red;">*</span></label>
+                                    <label for="points">Required Points <span class="text-danger">*</span></label>
                                     <input type="number" name="points" id="points"
                                         class="form-control @error('points') is-invalid @enderror"
-                                        value="{{ old('points') }}" placeholder="Enter required points" required
-                                        onfocus="hideError(this)">
-
+                                        value="{{ old('points', $voucher->required_points) }}"
+                                        placeholder="Enter required points" required
+                                        onfocus="this.nextElementSibling.style.display='none'; this.classList.remove('is-invalid')">
                                     @error('points')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -32,17 +33,17 @@
                             <!-- Amount -->
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="amount">Amount <span style="color: red;">*</span></label>
+                                    <label for="amount">Amount <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <input type="number" step="0.01" name="amount" id="amount"
                                             class="form-control @error('amount') is-invalid @enderror"
-                                            value="{{ old('amount') }}" placeholder="Enter amount" required
-                                            onfocus="hideError(this)">
+                                            value="{{ old('amount', $voucher->amount) }}" placeholder="Enter amount"
+                                            required
+                                            onfocus="this.closest('.form-group').querySelector('.invalid-feedback').style.display='none'; this.classList.remove('is-invalid')">
                                         <div class="input-group-append">
                                             <span class="input-group-text">PKR</span>
                                         </div>
                                     </div>
-
                                     @error('amount')
                                         <div class="invalid-feedback d-block">{{ $message }}</div>
                                     @enderror
@@ -51,25 +52,31 @@
                         </div>
 
                         <div class="card-footer text-center">
-                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
                         </div>
                     </div>
                 </form>
             </div>
         </section>
     </div>
+@endsection
 
+@section('scripts')
     <script>
-        function hideError(element) {
-            // Get the input element
-            const input = $(element);
-            // Find the closest form-group parent and then find the invalid-feedback within it
-            const feedback = input.closest('.form-group').find('.invalid-feedback');
-
-            if (feedback.length) {
-                feedback.hide();
-                input.removeClass('is-invalid');
-            }
-        }
+        // Alternative jQuery solution if needed
+        $(document).ready(function() {
+            $('input, select, textarea').on('focus', function() {
+                const $input = $(this);
+                // For points field
+                if ($input.attr('name') === 'points') {
+                    $input.next('.invalid-feedback').hide();
+                }
+                // For amount field
+                if ($input.attr('name') === 'amount') {
+                    $input.closest('.form-group').find('.invalid-feedback').hide();
+                }
+                $input.removeClass('is-invalid');
+            });
+        });
     </script>
 @endsection

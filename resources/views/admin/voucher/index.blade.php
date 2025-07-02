@@ -9,21 +9,21 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4>Voucher Settings</h4>
+                                <h4>Voucher Settings <small class="font-weight-bold text-danger">(Each voucher is created by
+                                        you, and based on the points and amount you set, users can redeem the voucher to
+                                        withdraw that amount.)</small></h4>
                             </div>
 
-                            <div class="card-body table-striped table-bordered table-responsive">
-                                <div class="clearfix">
-                                    <div class="create-btn">
-                                        @if (Auth::guard('admin')->check() ||
-                                                ($sideMenuPermissions->has('Products') && $sideMenuPermissions['Products']->contains('create')))
-                                            <a class="btn btn-primary mb-3 text-white"
-                                                href="{{ route('voucher.create') }}">Create</a>
-                                        @endif
-                                    </div>
+                            <div class="card-body table-responsive">
+                                <div class="clearfix mb-3">
+                                    @if (Auth::guard('admin')->check() ||
+                                            ($sideMenuPermissions->has('Voucher Settings') && $sideMenuPermissions['Voucher Settings']->contains('create')))
+                                        <a class="btn btn-primary text-white"
+                                            href="{{ route('voucher.create') }}">Create</a>
+                                    @endif
                                 </div>
 
-                                <table class="table responsive" id="table_id_events">
+                                <table class="table table-bordered table-striped table-hover" id="table_id_events">
                                     <thead>
                                         <tr>
                                             <th>Sr.</th>
@@ -32,33 +32,32 @@
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
-
                                     <tbody>
-                                        @foreach ($vouchers as $voucher)
+                                        @forelse ($vouchers as $voucher)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $voucher->required_points }}</td>
-                                                <td>{{ $voucher->amount }}</td>
+                                                <td>{{ $voucher->amount }} PKR</td>
                                                 <td>
                                                     <div class="d-flex">
                                                         @if (Auth::guard('admin')->check() ||
-                                                                ($sideMenuPermissions->has('Products') && $sideMenuPermissions['Products']->contains('edit')))
-                                                            <a href="{{ url('admin/products-edit', $voucher->id) }}"
+                                                                ($sideMenuPermissions->has('Voucher Settings') && $sideMenuPermissions['Voucher Settings']->contains('edit')))
+                                                            <a href="{{ url('admin/voucher-edit', $voucher->id) }}"
                                                                 class="btn btn-primary me-2">
                                                                 <i class="fa fa-edit"></i>
                                                             </a>
                                                         @endif
 
                                                         @if (Auth::guard('admin')->check() ||
-                                                                ($sideMenuPermissions->has('Products') && $sideMenuPermissions['Products']->contains('delete')))
+                                                                ($sideMenuPermissions->has('Voucher Settings') && $sideMenuPermissions['Voucher Settings']->contains('delete')))
                                                             <form id="delete-form-{{ $voucher->id }}"
-                                                                action="{{ route('product.delete', $voucher->id) }}"
+                                                                action="{{ route('voucher.destroy', $voucher->id) }}"
                                                                 method="POST">
                                                                 @csrf
                                                                 @method('DELETE')
                                                             </form>
 
-                                                            <button class="show_confirm btn d-flex"
+                                                            <button class="show_confirm btn text-white"
                                                                 style="background-color: #cb84fe;"
                                                                 data-form="delete-form-{{ $voucher->id }}" type="button">
                                                                 <i class="fa fa-trash"></i>
@@ -67,7 +66,11 @@
                                                     </div>
                                                 </td>
                                             </tr>
-                                        @endforeach
+                                        @empty
+                                            <tr>
+                                                <td colspan="4" class="text-center text-muted">No vouchers found.</td>
+                                            </tr>
+                                        @endforelse
                                     </tbody>
                                 </table>
 
@@ -86,7 +89,7 @@
             $('#table_id_events').DataTable();
         });
 
-        // delete confirmation with AJAX
+        // delete confirmation with SweetAlert and AJAX
         $(document).on('click', '.show_confirm', function(event) {
             event.preventDefault();
             var formId = $(this).data("form");
@@ -94,7 +97,7 @@
 
             swal({
                 title: "Are you sure?",
-                text: "If you delete this Product record, it will be gone forever.",
+                text: "If you delete this Voucher record, it will be gone forever.",
                 icon: "warning",
                 buttons: true,
                 dangerMode: true,
@@ -109,11 +112,11 @@
                         },
                         success: function(response) {
                             swal({
-                                title: "Success!",
-                                text: "Record deleted successfully!",
+                                title: "Deleted!",
+                                text: "Voucher deleted successfully!",
                                 icon: "success",
-                                button: false,
-                                timer: 3000
+                                timer: 3000,
+                                buttons: false
                             }).then(() => {
                                 location.reload();
                             });
