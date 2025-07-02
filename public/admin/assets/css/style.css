@@ -10555,6 +10555,10 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
     color: #6777ef
 }
 
+.theme-white .bg-purple {
+    background-color: #cb84fe !important
+}
+
 .theme-white .bg-primary {
     background-color: #6777ef !important
 }

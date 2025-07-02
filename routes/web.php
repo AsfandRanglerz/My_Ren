@@ -24,7 +24,7 @@ use App\Http\Controllers\UserController;
 
 use App\Http\Controllers\Admin\FaqController;
 
-use App\Http\Controllers\Admin\SeoController;
+// use App\Http\Controllers\Admin\SeoController;
 
 use App\Http\Controllers\Admin\AuthController;
 
@@ -336,10 +336,11 @@ Route::delete('admin/product-batch-delete/{id}', [ProductController::class, 'del
 
     Route::post('/point-conversions-update/{id}', [PointConversionController::class, 'update'])->name('point-conversions.update')->middleware('check.permission:Points Conversion,edit');
 
-// ############ Withdraw Requests #################
-Route::get('/withdrawrequest', [WithdrawRequestController::class, 'withdrawRequests'])->name('withdraw.requests');
-Route::put('/withdrawrequest/{id}', [WithdrawRequestController::class, 'withdrawRequestcreate'])->name('withdrawRequest.create');
-Route::delete('/withdrawrequest/{id}', [WithdrawRequestController::class, 'withdrawRequestdelete'])->name('withdrawRequest.delete');
+    // ############ Withdraw Requests #################
+    Route::get('/withdrawrequest/count', [WithdrawRequestController::class, 'withdrawalCounter'])->name('withdraw.counter');
+    Route::get('/withdrawrequest', [WithdrawRequestController::class, 'index'])->name('withdraw.requests');
+    Route::put('/withdrawrequest/{id}', [WithdrawRequestController::class, 'update'])->name('withdrawRequest.update');
+    Route::delete('/withdrawrequest/{id}', [WithdrawRequestController::class, 'delete'])->name('withdrawRequest.delete');
 
 
 

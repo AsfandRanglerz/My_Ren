@@ -188,7 +188,13 @@
                         <i data-feather="arrow-down-left"></i>
 
                         <span>Withdrawal Requests</span>
-
+                        <div id="withdrawalpendingCounter"
+                            class="badge {{ request()->is('admin/withdrawrequest*') ? 'bg-white text-dark' : 'bg-purple text-white' }} rounded-circle"
+                            style="display: inline-flex; justify-content: center; align-items: center; 
+                            min-width: 22px; height: 22px; border-radius: 50%; 
+                            text-align: center; font-size: 12px; margin-left: 5px; padding: 3px;">
+                            0
+                        </div>
                     </a>
 
                 </li>
