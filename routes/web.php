@@ -41,9 +41,8 @@ use App\Http\Controllers\Admin\VoucherController;
 use App\Http\Controllers\Admin\SecurityController;
 
 use App\Http\Controllers\Admin\SubAdminController;
-
 use App\Http\Controllers\PointConversionController;
-
+use App\Http\Controllers\WithdrawRequestController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\RolePermissionController;
 
@@ -313,15 +312,6 @@ Route::delete('admin/product-batch-delete/{id}', [ProductController::class, 'del
 
 
 
-    // ############ Voucher #################
-
-Route::get('/voucher-index', [VoucherController::class, 'index'])->name('voucher.index')->middleware('check.permission:voucher,view');
-
-Route::get('/voucher-create', [VoucherController::class, 'create'])->name('voucher.create')->middleware('check.permission:voucher,create');
-
-Route::post('/voucher-store', [VoucherController::class, 'store'])->name('voucher.store')->middleware('check.permission:voucher,create');
-
-
     // ############ Points Conversions #################
 
 
@@ -346,17 +336,10 @@ Route::post('/voucher-store', [VoucherController::class, 'store'])->name('vouche
 
     Route::post('/point-conversions-update/{id}', [PointConversionController::class, 'update'])->name('point-conversions.update')->middleware('check.permission:Points Conversion,edit');
 
-
-
-
-
-
-
-
-
-
-
-
+// ############ Withdraw Requests #################
+Route::get('/withdrawrequest', [WithdrawRequestController::class, 'withdrawRequests'])->name('withdraw.requests');
+Route::put('/withdrawrequest/{id}', [WithdrawRequestController::class, 'withdrawRequestcreate'])->name('withdrawRequest.create');
+Route::delete('/withdrawrequest/{id}', [WithdrawRequestController::class, 'withdrawRequestdelete'])->name('withdrawRequest.delete');
 
 
 
@@ -432,17 +415,22 @@ Route::post('/voucher-store', [VoucherController::class, 'store'])->name('vouche
 
 
 
-    // ############ Web Routes #################
+    // ############ Voucher Routes #################
+
+Route::get('/voucher-index', [VoucherController::class, 'index'])->name('voucher.index') ->middleware('check.permission:Voucher Settings,view');
+
+Route::get('/voucher-create', [VoucherController::class, 'create'])
+    ->name('voucher.create')
+    ->middleware('check.permission:Voucher Settings,create');
 
 
+Route::post('/voucher-store', [VoucherController::class, 'store'])->name('voucher.store') ->middleware('check.permission:Voucher Settings,create');
 
-         Route::get('/home-page', [WebController::class, 'homepage'])->name('web.homepage');
+Route::get('/voucher-edit/{id}', [VoucherController::class, 'edit'])->name('voucher.edit') ->middleware('check.permission:Voucher Settings,edit');
 
-         Route::get('/about-page', [WebController::class, 'aboutpage'])->name('web.aboutpage');
+Route::post('admin/voucher-update/{id}', [VoucherController::class, 'update'])->name('voucher.update') ->middleware('check.permission:Voucher Settings,edit');
 
-         Route::get('/contact-page', [WebController::class, 'contactpage'])->name('web.contactpage');
-
-
+Route::delete('voucher-destroy/{id}', [VoucherController::class, 'destroy'])->name('voucher.destroy') ->middleware('check.permission:Voucher Settings,delete');
 
 
 

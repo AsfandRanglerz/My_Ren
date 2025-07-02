@@ -159,7 +159,9 @@
 
 
             @if (Auth::guard('admin')->check() ||
+
                     ($sideMenuPermissions->has('Points Conversion') && $sideMenuPermissions['Points Conversion']->contains('view')))
+
                 <li class="dropdown {{ request()->is('admin/point-conversions*') ? 'active' : '' }}">
 
                     <a href="{{ url('admin/point-conversions-index') }}" class="nav-link">
@@ -171,8 +173,27 @@
                     </a>
 
                 </li>
+
             @endif
 
+
+            @if (Auth::guard('admin')->check() ||
+
+                    ($sideMenuPermissions->has('Withdraw Request') && $sideMenuPermissions['Withdraw Request']->contains('view')))
+
+                <li class="dropdown {{ request()->is('admin/withdrawrequest*') ? 'active' : '' }}">
+
+                    <a href="{{ url('admin/withdrawrequest') }}" class="nav-link">
+
+                        <i data-feather="arrow-down-left"></i>
+
+                        <span>Withdrawal Requests</span>
+
+                    </a>
+
+                </li>
+
+            @endif
 
 
 
@@ -290,7 +311,10 @@
                 <li class="dropdown {{ request()->is('admin/privacy-policy*') ? 'active' : '' }}">
 
                     <a href="{{ url('admin/privacy-policy') }}" class="nav-link"><i
-                            data-feather="shield"></i><span>Privacy Policy</span></a>
+
+                            data-feather="shield"></i><span>Privacy
+
+                            & Policy</span></a>
 
                 </li>
             @endif
