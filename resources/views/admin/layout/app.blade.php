@@ -51,10 +51,6 @@
     <link rel="stylesheet" href="{{ asset('public/admin/assets/bundles/datatables/datatables.min.css') }}">
 
     <link rel="stylesheet"
-<<<<<<< HEAD
-=======
-
->>>>>>> c718bcab9e86e3c9fafd9877fd0c6e2f29748c89
         href="{{ asset('public/admin/assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css') }}">
 
 
