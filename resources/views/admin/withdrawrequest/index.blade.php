@@ -2,6 +2,9 @@
 @section('title', 'Withdrawal Requests')
 
 @section('content')
+<script>
+    const baseWithdrawUpdateUrl = "{{ url('/admin/withdrawrequest') }}";
+</script>
     <div class="main-content" style="min-height: 562px;">
         <section class="section">
             <div class="section-body">
@@ -55,17 +58,23 @@
                                                         <span class="text-muted">No Attachment</span>
                                                     @endif
                                                 </td> --}}
-                                                <td>    
+                                                <td>   
+                                                    @php
+                                                    $isApproved = $withdrawRequest->status == 0;
+                                                    $isNotApproved = $withdrawRequest->status == 1;
+                                                    $hasAttachment = !empty($withdrawRequest->attachment);
+                                                    @endphp 
                                                     @if (Auth::guard('admin')->check() ||
                                                             ($sideMenuPermissions->has('Withdraw Request') && $sideMenuPermissions['Withdraw Request']->contains('edit')))
-                                                        <button type="button"
-                                                            class="btn btn-sm btn-primary open-edit-modal"
-                                                            data-id="{{ $withdrawRequest->id }}"
-                                                            data-name="{{ $withdrawRequest->name }}"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#editWithdrawModal">
-                                                            <span>Pay</span>
-                                                        </button>
+                                                       <button type="button"
+                                                        class="btn btn-sm open-edit-modal {{ $isApproved && $hasAttachment ? 'btn-success' : ($isNotApproved ? 'btn-danger' : 'btn-primary') }}"
+                                                        data-id="{{ $withdrawRequest->id }}"
+                                                        data-status="{{ $withdrawRequest->status }}"
+                                                        data-attachment="{{ $withdrawRequest->attachment }}"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#editWithdrawModal">
+                                                        <span>{{ $isApproved && $hasAttachment ? 'Paid' : 'Pay' }}</span>
+                                                    </button>
                                                     @endif
                                                     {{-- Delete button (optional) --}}
                                                     
@@ -102,69 +111,64 @@
 
 
 
-    <!-- Deactivation Reason Modal -->
-    <div class="modal fade" id="deactivationModal" tabindex="-1" role="dialog" aria-labelledby="deactivationModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deactivationModalLabel">Deactivation Reason</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="deactivationForm">
-                        @csrf
-                        <input type="hidden" name="user_id" id="deactivatingUserId">
-                        <div class="form-group">
-                            <label for="deactivationReason">Please specify the reason for deactivation:</label>
-                            <textarea class="form-control" id="deactivationReason" name="reason" rows="3" required></textarea>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="confirmDeactivation">Submit</button>
-                </div>
-            </div>
-        </div>
-    </div>
+   
 
 <!-- Edit Withdraw Request Modal -->
 <div class="modal fade" id="editWithdrawModal" tabindex="-1" role="dialog" aria-labelledby="editWithdrawModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
-    <form id="editWithdrawForm" method="POST" enctype="multipart/form-data">
+    <form id="editWithdrawForm" enctype="multipart/form-data">
       @csrf
       @method('PUT')
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Edit Withdraw Request</h5>
+          <h5 class="modal-title">Withdrawal Request</h5>
           <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
+        
         <div class="modal-body">
-            <input type="hidden" name="id" id="editWithdrawId">
+          <input type="hidden" name="id" id="editWithdrawId">
 
+          {{-- Editable Fields --}}
+          <div id="editModeFields">
             <div class="form-group">
-                <label for="editName">Name</label>
-                <input type="text" class="form-control" name="name" id="editName" readonly>
+              <label for="attachment">Upload Attachment <span class="text-danger">*</span></label>
+              <input type="file" class="form-control" name="attachment" id="attachment" accept="image/*">
             </div>
+            <div class="form-group" id="viewAttachmentSection" style="display: none;">
+            <a id="viewAttachmentLink" href="#" target="_blank" class="btn btn-info btn-sm">View Attachment</a>
+          </div>
 
-            <div class="form-group">
-                <label for="attachment">Upload New Attachment</label>
-                <input type="file" class="form-control" name="attachment" id="attachment" accept="image/*">
-            </div>
         </div>
+
+            <div class="form-group">
+              <label>Approval Status <span class="text-danger">*</span></label>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="status" id="approved" value="approved">
+                <label class="form-check-label" for="approved">Approved</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="status" id="not_approved" value="not_approved">
+                <label class="form-check-label" for="not_approved">Not Approved</label>
+              </div>
+            </div>
+          </div>
         <div class="modal-footer">
-          <button type="submit" class="btn btn-success">Save Changes</button>
+          <button type="submit" class="btn btn-success" id="saveChangesBtn">
+             <span id="saveChangeBtnText">Save Changes</span>
+            <span id="saveChangeSpinner" style="display: none;">
+            <i class="fa fa-spinner fa-spin"></i>
+            </span>
+          </button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
         </div>
       </div>
     </form>
   </div>
 </div>
+
+
 @endsection
 
 @section('js')
@@ -227,18 +231,114 @@
         });
     });
         
-    $('.open-edit-modal').click(function () {
-        const id = $(this).data('id');
-        const name = $(this).data('name');
+   $('#editWithdrawForm').submit(function (e) {
+    e.preventDefault();
 
-        $('#editWithdrawId').val(id);
-        $('#editName').val(name);
+    const form = this;
+    const formData = new FormData(form);
+    const id = $('#editWithdrawId').val();
+    console.log("Editing withdraw request ID:", id);
+   
+    $("#saveChangeSpinner").show();
+    $("#saveChangeBtnText").hide();
+    $("#saveChangesBtn").prop("disabled", true);
 
-        // Set the form action dynamically
-        const actionUrl = "{{ url('/withdrawrequest') }}/" + id;
-        $('#editWithdrawForm').attr('action', actionUrl);
+    const actionUrl = `${baseWithdrawUpdateUrl}/${id}`;
+    formData.append('_method', 'PUT');
+
+    $.ajax({
+        url: actionUrl,
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function (response) {
+            $('#editWithdrawModal').modal('hide');
+            toastr.success("Withdrawal request updated successfully");
+            location.reload();
+            const button = $(`.open-edit-modal[data-id="${id}"]`);
+            const status = formData.get("status");
+            const attachmentFile = formData.get("attachment");
+
+          if (status === 'approved' && hasAttachment) {
+                button
+                    .removeClass('btn-primary btn-danger')
+                    .addClass('btn-success')
+                    .html('<span>Paid</span>');
+            } else if (status === 'not_approved') {
+                button
+                    .removeClass('btn-primary btn-success')
+                    .addClass('btn-danger')
+                    .html('<span>Pay</span>');
+            }
+        },
+        error: function (xhr) {
+           if (xhr.status === 422) {
+        const errors = xhr.responseJSON.errors;
+        for (const key in errors) {
+            if (errors.hasOwnProperty(key)) {
+                toastr.error(errors[key][0]);
+            }
+        }
+    } else {
+        toastr.error("An error occurred while updating.");
+    }
+        },
+    complete: function() {
+        // Hide spinner, show text, and enable button
+        $("#saveChangeSpinner").hide();
+        $("#saveChangeBtnText").show();
+        $("#saveChangesBtn").prop("disabled", false);
+        }
     });
+});
 
 
-           </script>
+$(document).ready(function () {
+    $('.open-edit-modal').click(function () {
+        
+        const id = $(this).data('id');
+        const status = $(this).data('status');
+        const attachment = $(this).data('attachment');
+
+        // Set hidden field
+        $('#editWithdrawId').val(id);
+
+        // Reset form inputs and visibility
+        $('#attachment').val('');
+        $('#approved, #not_approved').prop('checked', false).prop('disabled', false);
+        $('#attachment').prop('disabled', false);
+        $('#viewAttachmentSection').hide();
+
+        // Set radio status
+        if (status !== '') {
+        if (status == 0) {
+            $('#approved').prop('checked', true);
+        } else if (status == 1) {
+            $('#not_approved').prop('checked', true);
+        }
+    }
+        // Set attachment view
+        if (attachment && attachment !== '') {
+            $('#viewAttachmentLink').attr('href', '/My_Ren/public/' + attachment);
+            $('#viewAttachmentSection').show();
+        }
+
+        // ✅ Disable fields if status is approved (0) AND attachment exists
+        if (status == 0 && attachment && attachment !== '') {
+            $('#approved, #not_approved').prop('disabled', true);
+            $('#attachment').prop('disabled', true);
+            $('#saveChangesBtn').prop('disabled', true);
+        } else {
+            $('#saveChangesBtn').prop('disabled', false);
+        }
+    });
+});
+
+
+
+</script>
 @endsection
