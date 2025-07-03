@@ -36,10 +36,11 @@ use App\Http\Controllers\Admin\ContactController;
 
 use App\Http\Controllers\Admin\ProductController;
 
+use App\Http\Controllers\Admin\RankingController;
+
 use App\Http\Controllers\Admin\VoucherController;
 
 use App\Http\Controllers\Admin\SecurityController;
-
 use App\Http\Controllers\Admin\SubAdminController;
 use App\Http\Controllers\PointConversionController;
 use App\Http\Controllers\WithdrawRequestController;
@@ -410,12 +411,6 @@ Route::delete('admin/product-batch-delete/{id}', [ProductController::class, 'del
 
 
 
-
-
-
-
-
-
     // ############ Voucher Routes #################
 
 Route::get('/voucher-index', [VoucherController::class, 'index'])->name('voucher.index') ->middleware('check.permission:Voucher Settings,view');
@@ -433,8 +428,9 @@ Route::post('admin/voucher-update/{id}', [VoucherController::class, 'update'])->
 
 Route::delete('voucher-destroy/{id}', [VoucherController::class, 'destroy'])->name('voucher.destroy') ->middleware('check.permission:Voucher Settings,delete');
 
+    // ############ Rankings Routes #################
 
-
+Route::get('/ranking', [RankingController::class, 'index'])->name('ranking.index')->middleware('check.permission:Rankings,view');
 
 
 

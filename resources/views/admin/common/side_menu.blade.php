@@ -159,28 +159,22 @@
 
 
             @if (Auth::guard('admin')->check() ||
+                    ($sideMenuPermissions->has('Voucher Settings') && $sideMenuPermissions['Voucher Settings']->contains('view')))
+                <li class="dropdown {{ request()->is('admin/voucher*') ? 'active' : '' }}">
 
-                    ($sideMenuPermissions->has('Points Conversion') && $sideMenuPermissions['Points Conversion']->contains('view')))
+                    <a href="{{ url('admin/voucher-index') }}" class="nav-link">
 
-                <li class="dropdown {{ request()->is('admin/point-conversions*') ? 'active' : '' }}">
-
-                    <a href="{{ url('admin/point-conversions-index') }}" class="nav-link">
-
-                        <i data-feather="refresh-cw"></i>
-
-                        <span>Points Conversition</span>
+                        <i data-feather="tag"></i>
+                        <span>Voucher Settings</span>
 
                     </a>
 
                 </li>
-
             @endif
 
 
             @if (Auth::guard('admin')->check() ||
-
                     ($sideMenuPermissions->has('Withdraw Request') && $sideMenuPermissions['Withdraw Request']->contains('view')))
-
                 <li class="dropdown {{ request()->is('admin/withdrawrequest*') ? 'active' : '' }}">
 
                     <a href="{{ url('admin/withdrawrequest') }}" class="nav-link">
@@ -198,13 +192,21 @@
                     </a>
 
                 </li>
-
             @endif
 
 
 
 
-
+            {{-- Ranking --}}
+            @if (Auth::guard('admin')->check() ||
+                    ($sideMenuPermissions->has('Rankings') && $sideMenuPermissions['Rankings']->contains('view')))
+                <li class="dropdown {{ request()->is('admin/ranking*') ? 'active' : '' }}">
+                    <a href="{{ url('admin/ranking') }}" class="nav-link">
+                        <i data-feather="bar-chart-2"></i>
+                        <span>Rankings</span>
+                    </a>
+                </li>
+            @endif
 
 
 
@@ -317,7 +319,6 @@
                 <li class="dropdown {{ request()->is('admin/privacy-policy*') ? 'active' : '' }}">
 
                     <a href="{{ url('admin/privacy-policy') }}" class="nav-link"><i
-
                             data-feather="shield"></i><span>Privacy
 
                             & Policy</span></a>

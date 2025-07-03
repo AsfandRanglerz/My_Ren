@@ -2,8 +2,6 @@
 
 <html lang="en">
 
-
-
 <head>
 
     <meta charset="UTF-8">
@@ -53,17 +51,9 @@
     <link rel="stylesheet"
         href="{{ asset('public/admin/assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css') }}">
 
-
-
-
-
-
-
     @yield('style')
 
 </head>
-
-
 
 <body>
 
@@ -87,29 +77,25 @@
 
     </div>
 
-<<<<<<< HEAD
-
-=======
-<script>
+    <script>
         function withdrawalRequestCounter() {
-              $.ajax({
-                  url: "{{ route('withdraw.counter') }}",
-                  type: 'GET',
-                  success: function(response) {
-                       // Ensure response.count exists and handle counts over 99
-                      let count = response.count || 0; // Default to 0 if no count is returned
-                      $('#withdrawalpendingCounter').text(count > 10 ? '10+' : count);
-                      // $('#orderCounter').text(response.count);
-                  },
-                  error: function(xhr, status, error) {
-                      console.log(error);
-                  }
-              });
-          }
-          withdrawalRequestCounter();
-          setInterval(withdrawalRequestCounter, 10000);
-  </script>
->>>>>>> c718bcab9e86e3c9fafd9877fd0c6e2f29748c89
+            $.ajax({
+                url: "{{ route('withdraw.counter') }}",
+                type: 'GET',
+                success: function(response) {
+                    // Ensure response.count exists and handle counts over 99
+                    let count = response.count || 0; // Default to 0 if no count is returned
+                    $('#withdrawalpendingCounter').text(count > 10 ? '10+' : count);
+                    // $('#orderCounter').text(response.count);
+                },
+                error: function(xhr, status, error) {
+                    console.log(error);
+                }
+            });
+        }
+        withdrawalRequestCounter();
+        setInterval(withdrawalRequestCounter, 10000);
+    </script>
 
     <!-- ========== Core JS Libraries ========== -->
 
@@ -126,15 +112,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
 
     <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
-<<<<<<< HEAD
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('public/admin/assets/img/favicon2.png') }}">
-=======
 
 
->>>>>>> c718bcab9e86e3c9fafd9877fd0c6e2f29748c89
 
     <!-- ========== Project JS Files ========== -->
 
@@ -153,10 +132,6 @@
     <script src="{{ asset('public/admin/assets/bundles/datatables/datatables.min.js') }}"></script>
 
     <script src="{{ asset('public/admin/assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js') }}">
-<<<<<<< HEAD
-=======
-
->>>>>>> c718bcab9e86e3c9fafd9877fd0c6e2f29748c89
     </script>
 
     <script src="{{ asset('public/admin/assets/js/page/datatables.js') }}"></script>
@@ -172,10 +147,6 @@
     <!-- ========== Toastr Configuration ========== -->
 
     <script>
-<<<<<<< HEAD
-=======
-
->>>>>>> c718bcab9e86e3c9fafd9877fd0c6e2f29748c89
         toastr.options = {
 
             "closeButton": false,
@@ -215,40 +186,22 @@
         @if (Session::has('success'))
 
             toastr.success("{{ Session::get('success') }}");
-<<<<<<< HEAD
-=======
-
->>>>>>> c718bcab9e86e3c9fafd9877fd0c6e2f29748c89
         @endif
 
         @if (Session::has('error'))
 
             toastr.error("{{ Session::get('error') }}");
-<<<<<<< HEAD
-=======
-
->>>>>>> c718bcab9e86e3c9fafd9877fd0c6e2f29748c89
         @endif
 
         @if (Session::has('info'))
 
             toastr.info("{{ Session::get('info') }}");
-<<<<<<< HEAD
-=======
-
->>>>>>> c718bcab9e86e3c9fafd9877fd0c6e2f29748c89
         @endif
 
         @if (Session::has('warning'))
 
             toastr.warning("{{ Session::get('warning') }}");
-<<<<<<< HEAD
         @endif
-=======
-
-        @endif
-
->>>>>>> c718bcab9e86e3c9fafd9877fd0c6e2f29748c89
     </script>
 
 
@@ -260,7 +213,3 @@
 
 
 </html>
-<<<<<<< HEAD
-=======
-
->>>>>>> c718bcab9e86e3c9fafd9877fd0c6e2f29748c89
