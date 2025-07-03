@@ -9,9 +9,16 @@
                     <div class="col-12">
                         <div class="card">
                             <!-- Card Header -->
-                            <div class="card-header">
-                                <h4> {{ $data->name ?? 'N/A' }} - Installations Detail</h4>
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h4 class="mb-0">{{ $data->name ?? 'N/A' }} - Installations Detail</h4>
+                                <div class="text-end">
+                                    <div class="bg-success px-3 py-2 rounded d-inline-block">
+                                        <h6 class="mb-0 text-light">Total Points: {{ $totalPoints ?? 0 }}</h6>
+                                    </div>
+                                </div>
                             </div>
+
+
 
                             <!-- Card Body -->
                             <div class="card-body table-striped table-bordered table-responsive">

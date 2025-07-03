@@ -36,14 +36,15 @@ use App\Http\Controllers\Admin\ContactController;
 
 use App\Http\Controllers\Admin\ProductController;
 
+use App\Http\Controllers\Admin\RankingController;
+
+use App\Http\Controllers\Admin\VoucherController;
+
 use App\Http\Controllers\Admin\SecurityController;
-
 use App\Http\Controllers\Admin\SubAdminController;
-
 use App\Http\Controllers\PointConversionController;
 use App\Http\Controllers\WithdrawRequestController;
 use App\Http\Controllers\Admin\NotificationController;
-
 use App\Http\Controllers\Admin\RolePermissionController;
 
 
@@ -410,26 +411,26 @@ Route::delete('admin/product-batch-delete/{id}', [ProductController::class, 'del
 
 
 
+    // ############ Voucher Routes #################
+
+Route::get('/voucher-index', [VoucherController::class, 'index'])->name('voucher.index') ->middleware('check.permission:Voucher Settings,view');
+
+Route::get('/voucher-create', [VoucherController::class, 'create'])
+    ->name('voucher.create')
+    ->middleware('check.permission:Voucher Settings,create');
 
 
+Route::post('/voucher-store', [VoucherController::class, 'store'])->name('voucher.store') ->middleware('check.permission:Voucher Settings,create');
 
+Route::get('/voucher-edit/{id}', [VoucherController::class, 'edit'])->name('voucher.edit') ->middleware('check.permission:Voucher Settings,edit');
 
+Route::post('admin/voucher-update/{id}', [VoucherController::class, 'update'])->name('voucher.update') ->middleware('check.permission:Voucher Settings,edit');
 
+Route::delete('voucher-destroy/{id}', [VoucherController::class, 'destroy'])->name('voucher.destroy') ->middleware('check.permission:Voucher Settings,delete');
 
-    // ############ Web Routes #################
+    // ############ Rankings Routes #################
 
-
-
-         Route::get('/home-page', [WebController::class, 'homepage'])->name('web.homepage');
-
-         Route::get('/about-page', [WebController::class, 'aboutpage'])->name('web.aboutpage');
-
-         Route::get('/contact-page', [WebController::class, 'contactpage'])->name('web.contactpage');
-
-
-
-
-
+Route::get('/ranking', [RankingController::class, 'index'])->name('ranking.index')->middleware('check.permission:Rankings,view');
 
 
 

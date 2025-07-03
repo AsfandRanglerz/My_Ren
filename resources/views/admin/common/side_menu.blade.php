@@ -21,7 +21,6 @@
             <li class="dropdown {{ request()->is('admin/dashboard') ? 'active' : '' }}">
 
                 <a href="{{ url('/admin/dashboard') }}" class="nav-link"><i
-
                         data-feather="home"></i><span>Dashboard</span></a>
 
             </li>
@@ -37,9 +36,7 @@
 
 
             @if (Auth::guard('admin')->check() ||
-
                     ($sideMenuPermissions->has('Roles') && $sideMenuPermissions['Roles']->contains('view')))
-
                 {{-- FAQS --}}
 
                 <li class="dropdown {{ request()->is('admin/roles*') ? 'active' : '' }}">
@@ -49,7 +46,6 @@
                         </i><span>Roles</span></a>
 
                 </li>
-
             @endif
 
 
@@ -63,9 +59,7 @@
 
 
             @if (Auth::guard('admin')->check() ||
-
                     ($sideMenuPermissions->has('Sub Admins') && $sideMenuPermissions['Sub Admins']->contains('view')))
-
                 {{-- FAQS --}}
 
                 <li class="dropdown {{ request()->is('admin/subadmin*') ? 'active' : '' }}">
@@ -75,7 +69,6 @@
                             Admins</span></a>
 
                 </li>
-
             @endif
 
 
@@ -85,9 +78,7 @@
 
 
             @if (Auth::guard('admin')->check() ||
-
                     ($sideMenuPermissions->has('Users') && $sideMenuPermissions['Users']->contains('view')))
-
                 <li class="dropdown {{ request()->is('admin/user*') ? 'active' : '' }}">
 
                     <a href="{{ url('admin/user') }}" class="nav-link">
@@ -99,7 +90,6 @@
                     </a>
 
                 </li>
-
             @endif
 
 
@@ -125,9 +115,7 @@
 
 
             @if (Auth::guard('admin')->check() ||
-
                     ($sideMenuPermissions->has('Reward Settings') && $sideMenuPermissions['Reward Settings']->contains('view')))
-
                 <li class="dropdown {{ request()->is('admin/login-reward-rules*') ? 'active' : '' }}">
 
                     <a href="{{ url('admin/login-reward-rules') }}" class="nav-link">
@@ -139,7 +127,6 @@
                     </a>
 
                 </li>
-
             @endif
 
 
@@ -149,9 +136,7 @@
 
 
             @if (Auth::guard('admin')->check() ||
-
                     ($sideMenuPermissions->has('Products') && $sideMenuPermissions['Products']->contains('view')))
-
                 <li class="dropdown {{ request()->is('admin/products*') ? 'active' : '' }}">
 
                     <a href="{{ url('admin/products') }}" class="nav-link">
@@ -163,7 +148,6 @@
                     </a>
 
                 </li>
-
             @endif
 
 
@@ -175,28 +159,22 @@
 
 
             @if (Auth::guard('admin')->check() ||
+                    ($sideMenuPermissions->has('Voucher Settings') && $sideMenuPermissions['Voucher Settings']->contains('view')))
+                <li class="dropdown {{ request()->is('admin/voucher*') ? 'active' : '' }}">
 
-                    ($sideMenuPermissions->has('Points Conversion') && $sideMenuPermissions['Points Conversion']->contains('view')))
+                    <a href="{{ url('admin/voucher-index') }}" class="nav-link">
 
-                <li class="dropdown {{ request()->is('admin/point-conversions*') ? 'active' : '' }}">
-
-                    <a href="{{ url('admin/point-conversions-index') }}" class="nav-link">
-
-                        <i data-feather="refresh-cw"></i>
-
-                        <span>Points Conversition</span>
+                        <i data-feather="tag"></i>
+                        <span>Voucher Settings</span>
 
                     </a>
 
                 </li>
-
             @endif
 
 
             @if (Auth::guard('admin')->check() ||
-
                     ($sideMenuPermissions->has('Withdraw Request') && $sideMenuPermissions['Withdraw Request']->contains('view')))
-
                 <li class="dropdown {{ request()->is('admin/withdrawrequest*') ? 'active' : '' }}">
 
                     <a href="{{ url('admin/withdrawrequest') }}" class="nav-link">
@@ -214,13 +192,21 @@
                     </a>
 
                 </li>
-
             @endif
 
 
 
 
-
+            {{-- Ranking --}}
+            @if (Auth::guard('admin')->check() ||
+                    ($sideMenuPermissions->has('Rankings') && $sideMenuPermissions['Rankings']->contains('view')))
+                <li class="dropdown {{ request()->is('admin/ranking*') ? 'active' : '' }}">
+                    <a href="{{ url('admin/ranking') }}" class="nav-link">
+                        <i data-feather="bar-chart-2"></i>
+                        <span>Rankings</span>
+                    </a>
+                </li>
+            @endif
 
 
 
@@ -229,9 +215,7 @@
 
 
             @if (Auth::guard('admin')->check() ||
-
                     ($sideMenuPermissions->has('Notifications') && $sideMenuPermissions['Notifications']->contains('view')))
-
                 {{-- Notification --}}
 
                 {{-- Notifications --}}
@@ -249,7 +233,6 @@
                     </a>
 
                 </li> --}}
-
             @endif
 
 
@@ -261,21 +244,17 @@
 
 
             @if (Auth::guard('admin')->check() ||
-
                     ($sideMenuPermissions->has('About us') && $sideMenuPermissions['About us']->contains('view')))
-
                 {{-- About Us --}}
 
                 <li class="dropdown {{ request()->is('admin/about-us*') ? 'active' : '' }}">
 
                     <a href="{{ url('admin/about-us') }}" class="nav-link"><i
-
                             data-feather="help-circle"></i><span>About
 
                             Us</span></a>
 
                 </li>
-
             @endif
 
 
@@ -293,21 +272,17 @@
 
 
             @if (Auth::guard('admin')->check() ||
-
                     ($sideMenuPermissions->has('Contact us') && $sideMenuPermissions['Contact us']->contains('view')))
-
                 {{-- Contact Us --}}
 
                 <li class="dropdown {{ request()->is('admin/admin/contact-us*') ? 'active' : '' }}">
 
                     <a href="{{ url('admin/admin/contact-us') }}" class="nav-link"><i
-
                             data-feather="mail"></i><span>Contact
 
                             Us</span></a>
 
                 </li>
-
             @endif
 
 
@@ -319,9 +294,7 @@
 
 
             @if (Auth::guard('admin')->check() ||
-
                     ($sideMenuPermissions->has('Faqs') && $sideMenuPermissions['Faqs']->contains('view')))
-
                 {{-- FAQS --}}
 
                 {{-- <li class="dropdown {{ request()->is('admin/faq*') ? 'active' : '' }}">
@@ -331,7 +304,6 @@
                             data-feather="settings"></i><span>FAQ's</span></a>
 
                 </li> --}}
-
             @endif
 
 
@@ -341,21 +313,17 @@
 
 
             @if (Auth::guard('admin')->check() ||
-
                     ($sideMenuPermissions->has('Privacy & Policy') && $sideMenuPermissions['Privacy & Policy']->contains('view')))
-
                 {{--  Privacy Policy --}}
 
                 <li class="dropdown {{ request()->is('admin/privacy-policy*') ? 'active' : '' }}">
 
                     <a href="{{ url('admin/privacy-policy') }}" class="nav-link"><i
-
                             data-feather="shield"></i><span>Privacy
 
                             & Policy</span></a>
 
                 </li>
-
             @endif
 
 
@@ -367,21 +335,16 @@
 
 
             @if (Auth::guard('admin')->check() ||
-
                     ($sideMenuPermissions->has('Terms & Conditions') &&
-
                         $sideMenuPermissions['Terms & Conditions']->contains('view')))
-
                 <li class="dropdown {{ request()->is('admin/term-condition*') ? 'active' : '' }}">
 
                     <a href="{{ url('admin/term-condition') }}" class="nav-link"><i
-
                             data-feather="file-text"></i><span>Terms
 
                             & Conditions</span></a>
 
                 </li>
-
             @endif
 
 
@@ -395,4 +358,3 @@
         </aside>
 
 </div>
-

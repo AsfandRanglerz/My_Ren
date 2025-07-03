@@ -2,8 +2,6 @@
 
 <html lang="en">
 
-
-
 <head>
 
     <meta charset="UTF-8">
@@ -51,20 +49,11 @@
     <link rel="stylesheet" href="{{ asset('public/admin/assets/bundles/datatables/datatables.min.css') }}">
 
     <link rel="stylesheet"
-
         href="{{ asset('public/admin/assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css') }}">
-
-
-
-
-
-
 
     @yield('style')
 
 </head>
-
-
 
 <body>
 
@@ -90,23 +79,23 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
         function withdrawalRequestCounter() {
-              $.ajax({
-                  url: "{{ route('withdraw.counter') }}",
-                  type: 'GET',
-                  success: function(response) {
-                       // Ensure response.count exists and handle counts over 99
-                      let count = response.count || 0; // Default to 0 if no count is returned
-                      $('#withdrawalpendingCounter').text(count > 10 ? '10+' : count);
-                      // $('#orderCounter').text(response.count);
-                  },
-                  error: function(xhr, status, error) {
-                      console.log(error);
-                  }
-              });
-          }
-          withdrawalRequestCounter();
-          setInterval(withdrawalRequestCounter, 10000);
-  </script>
+            $.ajax({
+                url: "{{ route('withdraw.counter') }}",
+                type: 'GET',
+                success: function(response) {
+                    // Ensure response.count exists and handle counts over 99
+                    let count = response.count || 0; // Default to 0 if no count is returned
+                    $('#withdrawalpendingCounter').text(count > 10 ? '10+' : count);
+                    // $('#orderCounter').text(response.count);
+                },
+                error: function(xhr, status, error) {
+                    console.log(error);
+                }
+            });
+        }
+        withdrawalRequestCounter();
+        setInterval(withdrawalRequestCounter, 10000);
+    </script>
 
     <!-- ========== Core JS Libraries ========== -->
 
@@ -143,7 +132,6 @@
     <script src="{{ asset('public/admin/assets/bundles/datatables/datatables.min.js') }}"></script>
 
     <script src="{{ asset('public/admin/assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js') }}">
-
     </script>
 
     <script src="{{ asset('public/admin/assets/js/page/datatables.js') }}"></script>
@@ -159,7 +147,6 @@
     <!-- ========== Toastr Configuration ========== -->
 
     <script>
-
         toastr.options = {
 
             "closeButton": false,
@@ -199,27 +186,22 @@
         @if (Session::has('success'))
 
             toastr.success("{{ Session::get('success') }}");
-
         @endif
 
         @if (Session::has('error'))
 
             toastr.error("{{ Session::get('error') }}");
-
         @endif
 
         @if (Session::has('info'))
 
             toastr.info("{{ Session::get('info') }}");
-
         @endif
 
         @if (Session::has('warning'))
 
             toastr.warning("{{ Session::get('warning') }}");
-
         @endif
-
     </script>
 
 
@@ -231,4 +213,3 @@
 
 
 </html>
-
