@@ -14,7 +14,7 @@
                                         withdraw that amount.)</small></h4>
                             </div>
 
-                            <div class="card-body table-responsive">
+                            <div class="card-body table-striped table-bordered table-responsive">
                                 <div class="clearfix mb-3">
                                     @if (Auth::guard('admin')->check() ||
                                             ($sideMenuPermissions->has('Voucher Settings') && $sideMenuPermissions['Voucher Settings']->contains('create')))
@@ -23,7 +23,7 @@
                                     @endif
                                 </div>
 
-                                <table class="table table-bordered table-striped table-hover" id="table_id_events">
+                                <table class="table" id="table_id_events">
                                     <thead>
                                         <tr>
                                             <th>Sr.</th>
