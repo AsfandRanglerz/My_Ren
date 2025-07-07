@@ -128,47 +128,45 @@
                     <div class="modal-body">
                         <input type="hidden" name="id" id="editWithdrawId">
 
-                        {{-- Editable Fields --}}
-                        <div id="editModeFields">
-                            <div class="form-group">
-                                <label for="attachment">Upload Attachment <span class="text-danger">*</span></label>
-                                <input type="file" class="form-control" name="attachment" id="attachment"
-                                    accept="image/*">
-                            </div>
-                            <div class="form-group" id="viewAttachmentSection" style="display: none;">
-                                <a id="viewAttachmentLink" href="#" target="_blank" class="btn btn-info btn-sm">View
-                                    Attachment</a>
-                            </div>
+          {{-- Editable Fields --}}
+          <div id="editModeFields">
+            <div class="form-group">
+              <label for="attachment">Upload Attachment <span class="text-danger">*</span></label>
+              <input type="file" class="form-control" name="attachment" id="attachment" accept="image/*">
+              <div id="attachment-error" class="text-danger" style="display:none;"></div>
+            </div>
+            <div class="form-group" id="viewAttachmentSection" style="display: none;">
+            <a id="viewAttachmentLink" href="#" target="_blank" class="btn btn-info btn-sm">View Attachment</a>
+          </div>
 
                         </div>
 
-                        <div class="form-group">
-                            <label>Approval Status <span class="text-danger">*</span></label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="status" id="approved"
-                                    value="approved">
-                                <label class="form-check-label" for="approved">Approved</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="status" id="not_approved"
-                                    value="not_approved">
-                                <label class="form-check-label" for="not_approved">Not Approved</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-success" id="saveChangesBtn">
-                            <span id="saveChangeBtnText">Save Changes</span>
-                            <span id="saveChangeSpinner" style="display: none;">
-                                <i class="fa fa-spinner fa-spin"></i>
-                            </span>
-                        </button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    </div>
-                </div>
-            </form>
+            <div class="form-group">
+              <label>Approval Status <span class="text-danger">*</span></label>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="status" id="approved" value="approved">
+                <label class="form-check-label" for="approved">Approved</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="status" id="not_approved" value="not_approved">
+                <label class="form-check-label" for="not_approved">Not Approved</label>
+              </div>
+              <div id="status-error" class="text-danger" style="display:none;"></div>
+            </div>
+          </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success" id="saveChangesBtn">
+             <span id="saveChangeBtnText">Save Changes</span>
+            <span id="saveChangeSpinner" style="display: none;">
+            <i class="fa fa-spinner fa-spin"></i>
+            </span>
+          </button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
         </div>
-    </div>
+      </div>
+    </form>
+  </div>
+</div>
 
 
 @endsection
@@ -265,38 +263,52 @@
                     const status = formData.get("status");
                     const attachmentFile = formData.get("attachment");
 
-                    if (status === 'approved' && hasAttachment) {
-                        button
-                            .removeClass('btn-primary btn-danger')
-                            .addClass('btn-success')
-                            .html('<span>Paid</span>');
-                    } else if (status === 'not_approved') {
-                        button
-                            .removeClass('btn-primary btn-success')
-                            .addClass('btn-danger')
-                            .html('<span>Pay</span>');
-                    }
-                },
-                error: function(xhr) {
-                    if (xhr.status === 422) {
-                        const errors = xhr.responseJSON.errors;
-                        for (const key in errors) {
-                            if (errors.hasOwnProperty(key)) {
-                                toastr.error(errors[key][0]);
-                            }
-                        }
-                    } else {
-                        toastr.error("An error occurred while updating.");
-                    }
-                },
-                complete: function() {
-                    // Hide spinner, show text, and enable button
-                    $("#saveChangeSpinner").hide();
-                    $("#saveChangeBtnText").show();
-                    $("#saveChangesBtn").prop("disabled", false);
-                }
-            });
-        });
+          if (status === 'approved' && hasAttachment) {
+                button
+                    .removeClass('btn-primary btn-danger')
+                    .addClass('btn-success')
+                    .html('<span>Paid</span>');
+            } else if (status === 'not_approved') {
+                button
+                    .removeClass('btn-primary btn-success')
+                    .addClass('btn-danger')
+                    .html('<span>Pay</span>');
+            }
+        },
+        error: function (xhr) {
+           if (xhr.status === 422) {
+        const errors = xhr.responseJSON.errors;
+        // Show status error under the status field
+        if (errors.status) {
+            $('#status-error').text(errors.status[0]).show();
+        } else {
+            $('#status-error').hide();
+        }
+        // Show attachment error under the attachment field
+        if (errors.attachment) {
+            $('#attachment-error').text(errors.attachment[0]).show();
+        } else {
+            $('#attachment-error').hide();
+        }
+        for (const key in errors) {
+            if (errors.hasOwnProperty(key) && key !== 'status' && key !== 'attachment') {
+                toastr.error(errors[key][0]);
+            }
+        }
+    } else {
+        $('#status-error').hide();
+        $('#attachment-error').hide();
+        toastr.error("An error occurred while updating.");
+    }
+        },
+    complete: function() {
+        // Hide spinner, show text, and enable button
+        $("#saveChangeSpinner").hide();
+        $("#saveChangeBtnText").show();
+        $("#saveChangesBtn").prop("disabled", false);
+        }
+    });
+});
 
 
         $(document).ready(function() {
@@ -309,11 +321,13 @@
                 // Set hidden field
                 $('#editWithdrawId').val(id);
 
-                // Reset form inputs and visibility
-                $('#attachment').val('');
-                $('#approved, #not_approved').prop('checked', false).prop('disabled', false);
-                $('#attachment').prop('disabled', false);
-                $('#viewAttachmentSection').hide();
+        // Reset form inputs and visibility
+        $('#attachment').val('');
+        $('#approved, #not_approved').prop('checked', false).prop('disabled', false);
+        $('#attachment').prop('disabled', false);
+        $('#viewAttachmentSection').hide();
+        $('#status-error').hide();
+        $('#attachment-error').hide();
 
                 // Set radio status
                 if (status !== '') {

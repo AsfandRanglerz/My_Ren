@@ -23,7 +23,10 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\Api\EmailOtpController;
 
 use App\Http\Controllers\SideMenuPermissionController;
+<<<<<<< HEAD
 use App\Http\Controllers\Api\UserActivePointsController;
+=======
+>>>>>>> 3dd91362199cab2511feaf398dae77c5ecb459ec
 
 
 
@@ -78,8 +81,11 @@ Route::post('/seo-bulk', [SeoController::class, 'storeBulk'])
      ->name('seo.bulk-update');
 
 
+<<<<<<< HEAD
 // User Active Points routes
 Route::post('/user-active-reward/{userId}', [UserActivePointsController::class, 'handleUserActiveReward']);
+=======
+>>>>>>> 3dd91362199cab2511feaf398dae77c5ecb459ec
 
 
 
