@@ -24,9 +24,8 @@ class WithdrawRequests extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'nullable|string|max:255',
             'attachment' => 'required|image|mimes:jpeg,png,jpg,svg|max:2048',
-            'status' => 'required|in:approved,not_approved',
+            'status' => 'required',
         ];
     }
 

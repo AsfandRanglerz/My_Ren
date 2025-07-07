@@ -135,6 +135,7 @@
             <div class="form-group">
               <label for="attachment">Upload Attachment <span class="text-danger">*</span></label>
               <input type="file" class="form-control" name="attachment" id="attachment" accept="image/*">
+              <div id="attachment-error" class="text-danger" style="display:none;"></div>
             </div>
             <div class="form-group" id="viewAttachmentSection" style="display: none;">
             <a id="viewAttachmentLink" href="#" target="_blank" class="btn btn-info btn-sm">View Attachment</a>
@@ -152,6 +153,7 @@
                 <input class="form-check-input" type="radio" name="status" id="not_approved" value="not_approved">
                 <label class="form-check-label" for="not_approved">Not Approved</label>
               </div>
+              <div id="status-error" class="text-danger" style="display:none;"></div>
             </div>
           </div>
         <div class="modal-footer">
@@ -278,12 +280,26 @@
         error: function (xhr) {
            if (xhr.status === 422) {
         const errors = xhr.responseJSON.errors;
+        // Show status error under the status field
+        if (errors.status) {
+            $('#status-error').text(errors.status[0]).show();
+        } else {
+            $('#status-error').hide();
+        }
+        // Show attachment error under the attachment field
+        if (errors.attachment) {
+            $('#attachment-error').text(errors.attachment[0]).show();
+        } else {
+            $('#attachment-error').hide();
+        }
         for (const key in errors) {
-            if (errors.hasOwnProperty(key)) {
+            if (errors.hasOwnProperty(key) && key !== 'status' && key !== 'attachment') {
                 toastr.error(errors[key][0]);
             }
         }
     } else {
+        $('#status-error').hide();
+        $('#attachment-error').hide();
         toastr.error("An error occurred while updating.");
     }
         },
@@ -312,6 +328,8 @@ $(document).ready(function () {
         $('#approved, #not_approved').prop('checked', false).prop('disabled', false);
         $('#attachment').prop('disabled', false);
         $('#viewAttachmentSection').hide();
+        $('#status-error').hide();
+        $('#attachment-error').hide();
 
         // Set radio status
         if (status !== '') {

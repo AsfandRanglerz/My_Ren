@@ -22,7 +22,6 @@ public function index()
 public function update(WithdrawRequests $request, $id)
 {
     
-    
     $withdrawRequest = WithdrawRequest::findOrFail($id);
     
 

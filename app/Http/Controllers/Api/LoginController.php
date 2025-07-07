@@ -38,19 +38,8 @@ public function login(Request $request)
         // Sanctum token
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        // ✅ 24-Hour Login Tracking Logic
-        $cutoff = now()->subHours(24);
-        $alreadyTracked = UserActivity::where('user_id', $user->id)
-            ->where('login_at', '>=', $cutoff)
-            ->exists();
-
-        if (!$alreadyTracked) {
-            UserActivity::create([
-                'user_id' => $user->id,
-                'is_active' => $request->has('is_active') ? $request->input('is_active') : 1,
-                'login_at' => now(),
-            ]);
-        }
+        
+       
 
         return response()->json([
             'message' => 'Login successful',
@@ -78,11 +67,7 @@ public function logout(Request $request)
             ], 401);
         }
 
-        LoginTracking::create([
-            'user_id' => $user->id,
-            'logout_at' => now(),
-        ]);
-
+        
         // Revoke all tokens
         $user->tokens()->delete();
 
