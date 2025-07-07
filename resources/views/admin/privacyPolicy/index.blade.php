@@ -42,8 +42,7 @@
 
 
 
-                                <table class="table responsive" id="table_id_events">
-
+                                <table class="table" id="table_id_events">
                                     <thead>
 
                                         <tr>
