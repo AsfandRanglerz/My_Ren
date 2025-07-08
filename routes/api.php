@@ -22,8 +22,8 @@ use App\Http\Controllers\PermissionController;
 
 use App\Http\Controllers\Api\EmailOtpController;
 
+use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\SideMenuPermissionController;
-use App\Http\Controllers\Api\UserActivePointsController;
 
 
 
@@ -104,13 +104,11 @@ Route::post('/user-login', [LoginController::class, 'login'])->name('user.login'
 Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth:sanctum');
 
 
+//Notifications
+Route::get('/notifications', [NotificationController::class, 'getUserNotifications'])->middleware('auth:sanctum');
+Route::get('/notification/{id}', [NotificationController::class, 'showNotification'])->middleware('auth:sanctum');
+Route::post('/clearnotification', [NotificationController::class, 'clearAll'])->middleware('auth:sanctum');
 
-
-
-
-// User Active points
-
-Route::post('user-active-reward/{userId}', [UserActivePointsController::class, 'handleUserActiveReward']);
 
 
 
