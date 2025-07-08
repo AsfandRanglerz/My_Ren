@@ -139,7 +139,7 @@
             <a id="viewAttachmentLink" href="#" target="_blank" class="btn btn-info btn-sm">View Attachment</a>
           </div>
 
-                        </div>
+        </div>
 
             <div class="form-group">
               <label>Approval Status <span class="text-danger">*</span></label>
