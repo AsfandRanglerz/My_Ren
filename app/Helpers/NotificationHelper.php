@@ -32,6 +32,7 @@ class NotificationHelper
                     'notification' => [
                         'title' => $title,
                         'description' => $description,
+                        'image' => $data['image'] ?? null,
                     ],
                     'data' => array_map('strval', $data),
                 ],

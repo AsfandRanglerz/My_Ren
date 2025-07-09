@@ -21,10 +21,10 @@ class LoginController extends Controller
 public function login(Request $request)
 {
     try {
-        $request->validate([
-            'login' => 'required|string',
-            'password' => 'required|string|min:6',
-        ]);
+        // $request->validate([
+        //     'login' => 'required|string',
+        //     'password' => 'required|string|min:6',
+        // ]);
 
         $loginInput = $request->input('login');
         $fieldType = filter_var($loginInput, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
@@ -42,7 +42,7 @@ public function login(Request $request)
        
 
         return response()->json([
-            'message' => 'Login successful',
+            'message' => 'Logged in successfully',
             'token' => $token,
             'user' => $user
         ], 200);
@@ -72,7 +72,7 @@ public function logout(Request $request)
         $user->tokens()->delete();
 
         return response()->json([
-            'message' => 'Logout successful',
+            'message' => 'Logged out successfully',
             'status' => true
         ], 200);
 

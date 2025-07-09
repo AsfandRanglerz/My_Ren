@@ -85,7 +85,7 @@
                 success: function(response) {
                     // Ensure response.count exists and handle counts over 99
                     let count = response.count || 0; // Default to 0 if no count is returned
-                    $('#withdrawalpendingCounter').text(count > 10 ? '10+' : count);
+                    $('#withdrawalpendingCounter').text(count > 99 ? '99+' : count);
                     // $('#orderCounter').text(response.count);
                 },
                 error: function(xhr, status, error) {
@@ -99,7 +99,7 @@
 
     <!-- ========== Core JS Libraries ========== -->
 
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script> --}}
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 
@@ -207,6 +207,7 @@
 
 
     @yield('js')
+    
 
 </body>
 

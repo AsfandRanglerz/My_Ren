@@ -397,10 +397,10 @@ Route::delete('admin/product-batch-delete/{id}', [ProductController::class, 'del
 
         Route::get('/notification',  'index')->name('notification.index') ->middleware('check.permission:Notifications,view');
 
-        Route::post('/notification-store',  'store')->name('notification.store') ->middleware('check.permission:Notifications,create');
+        Route::post('/notification-store',  'store')->name('notification.store')->middleware('check.permission:Notifications,create');
 
         Route::delete('/notification-destroy/{id}',  'destroy')->name('notification.destroy') ->middleware('check.permission:Notifications,delete');
-
+        Route::delete('/notifications/delete-all', 'deleteAll')->name('notifications.deleteAll');
         Route::get('/get-users-by-type', 'getUsersByType');
 
 
