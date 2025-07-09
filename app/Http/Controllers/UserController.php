@@ -455,9 +455,6 @@ protected function sendDeactivationEmail($user, $reason)
 
 
 
-
-
-
     public function delete($id) {
 
         $user = User::find($id);

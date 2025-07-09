@@ -16,69 +16,59 @@ use Carbon\Carbon;
 class UserActivePointsController extends Controller
 {
     //
- public function handleUserActiveReward($userId)
+public function handleUserActiveReward($userId)
 {
     DB::transaction(function () use ($userId) {
-        $today = Carbon::createFromFormat('Y-m-d', '2025-07-22')->startOfDay();
 
+        $today = Carbon::createFromFormat('Y-m-d', '2025-07-24')->startOfDay(); // 
         $activePoints = UserActivePoint::firstOrNew(['user_id' => $userId]);
 
         $lastActiveDate = $activePoints->last_active_date
             ? Carbon::parse($activePoints->last_active_date)->startOfDay()
             : null;
 
-        // ✅ Decide day_counter
+        $latestWithdraw = $this->getLatestWithdrawPoints($userId);
+
         if (!$lastActiveDate) {
+            // 👉 Pehli dafa
             $activePoints->day_counter = 1;
             $activePoints->first_active_date = $today;
         } else {
             $daysDiff = $today->diffInDays($lastActiveDate);
 
             if ($daysDiff === 0) {
-                // Same day → kuch nahi
+                // 👉 Same day → kuch nahi
             } elseif ($daysDiff === 1) {
+                // 👉 Streak continue → next day
                 $activePoints->day_counter += 1;
             } else {
-                // Break → reset streak
+                // 👉 Streak break → reset
                 $activePoints->day_counter = 1;
                 $activePoints->first_active_date = $today;
-
-                // 👇 Calculate fresh day 1 points using your method
-                $rule = LoginRewardRule::where('day', 1)->first();
-                $rulePoints = $rule ? $rule->points : 0;
-                $latestWithdraw = $this->getLatestWithdrawPoints($userId);
-
-                $newPoints = $this->calculateNewActivePoints($rulePoints, 0, $latestWithdraw);
-
-                $activePoints->current_points = $newPoints;
+                $activePoints->current_points = 0; // 
             }
         }
 
         $activePoints->last_active_date = $today;
 
-        // ✅ Rule for current day_counter
+        // Ab rule lelo
         $rule = LoginRewardRule::where('day', $activePoints->day_counter)->first();
         $rulePoints = $rule ? $rule->points : 0;
 
-        // ✅ Withdraw check
-        $latestWithdraw = $this->getLatestWithdrawPoints($userId);
-
-        // ✅ History exist check
+        // ✅ Check: pehle se history hai ya nahi
         $existingHistory = UserActivePointsHistory::where([
             'user_id' => $userId,
             'source' => 'active_reward',
             'day_counter' => $activePoints->day_counter,
-        ])->first();
+        ])->whereDate('created_at', $today)->first();
 
         if ($existingHistory) {
-            // 👇 Pehle hi mile hue → points assign nahi honge
-            $newPoints = 0;
-
+            // 👉 Already mil chuke
             $existingHistory->update([
-                'remarks' => 'Day ' . $activePoints->day_counter . ' Reward',
+                'remarks' => 'Day ' . $activePoints->day_counter . ' Reward (Already Claimed)',
             ]);
         } else {
-            // 👇 Calculate fresh using your helper
+            // 👉 Pehli dafa iss din ka reward
             $newPoints = $this->calculateNewActivePoints(
                 $rulePoints,
                 $activePoints->current_points,
@@ -86,13 +76,13 @@ class UserActivePointsController extends Controller
             );
 
             if ($newPoints > 0) {
-               $finalPoints =  $activePoints->current_points += $newPoints;
+               $totalPoints = $activePoints->current_points += $newPoints;
 
                 UserActivePointsHistory::create([
                     'user_id' => $userId,
                     'source' => 'active_reward',
                     'day_counter' => $activePoints->day_counter,
-                    'points_awarded' => $finalPoints    ,
+                    'points_awarded' => $totalPoints,
                     'remarks' => 'Day ' . $activePoints->day_counter . ' Reward',
                 ]);
 
@@ -107,6 +97,9 @@ class UserActivePointsController extends Controller
 
     return response()->json(['status' => 'ok']);
 }
+
+
+
 
 private function getLatestWithdrawPoints($userId)
 {
