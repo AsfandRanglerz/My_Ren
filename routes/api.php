@@ -10,6 +10,8 @@ use App\Http\Controllers\Api\AuthController;
 
 use App\Http\Controllers\Api\SaleController;
 
+use App\Http\Controllers\Api\ScanController;
+
 use App\Http\Controllers\Api\UserController;
 
 use App\Http\Controllers\Admin\SeoController;
@@ -21,7 +23,6 @@ use App\Http\Controllers\SideMenueController;
 use App\Http\Controllers\PermissionController;
 
 use App\Http\Controllers\Api\EmailOtpController;
-
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\SideMenuPermissionController;
 use App\Http\Controllers\Api\UserActivePointsController;
@@ -96,11 +97,11 @@ Route::post('/sales-store', [SaleController::class, 'store'])
 
 Route::post('/verify-otp', [EmailOtpController::class, 'verifyOtp']);
 
-Route::post('/user-register-complete', [UserController::class, 'completeRegistration']);
+Route::post('/userregistercomplete', [UserController::class, 'completeRegistration']);
 
 //user login
 
-Route::post('/user-login', [LoginController::class, 'login'])->name('user.login');
+Route::post('/userlogin', [LoginController::class, 'login'])->name('user.login');
 
 Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth:sanctum');
 
@@ -111,11 +112,8 @@ Route::get('/notification/{id}', [NotificationController::class, 'showNotificati
 Route::post('/clearnotification', [NotificationController::class, 'clearAll'])->middleware('auth:sanctum');
 
 
-// Active Points
-
-Route::post('/user-active-reward/{userId}', [UserActivePointsController::class, 'handleUserActiveReward']);
-
-
+//Scan Code
+Route::post('/scancode', [ScanController::class, 'storeScanCode'])->middleware('auth:sanctum');
 
 
 

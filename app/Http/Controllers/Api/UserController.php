@@ -36,15 +36,15 @@ public function completeRegistration(Request $request)
 
 
 
-    $otpRecord = EmailOtp::where('email', $request->email)->first();
+    // $otpRecord = EmailOtp::where('email', $request->email)->first();
 
 
 
-    if (!$otpRecord) {
+    // if (!$otpRecord) {
 
-        return response()->json(['message' => 'No OTP record found'], 404);
+    //     return response()->json(['message' => 'No OTP record found'], 404);
 
-    }
+    // }
 
 
 
@@ -52,9 +52,9 @@ public function completeRegistration(Request $request)
 
         'name' => $request->name ?? null,
 
-        'email' => $otpRecord->email,
+        'email' => $request->email,
 
-        'phone' => $otpRecord->phone,
+        'phone' => $request->phone,
 
         'password' => bcrypt($request->password),
 
@@ -64,7 +64,7 @@ public function completeRegistration(Request $request)
 
     // OTP record delete after successful registration
 
-    $otpRecord->delete();
+    // $otpRecord->delete();
 
 
 
