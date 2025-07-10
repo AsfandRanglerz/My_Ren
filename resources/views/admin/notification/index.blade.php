@@ -12,8 +12,8 @@
                                 <h4>Notifications</h4>
                             </div>
                             <div class="card-body table-striped table-bordered table-responsive"> <a
-                                    class="btn mb-3 text-white" data-toggle="modal" style="background-color: #cb84fe;"
-                                    data-target="#createUserModal">Create</a>
+                                    class="btn mb-3 text-white" data-bs-toggle="modal" style="background-color: #cb84fe;"
+                                    data-bs-target="#createUserModal">Create</a>
                                     <form action="{{ route('notifications.deleteAll') }}" method="POST" class="d-inline-block float-right">
                                     @csrf
                                     @method('DELETE')
@@ -80,7 +80,7 @@
                     @csrf
                     <div class="modal-header">
                         <h5 class="modal-title">Create Notification</h5>
-                        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <!-- User Type Dropdown with Select All -->
@@ -133,7 +133,7 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        {{-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button> --}}
                         <button type="submit" class="btn btn-primary" id="createBtn">
                             <span id="createBtnText">Create Notification</span>
                             <span id="createSpinner" style="display: none;">

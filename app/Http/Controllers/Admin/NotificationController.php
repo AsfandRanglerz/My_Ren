@@ -21,6 +21,7 @@ use App\Jobs\NotificationJob;
 use App\Models\AuthorizedDealer;
 
 use App\Models\AdminNotification;
+
 use App\Models\UserRolePermission;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -105,8 +106,7 @@ public function store(Request $request)
         ]);
         
     
-        
-        // Handle image upload
+       
         $imagePath = null;
         if ($request->hasFile('image')) {
             $image = $request->file('image');
@@ -114,15 +114,14 @@ public function store(Request $request)
             $image->move(public_path('admin/assets/images/users'), $imageName);
             $imagePath = 'public/admin/assets/images/users/' . $imageName;
         }
-        
-       // Create admin-level notification
-        $adminNotification = AdminNotification::create([
+
+        AdminNotification::create([
             'title' => $request->title,
             'description' => $request->description,
             'image' => $imagePath,
         ]);
 
-        // Send notification to selected users
+        // Iterate through the arrays and create notifications
         foreach ($request->users as $userId) {
             $notification = Notification::create([
                 'user_id' => $userId,
@@ -131,19 +130,18 @@ public function store(Request $request)
                 'image' => $imagePath,
                 'created_at' => now(),
             ]);
-        
 
-                $customer = User::find($userId); // Fetch customer by ID
-                if ($customer && $customer->fcm_token) {
-                    $data = [
-                        'id' => $notification->id,
-                        'title' => $request->title,
-                        'body' => $request->description,
-                        'image' => asset($imagePath),
-                    ];
-                    // NotificationHelper::sendFcmNotification($customer->fcm_token, $request->title, $request->description, $data);
-                    dispatch(new NotificationJob($customer->fcm_token, $request->title, $request->description, $data));
-                }
+                   $customer = User::find($userId);
+            if ($customer && $customer->fcm_token) {
+                $data = [
+                    'id' => $notification->id,
+                    'title' => $request->title,
+                    'body' => $request->description,
+                    'image' => asset($imagePath),
+                ];
+                dispatch(new NotificationJob($customer->fcm_token, $request->title, $request->description, $data));
+            }
+        
     
                 
               
@@ -200,13 +198,13 @@ public function store(Request $request)
 
  
 
-public function deleteAll()
+    public function deleteAll()
 
 {
 
-    AdminNotification::truncate();  // or Notification::query()->delete(); if you want model events to trigger
+    Notification::truncate();  // or Notification::query()->delete(); if you want model events to trigger
 
-    return redirect()->route('notification.index')->with('success', 'All notifications have been deleted');
+    return redirect()->route('notification.index')->with('message', 'All notifications have been deleted.');
 
 }
 
