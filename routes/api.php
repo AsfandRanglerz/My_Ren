@@ -25,6 +25,7 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\Api\EmailOtpController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\SideMenuPermissionController;
+use App\Http\Controllers\Api\UserActivePointsController;
 
 
 
