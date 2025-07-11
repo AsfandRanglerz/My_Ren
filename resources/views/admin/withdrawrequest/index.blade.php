@@ -90,7 +90,7 @@
                                                     @if ($isApproved && $hasAttachment)
                                                     <a href="{{ asset('public/' . $withdrawRequest->attachment) }}"
                                                         target="_blank" class="btn btn-info btn-sm mt-0">
-                                                        <i class="fa fa-eye"></i> 
+                                                        <i class="fa fa-paperclip"></i> 
                                                     </a>
                                                 @endif
                                                     {{-- Delete button (optional) --}}
