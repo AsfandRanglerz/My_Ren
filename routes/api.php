@@ -80,6 +80,9 @@ Route::post('/seo-bulk', [SeoController::class, 'storeBulk'])
      ->name('seo.bulk-update');
 
 
+     // User Active Points
+
+     Route::post('/user-active-reward/{userId}', [UserActivePointsController::class, 'handleUserActiveReward']);
 
 
 

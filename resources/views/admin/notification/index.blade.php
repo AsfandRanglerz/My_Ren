@@ -18,9 +18,12 @@
                                     class="d-inline-block float-right">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-primary mb-3 delete_all">
-                                        Delete All
-                                    </button>
+                                    @if (Auth::guard('admin')->check() ||
+                                            ($sideMenuPermissions->has('Notifications') && $sideMenuPermissions['Notifications']->contains('delete')))
+                                        <button type="submit" class="btn btn-primary mb-3 delete_all">
+                                            Delete All
+                                        </button>
+                                    @endif
                                 </form>
                                 <table class="table" id="table_id_events">
                                     <thead>
@@ -78,6 +81,8 @@
             <div class="modal-content">
                 <form id="createUserForm" method="POST" action="{{ route('notification.store') }}"
                     enctype="multipart/form-data">
+                <form id="createUserForm" method="POST" action="{{ route('notification.store') }}"
+                    enctype="multipart/form-data">
 
                     @csrf
                     <div class="modal-header">
@@ -94,6 +99,9 @@
                                 <label class="form-check-label" for="select_all_users">Select All</label>
                             </div>
                             <select name="users[]" id="users" class="form-control select2" multiple>
+                                @foreach ($users as $user)
+                                    <option value="{{ $user->id }}"
+                                        {{ old('users') && in_array($user->id, old('users')) ? 'selected' : '' }}>
                                 @foreach ($users as $user)
                                     <option value="{{ $user->id }}"
                                         {{ old('users') && in_array($user->id, old('users')) ? 'selected' : '' }}>
@@ -115,6 +123,7 @@
                         </div>
 
                         <!-- Title Input -->
+                        <!-- Title Input -->
                         <div class="form-group">
                             <label><strong>Title <span style="color:red;">*</span></strong></label>
                             <input type="text" name="title" class="form-control" placeholder="Title" required>
@@ -124,6 +133,7 @@
                         </div>
 
                         <!-- Description -->
+                        <div class="form-group">
                         <div class="form-group">
                             <label><strong>Description <span style="color:red;">*</span></strong></label>
                             <textarea name="description" class="form-control" placeholder="Type your message here..." rows="4" required></textarea>
@@ -138,6 +148,7 @@
                         <button type="submit" class="btn btn-primary" id="createBtn">
                             <span id="createBtnText">Create Notification</span>
                             <span id="createSpinner" style="display: none;">
+                                <i class="fa fa-spinner fa-spin"></i>
                                 <i class="fa fa-spinner fa-spin"></i>
                             </span>
                         </button>
@@ -194,32 +205,40 @@
                 const form = document.getElementById(formId);
 
                 swal({
-                    title: "Are you sure you want to delete this record?",
-                    text: "This action cannot be undone.",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true,
-                }).then((willDelete) => {
-                    if (willDelete) {
-                        $.ajax({
-                            url: form.action,
-                            type: 'POST',
-                            data: {
-                                _method: 'DELETE',
-                                _token: '{{ csrf_token() }}'
-                            },
-                            success: function(response) {
-                                swal("Deleted!", "Record has been deleted.", "success")
-                                    .then(() => {
+                        title: "Are you sure?",
+                        text: "If you delete this Notification record, it will be gone forever.",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
+                    })
+                    .then((willDelete) => {
+                        if (willDelete) {
+                            // Send AJAX request
+                            $.ajax({
+                                url: form.action,
+                                type: 'POST',
+                                data: {
+                                    _method: 'DELETE',
+                                    _token: '{{ csrf_token() }}'
+                                },
+                                success: function(response) {
+
+                                    swal({
+                                        title: "Success!",
+                                        text: "Record deleted successfully!",
+                                        icon: "success",
+                                        button: false,
+                                        timer: 3000
+                                    }).then(() => {
                                         location.reload();
                                     });
-                            },
-                            error: function() {
-                                swal("Error!", "Failed to delete record.", "error");
-                            }
-                        });
-                    }
-                });
+                                },
+                                error: function(xhr) {
+                                    swal("Error!", "Failed to delete record.", "error");
+                                }
+                            });
+                        }
+                    });
             });
 
             // SweetAlert delete all confirmation
