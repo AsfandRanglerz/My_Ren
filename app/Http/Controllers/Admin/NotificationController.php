@@ -202,7 +202,7 @@ public function store(Request $request)
 
 {
 
-    Notification::truncate();  // or Notification::query()->delete(); if you want model events to trigger
+    AdminNotification::truncate();  // or Notification::query()->delete(); if you want model events to trigger
 
     return redirect()->route('notification.index')->with('message', 'All notifications have been deleted.');
 

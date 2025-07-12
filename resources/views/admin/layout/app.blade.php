@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
@@ -15,8 +14,7 @@
     <link rel="stylesheet" href="{{ asset('public/admin/assets/css/components.css') }}">
     {{-- <link rel="stylesheet" href="{{ asset('public/admin/assets/toastr/toastr.css') }}"> --}}
     <link rel="stylesheet" href="{{ asset('public/admin/assets/bundles/datatables/datatables.min.css') }}">
-    <link rel="stylesheet"
-        href="{{ asset('public/admin/assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('public/admin/assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css') }}">
 
     <!-- ========== External CSS Libraries ========== -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -61,8 +59,7 @@
 
     <!-- ========== DataTables ========== -->
     <script src="{{ asset('public/admin/assets/bundles/datatables/datatables.min.js') }}"></script>
-    <script src="{{ asset('public/admin/assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js') }}">
-    </script>
+    <script src="{{ asset('public/admin/assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('public/admin/assets/js/page/datatables.js') }}"></script>
 
     <!-- ========== Charts ========== -->
@@ -131,5 +128,4 @@
     @yield('js')
 
 </body>
-
 </html>

@@ -84,11 +84,11 @@
                                                         </button>
                                                     @endif
                                                     @if ($isApproved && $hasAttachment)
-                                                        <a href="{{ asset('public/' . $withdrawRequest->attachment) }}"
-                                                            target="_blank" class="btn btn-info btn-sm mt-0">
-                                                            <i class="fa fa-paperclip"></i>
-                                                        </a>
-                                                    @endif
+                                                    <a href="{{ asset('public/' . $withdrawRequest->attachment) }}"
+                                                        target="_blank" class="btn btn-info btn-sm mt-0">
+                                                        <i class="fa fa-paperclip"></i> 
+                                                    </a>
+                                                @endif
                                                     {{-- Delete button (optional) --}}
 
                                                     {{-- @if (Auth::guard('admin')->check() || ($sideMenuPermissions->has('Withdraw Request') && $sideMenuPermissions['Withdraw Request']->contains('delete')))

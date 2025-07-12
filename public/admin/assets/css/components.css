@@ -3777,7 +3777,7 @@ tr:first-child>td>.fc-day-grid-event {
 
 .form-check .form-check-label {
     cursor: pointer;
-    padding-left: 25px;
+    padding-left: 1px;
     position: relative;
     padding-right: 15px
 }
@@ -3791,7 +3791,7 @@ tr:first-child>td>.fc-day-grid-event {
     padding-left: 0
 }
 
-.form-check .form-check-input {
+/* .form-check .form-check-input {
     overflow: hidden;
     position: absolute;
     margin: 0;
@@ -3812,7 +3812,7 @@ tr:first-child>td>.fc-day-grid-event {
     box-shadow: 0 0 0 10px, 10px -10px 0 10px, 32px 0 0 20px,
         0 32px 0 20px, -5px 5px 0 10px, 20px -12px 0 11px;
     animation: checkboxOn 0.3s forwards
-}
+} */
 
 .form-check .form-check-sign {
     vertical-align: middle;
