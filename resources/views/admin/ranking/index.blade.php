@@ -4,49 +4,56 @@
 
 @section('content')
     @php
-        $type = $type ?? 'month'; // Default to 'month' if not set
+        $type = $type ?? 'overall';
+        $selectedMonth = $selectedMonth ?? now()->month;
     @endphp
 
     <div class="main-content" style="min-height: 562px;">
         <section class="section">
             <div class="section-body">
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-12 col-md-12 col-lg-12">
                         <div class="card">
+                            <div class="card-header d-flex flex-wrap justify-content-between align-items-center pb-0">
+                                <div>
+                                    <h4>Users Rankings </h4>
+                                </div>
 
-                            <div
-                                class="card-header d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
-                                <h4 class="mb-2 mb-md-0">
-                                    User Rankings - <span class="text-capitalize">{{ $type }}</span>
-                                </h4>
+                                <div class="d-flex flex-wrap align-items-center gap-2">
+                                    <label class="me-2 mb-0 fw-bold">Filter by:</label>
 
-                                <div class="mt-2 mt-md-0 d-flex align-items-center">
-                                    <label for="rankingTypeSelect" class="me-2 mb-0" style="white-space: nowrap;"> <b>Filter
-                                            By : </b></label>
-                                    <select class="form-control form-control-sm" id="rankingTypeSelect"
-                                        style="border-radius: 0;">
-                                        <option value="monthly" {{ $type == 'monthly' ? 'selected' : '' }}>Monthly Rankings
+                                    <select class="form-select form-select-sm w-auto" id="rankingTypeSelect">
+                                        <option value="overall" {{ $type == 'overall' ? 'selected' : '' }}>All</option>
+                                        <option value="year" {{ $type == 'year' ? 'selected' : '' }}>This Year</option>
+                                        <option value="month" {{ $type == 'month' ? 'selected' : '' }}>Select Month
                                         </option>
-                                        <option value="yearly" {{ $type == 'yearly' ? 'selected' : '' }}>Yearly Rankings
-                                        </option>
+                                    </select>
+
+                                    <select class="form-select form-select-sm w-auto {{ $type != 'month' ? 'd-none' : '' }}"
+                                        id="monthSelect">
+                                        @for ($i = 1; $i <= 12; $i++)
+                                            <option value="{{ $i }}"
+                                                {{ (int) $selectedMonth === $i ? 'selected' : '' }}>
+                                                {{ \Carbon\Carbon::create()->month($i)->format('F') }}
+                                            </option>
+                                        @endfor
                                     </select>
                                 </div>
                             </div>
 
-
-                            <div class="card-body table-responsive table-bordered">
+                            <div class="card-body table-striped table-bordered table-responsive">
                                 @if ($rankings->isEmpty())
-                                    <div class="alert alert-info mb-0">
+                                    <div class="alert alert-info m-4">
                                         No ranking data available for this {{ $type }}.
                                     </div>
                                 @else
-                                    <table class="table" id="table_id_rankings">
+                                    <table class="table responsive" id="table_id_rankings">
                                         <thead>
                                             <tr>
-                                                <th>Rank</th>
-                                                <th>Name</th>
-                                                <th>Installs (Products)</th>
-                                                <th>Total Points</th>
+                                                <th style="width: 80px;">Rank</th>
+                                                <th>User Name</th>
+                                                <th>Install (Products)</th>
+                                                <th>Earned Points</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -72,7 +79,7 @@
 @endsection
 
 @section('js')
-    <script>
+    <script type="text/javascript">
         $(document).ready(function() {
             $('#table_id_rankings').DataTable({
                 responsive: true,
@@ -81,17 +88,48 @@
                 autoWidth: false
             });
 
+            function applyFilter() {
+                const type = $('#rankingTypeSelect').val();
+                let url = "{{ route('ranking.index') }}?type=" + type;
 
-            const urlParams = new URLSearchParams(window.location.search);
-            if (!urlParams.has('type')) {
-                window.location.href = "{{ route('ranking.index') }}?type=month";
+                if (type === 'month') {
+                    const month = $('#monthSelect').val();
+                    url += '&month=' + month;
+                }
+
+                window.location.href = url;
             }
 
-
             $('#rankingTypeSelect').on('change', function() {
-                const selected = $(this).val();
-                window.location.href = "{{ route('ranking.index') }}?type=" + selected;
+                if ($(this).val() === 'month') {
+                    $('#monthSelect').removeClass('d-none');
+                } else {
+                    $('#monthSelect').addClass('d-none');
+                }
+                applyFilter();
             });
+
+            $('#monthSelect').on('change', applyFilter);
+
+
+            const titleElement = $('.card-header h4');
+            let html = titleElement.html();
+            html = html.replace(/\s+\(/g, ' (');
+            titleElement.html(html);
+
+
+            if ("{{ $type }}" === 'year') {
+                const currentYear = new Date().getFullYear();
+                let updated = titleElement.html().replace(/Current Year/i, currentYear);
+                titleElement.html(updated);
+            }
         });
     </script>
+
+    <style>
+        /* Reduce spacing between "Users Rankings - year" and month */
+        .card-header h4 span.text-primary {
+            margin-right: 4px;
+        }
+    </style>
 @endsection

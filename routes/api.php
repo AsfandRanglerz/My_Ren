@@ -99,6 +99,8 @@ Route::post('/sales-store', [SaleController::class, 'store'])
      Route::post('/send-otp', [EmailOtpController::class, 'sendOtp']);
 
 Route::post('/verify-otp', [EmailOtpController::class, 'verifyOtp']);
+Route::post('/register-user', [EmailOtpController::class, 'registerUser']);
+
 
 Route::post('/userregistercomplete', [UserController::class, 'completeRegistration']);
 
