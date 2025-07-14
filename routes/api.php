@@ -24,6 +24,7 @@ use App\Http\Controllers\PermissionController;
 
 use App\Http\Controllers\Api\EmailOtpController;
 use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\ForgotPasswordController;
 use App\Http\Controllers\SideMenuPermissionController;
 use App\Http\Controllers\Api\UserActivePointsController;
 
@@ -110,6 +111,11 @@ Route::post('/userregistercomplete', [UserController::class, 'completeRegistrati
 Route::post('/user-login', [LoginController::class, 'login']);
 
 Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth:sanctum');
+
+//Forgot Password
+Route::post('/forgotpassword', [ForgotPasswordController::class, 'forgotPassword']);
+Route::post('/forgotverifyotp', [ForgotPasswordController::class, 'forgotverifyOtp']);
+Route::post('/resetpassword', [ForgotPasswordController::class, 'resetPassword']);
 
 
 //Notifications
