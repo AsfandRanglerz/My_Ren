@@ -20,31 +20,53 @@ class LoginController extends Controller
 // LoginController.php
 public function login(Request $request)
 {
+    $request->validate([
+            'email' => 'required_without:phone|email',
+            'password' => 'required|string|min:6',
+            'fcm' => 'required|string',
+        ]);
     try {
-        // $request->validate([
-        //     'login' => 'required|string',
-        //     'password' => 'required|string|min:6',
-        // ]);
+        // Validate request
+        
 
-        $loginInput = $request->input('login');
+        $loginInput = $request->input('email') ?: $request->input('phone');
+       
+        
+        // Trim and clean the input
+        $loginInput = trim($loginInput);
+        
+        // Determine if login is email or phone
         $fieldType = filter_var($loginInput, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
+        
+
+        // For phone numbers, remove any non-digit characters
+        if ($fieldType === 'phone') {
+            $loginInput = preg_replace('/[^0-9]/', '', $loginInput);
+        }
 
         $user = User::where($fieldType, $loginInput)->first();
+        
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        if (!Hash::check($request->password, $user->password)) {
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
-        // Sanctum token
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        
+        // Update FCM token
+        $user->fcm = $request->input('fcm');
+        $user->save();
        
+
+        // Create Sanctum token
+        $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
             'message' => 'Logged in successfully',
             'token' => $token,
-            'user' => $user
+            'user' => $user,
         ], 200);
 
     } catch (\Exception $e) {
@@ -54,7 +76,7 @@ public function login(Request $request)
     }
 }
 
-
+    // Logout function
 public function logout(Request $request)
 {
     try {
@@ -78,29 +100,13 @@ public function logout(Request $request)
 
     } catch (\Exception $e) {
         return response()->json([
-            'message' => 'Logout failed: ' . $e->getMessage(),
+            'message' => 'Logged out failed: ' . $e->getMessage(),
             'status' => false
         ], 500);
     }
 }
 
 
- private function trackActivityOnceEvery24Hours($userId)
-    {
-        $now = Carbon::now();
-        $cutoff = $now->copy()->subHours(24);
-
-        $alreadyExists = UserActivity::where('user_id', $userId)
-            ->where('created_at', '>=', $cutoff)
-            ->exists();
-
-        if (!$alreadyExists) {
-            UserActivity::create([
-                'user_id' => $userId,
-                'is_active' => 1,
-                'created_at' => $now,
-            ]);
-        }
-    }
+ 
 
 }

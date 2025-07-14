@@ -339,7 +339,7 @@ Route::delete('admin/product-batch-delete/{id}', [ProductController::class, 'del
 
     // ############ Withdraw Requests #################
     Route::get('/withdrawrequest/count', [WithdrawRequestController::class, 'withdrawalCounter'])->name('withdraw.counter');
-    Route::get('/withdrawrequest', [WithdrawRequestController::class, 'index'])->name('withdraw.requests');
+    Route::get('/withdrawrequest', [WithdrawRequestController::class, 'index'])->name('withdraw.requests')->middleware('check.permission:Withdrawal Requests,view');
     Route::put('/withdrawrequest/{id}', [WithdrawRequestController::class, 'update'])->name('withdrawRequest.update');
     Route::delete('/withdrawrequest/{id}', [WithdrawRequestController::class, 'delete'])->name('withdrawRequest.delete');
 
@@ -430,7 +430,7 @@ Route::delete('voucher-destroy/{id}', [VoucherController::class, 'destroy'])->na
 
     // ############ Rankings Routes #################
 
-Route::get('/ranking', [RankingController::class, 'index'])->name('ranking.index')->middleware('check.permission:Rankings,view');
+Route::get('/ranking', [RankingController::class, 'index'])->name('ranking.index')->middleware('check.permission:Users Rankings,view');
 
 
 

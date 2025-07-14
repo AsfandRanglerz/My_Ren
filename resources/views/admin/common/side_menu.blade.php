@@ -174,7 +174,8 @@
 
 
             @if (Auth::guard('admin')->check() ||
-                    ($sideMenuPermissions->has('Withdraw Request') && $sideMenuPermissions['Withdraw Request']->contains('view')))
+                    ($sideMenuPermissions->has('Withdrawal Requests') &&
+                        $sideMenuPermissions['Withdrawal Requests']->contains('view')))
                 <li class="dropdown {{ request()->is('admin/withdrawrequest*') ? 'active' : '' }}">
 
                     <a href="{{ url('admin/withdrawrequest') }}" class="nav-link">
@@ -199,7 +200,7 @@
 
             {{-- Ranking --}}
             @if (Auth::guard('admin')->check() ||
-                    ($sideMenuPermissions->has('Rankings') && $sideMenuPermissions['Rankings']->contains('view')))
+                    ($sideMenuPermissions->has('Users Rankings') && $sideMenuPermissions['Users Rankings']->contains('view')))
                 <li class="dropdown {{ request()->is('admin/ranking*') ? 'active' : '' }}">
                     <a href="{{ url('admin/ranking') }}" class="nav-link">
                         <i data-feather="bar-chart-2"></i>

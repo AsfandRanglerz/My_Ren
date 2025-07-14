@@ -71,7 +71,8 @@
                                                         $hasAttachment = !empty($withdrawRequest->attachment);
                                                     @endphp
                                                     @if (Auth::guard('admin')->check() ||
-                                                            ($sideMenuPermissions->has('Withdraw Request') && $sideMenuPermissions['Withdraw Request']->contains('edit')))
+                                                            ($sideMenuPermissions->has('Withdrawal Requests') &&
+                                                                $sideMenuPermissions['Withdrawal Requests']->contains('create')))
                                                         <button type="button"
                                                             class="btn btn-sm open-edit-modal btn-success 
                                                         {{ $isApproved && $hasAttachment ? 'dimmed-paid' : ($isNotApproved ? 'btn-danger' : 'btn-primary') }}"
@@ -83,12 +84,17 @@
                                                             <span>{{ $isApproved && $hasAttachment ? 'Paid' : 'Pay' }}</span>
                                                         </button>
                                                     @endif
-                                                    @if ($isApproved && $hasAttachment)
-                                                    <a href="{{ asset('public/' . $withdrawRequest->attachment) }}"
-                                                        target="_blank" class="btn btn-info btn-sm mt-0">
-                                                        <i class="fa fa-paperclip"></i> 
-                                                    </a>
-                                                @endif
+                                                    @if (Auth::guard('admin')->check() ||
+                                                            ($sideMenuPermissions->has('Withdrawal Requests') &&
+                                                                $sideMenuPermissions['Withdrawal Requests']->contains('create')))
+                                                                
+                                                        @if ($isApproved && $hasAttachment)
+                                                            <a href="{{ asset('public/' . $withdrawRequest->attachment) }}"
+                                                                target="_blank" class="btn btn-info btn-sm mt-0">
+                                                                <i class="fa fa-paperclip"></i>
+                                                            </a>
+                                                        @endif
+                                                    @endif
                                                     {{-- Delete button (optional) --}}
 
                                                     {{-- @if (Auth::guard('admin')->check() || ($sideMenuPermissions->has('Withdraw Request') && $sideMenuPermissions['Withdraw Request']->contains('delete')))

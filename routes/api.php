@@ -96,6 +96,7 @@ Route::post('/sales-store', [SaleController::class, 'store'])
 
      // User Registration
 
+
      Route::post('/send-otp', [EmailOtpController::class, 'sendOtp']);
 
 Route::post('/verify-otp', [EmailOtpController::class, 'verifyOtp']);
@@ -106,7 +107,7 @@ Route::post('/userregistercomplete', [UserController::class, 'completeRegistrati
 
 //user login
 
-Route::post('/userlogin', [LoginController::class, 'login'])->name('user.login');
+Route::post('/user-login', [LoginController::class, 'login']);
 
 Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth:sanctum');
 
