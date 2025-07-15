@@ -136,14 +136,14 @@
 
 
             @if (Auth::guard('admin')->check() ||
-                    ($sideMenuPermissions->has('Products') && $sideMenuPermissions['Products']->contains('view')))
+                    ($sideMenuPermissions->has('Devices') && $sideMenuPermissions['Devices']->contains('view')))
                 <li class="dropdown {{ request()->is('admin/products*') ? 'active' : '' }}">
 
                     <a href="{{ url('admin/products') }}" class="nav-link">
 
                         <i data-feather="box"></i>
 
-                        <span>Products</span>
+                        <span>Devices</span>
 
                     </a>
 
