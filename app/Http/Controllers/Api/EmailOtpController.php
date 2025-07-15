@@ -40,28 +40,20 @@ class EmailOtpController extends Controller
 
         if (!empty($data['email'])) {
             $rules['email'] = [
-                'required',
                 'email',
-                'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
-                'unique:users,email'
+                'unique:users,email',
             ];
-            $messages['email.email'] = 'Invalid email format.';
-            $messages['email.regex'] = 'Email format is not correct';
             $messages['email.unique'] = 'This email is already used';
         }
 
         if (!empty($data['phone'])) {
             $rules['phone'] = [
-                'required',
-                'regex:/^[0-9]{8,15}$/',
-                'unique:users,phone'
+                'unique:users,phone',
             ];
-            $messages['phone.regex'] = 'Phone number must be 8 to 15 digits';
             $messages['phone.unique'] = 'This phone number is already used';
         }
 
-        $rules['country'] = ['required', 'string', 'max:100'];
-        $messages['country.required'] = 'Country is required';
+        // $rules['country'] = ['required', 'string', 'max:100'];
 
         // Run validation
         $request->validate($rules, $messages);
@@ -106,23 +98,16 @@ class EmailOtpController extends Controller
 
         if (!empty($data['email'])) {
                 $rules['email'] = [
-                    'required',
                     'email',
-                    'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
-                    'unique:email_otps,email'
+                    'unique:users,email'
                 ];
-                $messages['email.email'] = 'Invalid email format';
-                $messages['email.regex'] = 'Email format is not correct';
                 $messages['email.unique'] = 'This email is already used';
             }
 
             if (!empty($data['phone'])) {
                 $rules['phone'] = [
-                    'required',
-                    'regex:/^[0-9]{8,15}$/',
-                    'unique:email_otps,phone'
+                    'unique:users,phone',
                 ];
-                $messages['phone.regex'] = 'Phone number must be 8 to 15 digits';
                 $messages['phone.unique'] = 'This phone number is already used';
             }
 
@@ -162,30 +147,23 @@ class EmailOtpController extends Controller
 
         if (!empty($data['email'])) {
             $rules['email'] = [
-                'required',
                 'email',
-                'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
-                // 'unique:email_otps,email' // remove this because we're now finding the record
+                'unique:users,email'
             ];
-            $messages['email.email'] = 'Invalid email format';
-            $messages['email.regex'] = 'Email format is not correct';
+            $messages['email.unique'] = 'This email is already used';
         }
 
         if (!empty($data['phone'])) {
             $rules['phone'] = [
-                'required',
-                'regex:/^[0-9]{8,15}$/',
+                'unique:users,phone'
             ];
-            $messages['phone.regex'] = 'Phone number must be 8 to 15 digits';
+            $messages['phone.unique'] = 'This phone number is already used';
         }
 
         // Password validation
-        $rules['password'] = ['required', 'min:6'];
-        $rules['confirm_password'] = ['required', 'same:password'];
+        $rules['password'] = ['required'];
+        $rules['confirm_password'] = ['same:password'];
 
-        $messages['password.required'] = 'Password is required';
-        $messages['password.min'] = 'Password must be at least 6 characters';
-        $messages['confirm_password.required'] = 'Confirm Password is required';
         $messages['confirm_password.same'] = 'Confirm Password must match the Password';
 
         // ✅ Validate the request
@@ -206,6 +184,7 @@ class EmailOtpController extends Controller
             'phone' => $otpRecord->phone,
             'country' => $otpRecord->country,
             'password' => Hash::make($request->password),
+            'status' => is_null($otpRecord->phone) ? 1 : (is_null($otpRecord->email) ? 2 : null),
         ]);
 
         // ✅ OTP record delete karna

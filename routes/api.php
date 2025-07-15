@@ -26,6 +26,7 @@ use App\Http\Controllers\Api\EmailOtpController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\ForgotPasswordController;
 use App\Http\Controllers\SideMenuPermissionController;
+use App\Http\Controllers\Api\WithdrawRequestController;
 use App\Http\Controllers\Api\UserActivePointsController;
 
 
@@ -122,6 +123,9 @@ Route::post('/resetpassword', [ForgotPasswordController::class, 'resetPassword']
 Route::get('/notifications', [NotificationController::class, 'getUserNotifications'])->middleware('auth:sanctum');
 Route::get('/notification/{id}', [NotificationController::class, 'showNotification'])->middleware('auth:sanctum');
 Route::post('/clearnotification', [NotificationController::class, 'clearAll'])->middleware('auth:sanctum');
+
+// User Withdraw Requests
+Route::post('/withdraw-request', [WithdrawRequestController::class, 'store'])->middleware('auth:sanctum');
 
 
 //Scan Code

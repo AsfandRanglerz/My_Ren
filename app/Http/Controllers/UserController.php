@@ -10,12 +10,13 @@ use App\Models\Sale;
 
 use App\Models\User;
 
+use App\Models\UserWallet;
+
 use Illuminate\Http\Request;
 
 use App\Models\UserRolePermission;
 
 use Illuminate\Support\Facades\Auth;
-
 use Illuminate\Support\Facades\Mail;
 
 
@@ -481,17 +482,34 @@ protected function sendDeactivationEmail($user, $reason)
 
 
 
-public function sales($id) {
+public function sales($id)
+{
+    $data = User::with('sales')->where('id', $id)->first();
 
-$data = User::with('sales')->where('id',$id)->first(); 
-$totalPoints = $data->sales->sum('points_earned');
+    if (!$data) {
+        return response()->json(['message' => 'User not found'], 404);
+    }
 
+    $totalPoints = $data->sales->sum('points_earned');
 
-// return $sales;  
+    // ✅ UserWallet update or create
+    $wallet = UserWallet::where('user_id', $id)->first();
+
+    if ($wallet) {
+        // Agar wallet already exist karta hai, to points add karo
+        $wallet->total_points += $totalPoints;
+        $wallet->save();
+    } else {
+        // Wallet exist nahi karta, to new create karo
+        UserWallet::create([
+            'user_id' => $id,
+            'total_points' => $totalPoints,
+        ]);
+    }
 
     return view('admin.sales.index', compact('data', 'totalPoints'));
-
 }
+
 
 
 

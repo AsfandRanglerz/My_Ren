@@ -53,7 +53,7 @@
                                                 <td>
 
                                                     @if (Auth::guard('admin')->check() ||
-                                                            ($sideMenuPermissions->has('Sub Admins') && $sideMenuPermissions['Sub Admins']->contains('delete')))
+                                                            ($sideMenuPermissions->has('Products') && $sideMenuPermissions['Products']->contains('delete')))
                                                         <form id="delete-form-{{ $data->id }}"
                                                             action="{{ route('bactches.delete', $data->id) }}"
                                                             method="POST">
