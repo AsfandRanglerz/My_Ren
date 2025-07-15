@@ -1,6 +1,6 @@
 @extends('admin.layout.app')
 
-@section('title', 'Edit Device')
+@section('title', 'Edit Device/Product')
 
 @section('content')
 
@@ -12,7 +12,7 @@
 
             <div class="section-body">
 
-                <a class="btn btn-primary mb-3" href="{{ url('admin/products') }}">Back</a>
+                <a class="btn btn-primary mb-3" href="{{ url('admin/devices') }}">Back</a>
 
 
 
@@ -26,7 +26,7 @@
 
                     <div class="card">
 
-                        <h4 class="text-center my-4">Edit Device</h4>
+                        <h4 class="text-center my-4">Edit Device/Product</h4>
 
                         <div class="row px-4">
 

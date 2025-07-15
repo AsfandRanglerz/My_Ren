@@ -200,7 +200,7 @@
 
                                     button: false,
 
-                                    timer: 3000
+                                    timer: 1000
 
                                 }).then(() => {
 

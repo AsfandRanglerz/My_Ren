@@ -1,6 +1,6 @@
 @extends('admin.layout.app')
 
-@section('title', 'Create Device')
+@section('title', 'Create Device/Product')
 
 @section('content')
 
@@ -14,13 +14,13 @@
 
 
 
-                <form action="{{ url('admin/products-store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ url('admin/devices-store') }}" method="POST" enctype="multipart/form-data">
 
                     @csrf
 
                     <div class="card">
 
-                        <h4 class="text-center my-4">Create Device</h4>
+                        <h4 class="text-center my-4">Create Device/Product</h4>
 
                         <div class="row px-4">
 

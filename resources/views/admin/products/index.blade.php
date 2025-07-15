@@ -1,5 +1,5 @@
 @extends('admin.layout.app')
-@section('title', 'Devices')
+@section('title', 'Devices/Products')
 @section('content')
 
     <div class="main-content" style="min-height: 562px;">
@@ -10,7 +10,7 @@
                         <div class="card">
                             <div class="card-header">
                                 <div class="col-12">
-                                    <h4>Devices</h4>
+                                    <h4>Devices/Products</h4>
                                 </div>
                             </div>
                             <div class="card-body table-striped table-bordered table-responsive">
@@ -19,9 +19,9 @@
                                     <div class="create-btn">
 
                                         @if (Auth::guard('admin')->check() ||
-                                                ($sideMenuPermissions->has('Devices') && $sideMenuPermissions['Devices']->contains('create')))
+                                                ($sideMenuPermissions->has('Devices/Products') && $sideMenuPermissions['Devices/Products']->contains('create')))
                                             <a class="btn btn-primary mb-3 text-white"
-                                                href="{{ url('admin/products-create') }}">Create</a>
+                                                href="{{ url('admin/devices-create') }}">Create</a>
                                         @endif
                                     </div>
                                 </div>
@@ -63,15 +63,15 @@
 
 
                                                         @if (Auth::guard('admin')->check() ||
-                                                                ($sideMenuPermissions->has('Devices') && $sideMenuPermissions['Devices']->contains('edit')))
-                                                            <a href="{{ url('admin/products-edit', $product->id) }}"
+                                                                ($sideMenuPermissions->has('Devices/Products') && $sideMenuPermissions['Devices/Products']->contains('edit')))
+                                                            <a href="{{ url('admin/devices-edit', $product->id) }}"
                                                                 class="btn btn-primary me-2"
                                                                 style="float: left; margin-right: 8px;"><span><i
                                                                         class="fa fa-edit"></i></span></a>
                                                         @endif
 
                                                         @if (Auth::guard('admin')->check() ||
-                                                                ($sideMenuPermissions->has('Devices') && $sideMenuPermissions['Devices']->contains('delete')))
+                                                                ($sideMenuPermissions->has('Devices/Products') && $sideMenuPermissions['Devices/Products']->contains('delete')))
                                                             <form id="delete-form-{{ $product->id }}"
                                                                 action="{{ route('product.delete', $product->id) }}"
                                                                 method="POST">
@@ -142,7 +142,7 @@
                                     text: "Record deleted successfully!",
                                     icon: "success",
                                     button: false,
-                                    timer: 3000
+                                    timer: 1000
                                 }).then(() => {
                                     location.reload();
                                 });

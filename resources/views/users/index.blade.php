@@ -252,10 +252,10 @@
                                         response); // Debug
                                     swal({
                                         title: "Success!",
-                                        text: "Record deleted successfully.",
+                                        text: "Record deleted successfully!",
                                         icon: "success",
                                         button: false,
-                                        timer: 2000
+                                        timer: 1000
                                     }).then(() => {
                                         location.reload();
                                     });

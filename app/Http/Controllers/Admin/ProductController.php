@@ -116,7 +116,7 @@ class ProductController extends Controller
 
 
 
-    return redirect()->route('product.index')->with('success', 'Device created successfully');
+    return redirect()->route('product.index')->with('success', 'Device/Product created successfully');
 
 }
 
@@ -192,7 +192,7 @@ public function update(Request $request, $id)
 
 
 
-    return redirect()->route('product.index')->with('success', 'Device updated successfully');
+    return redirect()->route('product.index')->with('success', 'Device/Product updated successfully');
 
 }
 
@@ -210,7 +210,7 @@ public function delete($id)
 
     $product->delete();
 
-    return redirect()->route('product.index')->with('success', 'Device deleted successfully');
+    return redirect()->route('product.index')->with('success', 'Device/Product deleted successfully');
 
 
 
@@ -324,7 +324,7 @@ public function storeBatch(Request $request)
 
 
 
-    return redirect()->route('product.index')->with('success', 'Device scan code added successfully');
+    return redirect()->route('product.index')->with('success', 'Device/Product scan code added successfully');
 
 }
 
@@ -338,7 +338,7 @@ public function deleteBatch($id)
 
     $batch->delete();
 
-    return redirect()->back()->with('success', 'Device batch deleted successfully');
+    return redirect()->back()->with('success', 'Device/Product batch deleted successfully');
 
 
 

@@ -113,9 +113,9 @@
                         success: function(response) {
                             swal({
                                 title: "Deleted!",
-                                text: "Voucher deleted successfully!",
+                                text: "Record deleted successfully!",
                                 icon: "success",
-                                timer: 3000,
+                                timer: 1000,
                                 buttons: false
                             }).then(() => {
                                 location.reload();

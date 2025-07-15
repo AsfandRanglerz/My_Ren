@@ -281,35 +281,35 @@ Route::post('/users/toggle-status', [UserController::class, 'toggleStatus'])->na
 
 
 
-    Route::get('/products', [ProductController::class, 'Index'])->name('product.index') ->middleware('check.permission:Devices,view');
+    Route::get('/devices', [ProductController::class, 'Index'])->name('product.index') ->middleware('check.permission:Devices/Products,view');
 
-     Route::get('/products-create', [ProductController::class, 'create'])->name('product.create') ->middleware('check.permission:Devices,create');
+     Route::get('/devices-create', [ProductController::class, 'create'])->name('product.create') ->middleware('check.permission:Devices/Products,create');
 
-    Route::post('/products-store', [ProductController::class, 'store'])->name('product.store') ->middleware('check.permission:Devices,create');
+    Route::post('/devices-store', [ProductController::class, 'store'])->name('product.store') ->middleware('check.permission:Devices/Products,create');
 
-    Route::get('/products-edit/{id}', [ProductController::class, 'edit'])->name('product.edit') ->middleware('check.permission:Devices,edit');
+    Route::get('/devices-edit/{id}', [ProductController::class, 'edit'])->name('product.edit') ->middleware('check.permission:Devices/Products,edit');
 
-    Route::post('/products-update/{id}', [ProductController::class, 'update'])->name('product.update') ->middleware('check.permission:Devices,edit');
+    Route::post('/devices-update/{id}', [ProductController::class, 'update'])->name('product.update') ->middleware('check.permission:Devices/Products,edit');
 
-    Route::delete('/products-destroy/{id}', [ProductController::class, 'delete'])->name('product.delete') ->middleware('check.permission:Devices,delete');
+    Route::delete('/devices-destroy/{id}', [ProductController::class, 'delete'])->name('product.delete') ->middleware('check.permission:Devices/Products,delete');
 
-    Route::get('/products-details/{id}', [ProductController::class, 'ProductDetails'])->name('product.detail') ->middleware('check.permission:Devices,view');
-
-
-
-    Route::get('/products-scancreate', [ProductController::class, 'ScanCreate'])->name('product.scancreate') ->middleware('check.permission:Devices,create');
+    Route::get('/devices-details/{id}', [ProductController::class, 'ProductDetails'])->name('product.detail') ->middleware('check.permission:Devices/Products,view');
 
 
 
-    Route::post('/products-scanstore', [ProductController::class, 'ScanStore'])->name('product.scanstore') ->middleware('check.permission:Devices,create');
-
-Route::post('admin/product-batch-store', [ProductController::class, 'storeBatch'])->name('product.batch.store')->middleware('check.permission:Devices,create');
-
-Route::delete('admin/product-batch-delete/{id}', [ProductController::class, 'deleteBatch'])->name('bactches.delete')->middleware('check.permission:Devices,create');;
+    Route::get('/devices-scancreate', [ProductController::class, 'ScanCreate'])->name('product.scancreate') ->middleware('check.permission:Devices/Products,create');
 
 
 
-    Route::get('/products-createdetails/{id}', [ProductController::class, 'CreateProductDetails'])->name('product.createdetails')->middleware('check.permission:Devices,edit');
+    Route::post('/devices-scanstore', [ProductController::class, 'ScanStore'])->name('product.scanstore') ->middleware('check.permission:Devices/Products,create');
+
+Route::post('admin/device-batch-store', [ProductController::class, 'storeBatch'])->name('product.batch.store')->middleware('check.permission:Devices/Products,create');
+
+Route::delete('admin/device-batch-delete/{id}', [ProductController::class, 'deleteBatch'])->name('bactches.delete')->middleware('check.permission:Devices/Products,create');;
+
+
+
+    Route::get('/devices-createdetails/{id}', [ProductController::class, 'CreateProductDetails'])->name('product.createdetails')->middleware('check.permission:Devices/Products,edit');
 
 
 
