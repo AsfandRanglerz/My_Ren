@@ -62,7 +62,7 @@ class LoginRewardRuleController extends Controller
         ])->save();
         
 
-        return redirect()->route('login-reward-rules.index')->with('success', 'Login reward rule created successfully.');
+        return redirect()->route('login-reward-rules.index')->with('success', 'Login reward rule created successfully');
     }
 
     public function edit($id)
@@ -90,7 +90,7 @@ if ($validator->fails()) {
         $data->points = $request->points;
         $data->save();
 
-        return redirect()->route('login-reward-rules.index')->with('success', 'Reward settings updated successfully.');
+        return redirect()->route('login-reward-rules.index')->with('success', 'Reward settings updated successfully');
     }
 
 
@@ -99,6 +99,6 @@ if ($validator->fails()) {
         $data = LoginRewardRule::findOrFail($id);
         $data->delete();
 
-        return redirect()->route('login-reward-rules.index')->with('success', 'Reward Setting deleted successfully.');
+        return redirect()->route('login-reward-rules.index')->with('success', 'Reward Setting deleted successfully');
     }
 }

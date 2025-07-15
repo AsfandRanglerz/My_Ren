@@ -1,5 +1,5 @@
 @extends('admin.layout.app')
-@section('title', 'Product Details')
+@section('title', 'Device/Product Details')
 @section('content')
 
     <style>
@@ -23,8 +23,9 @@
                             <div class="card-body table-striped table-bordered table-responsive">
                                 <div class="clearfix mb-3">
                                     <div class="create-btn">
+                                        <a class="btn btn-primary mb-0" href="{{ url('admin/devices') }}">Back</a>
                                         @if (Auth::guard('admin')->check() ||
-                                                ($sideMenuPermissions->has('Products') && $sideMenuPermissions['Products']->contains('create')))
+                                                ($sideMenuPermissions->has('Devices/Products') && $sideMenuPermissions['Devices/Products']->contains('create')))
                                             <a class="btn  text-white" href="{{ route('product.createdetails', $id) }}"
                                                 style="background-color: #cb84fe;
 ">Create</a>
@@ -53,7 +54,7 @@
                                                 <td>
 
                                                     @if (Auth::guard('admin')->check() ||
-                                                            ($sideMenuPermissions->has('Products') && $sideMenuPermissions['Products']->contains('delete')))
+                                                            ($sideMenuPermissions->has('Devices/Products') && $sideMenuPermissions['Devices/Products']->contains('delete')))
                                                         <form id="delete-form-{{ $data->id }}"
                                                             action="{{ route('bactches.delete', $data->id) }}"
                                                             method="POST">
@@ -126,7 +127,7 @@
             event.preventDefault();
             swal({
                     title: "Are you sure?",
-                    text: "If you delete this Product Scan Code, it will be gone forever.",
+                    text: "If you delete this Device/Product Scan Code, it will be gone forever.",
                     icon: "warning",
                     buttons: true,
                     dangerMode: true,
@@ -148,7 +149,7 @@
                                     text: "Record deleted successfully!",
                                     icon: "success",
                                     button: false,
-                                    timer: 3000
+                                    timer: 1000
                                 }).then(() => {
                                     location.reload();
                                 });

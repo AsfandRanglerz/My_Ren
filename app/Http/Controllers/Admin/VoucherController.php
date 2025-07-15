@@ -68,7 +68,7 @@ public function destroy($id)
     $voucher = Voucher::findOrFail($id);
     $voucher->delete();
 
-    return redirect()->route('voucher.index')->with('success', 'Voucher deleted successfully!');
+    return redirect()->route('voucher.index')->with('success', 'Voucher deleted successfully');
 
 }
 

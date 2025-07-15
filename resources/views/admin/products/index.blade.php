@@ -1,5 +1,5 @@
 @extends('admin.layout.app')
-@section('title', 'Products')
+@section('title', 'Devices/Products')
 @section('content')
 
     <div class="main-content" style="min-height: 562px;">
@@ -10,7 +10,7 @@
                         <div class="card">
                             <div class="card-header">
                                 <div class="col-12">
-                                    <h4>Products</h4>
+                                    <h4>Devices/Products</h4>
                                 </div>
                             </div>
                             <div class="card-body table-striped table-bordered table-responsive">
@@ -19,9 +19,9 @@
                                     <div class="create-btn">
 
                                         @if (Auth::guard('admin')->check() ||
-                                                ($sideMenuPermissions->has('Products') && $sideMenuPermissions['Products']->contains('create')))
+                                                ($sideMenuPermissions->has('Devices/Products') && $sideMenuPermissions['Devices/Products']->contains('create')))
                                             <a class="btn btn-primary mb-3 text-white"
-                                                href="{{ url('admin/products-create') }}">Create</a>
+                                                href="{{ url('admin/devices-create') }}">Create</a>
                                         @endif
                                     </div>
                                 </div>
@@ -44,7 +44,7 @@
 
                                                 <td>
                                                     <img src="{{ !empty($product->image) && file_exists(public_path($product->image)) ? asset('public/' . $product->image) : asset('public/admin/assets/images/default.png') }}"
-                                                        alt="product image"
+                                                        alt="device image"
                                                         style="width: 50px; height: 50px; object-fit: cover;">
                                                 </td>
                                                 <td>{{ $product->name }}</td>
@@ -63,15 +63,15 @@
 
 
                                                         @if (Auth::guard('admin')->check() ||
-                                                                ($sideMenuPermissions->has('Products') && $sideMenuPermissions['Products']->contains('edit')))
-                                                            <a href="{{ url('admin/products-edit', $product->id) }}"
+                                                                ($sideMenuPermissions->has('Devices/Products') && $sideMenuPermissions['Devices/Products']->contains('edit')))
+                                                            <a href="{{ url('admin/devices-edit', $product->id) }}"
                                                                 class="btn btn-primary me-2"
                                                                 style="float: left; margin-right: 8px;"><span><i
                                                                         class="fa fa-edit"></i></span></a>
                                                         @endif
 
                                                         @if (Auth::guard('admin')->check() ||
-                                                                ($sideMenuPermissions->has('Products') && $sideMenuPermissions['Products']->contains('delete')))
+                                                                ($sideMenuPermissions->has('Devices/Products') && $sideMenuPermissions['Devices/Products']->contains('delete')))
                                                             <form id="delete-form-{{ $product->id }}"
                                                                 action="{{ route('product.delete', $product->id) }}"
                                                                 method="POST">
@@ -120,7 +120,7 @@
             event.preventDefault();
             swal({
                     title: "Are you sure?",
-                    text: "If you delete this Product record, it will be gone forever.",
+                    text: "If you delete this Device record, it will be gone forever.",
                     icon: "warning",
                     buttons: true,
                     dangerMode: true,
@@ -142,7 +142,7 @@
                                     text: "Record deleted successfully!",
                                     icon: "success",
                                     button: false,
-                                    timer: 3000
+                                    timer: 1000
                                 }).then(() => {
                                     location.reload();
                                 });

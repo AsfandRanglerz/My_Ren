@@ -77,7 +77,7 @@ class ContactController extends Controller
         if ($request->ajax()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Contact information saved successfully.',
+                'message' => 'Contact information saved successfully',
             ]);
         }
     

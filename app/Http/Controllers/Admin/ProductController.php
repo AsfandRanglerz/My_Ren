@@ -72,11 +72,11 @@ class ProductController extends Controller
 
     ], [
 
-        'name.required' => 'Product name is required.',
+        'name.required' => 'Device name is required.',
 
         'demissions.required' => 'Demissions are required.',
 
-        'image.required' => 'Product image is required.',
+        'image.required' => 'Device image is required.',
 
         'points.required' => 'Points per sale are required.',
 
@@ -116,7 +116,7 @@ class ProductController extends Controller
 
 
 
-    return redirect()->route('product.index')->with('success', 'Product created successfully.');
+    return redirect()->route('product.index')->with('success', 'Device/Product created successfully');
 
 }
 
@@ -152,7 +152,7 @@ public function update(Request $request, $id)
 
     ], [
 
-        'name.required' => 'Product name is required.',
+        'name.required' => 'Device name is required.',
 
         'demissions.required' => 'Demissions are required.',
 
@@ -192,7 +192,7 @@ public function update(Request $request, $id)
 
 
 
-    return redirect()->route('product.index')->with('success', 'Product updated successfully.');
+    return redirect()->route('product.index')->with('success', 'Device/Product updated successfully');
 
 }
 
@@ -205,7 +205,7 @@ public function delete($id)
 
     $product->delete();
 
-    return redirect()->route('product.index')->with('success', 'Product deleted successfully.');
+    return redirect()->route('product.index')->with('success', 'Device/Product deleted successfully');
 
 
 
@@ -265,7 +265,7 @@ public function ScanStore(Request $request) {
 
 
 
-    return redirect()->route('product.index')->with('success', 'Scan code created successfully.');
+    return redirect()->route('product.index')->with('success', 'Scan code created successfully');
 
 }
 
@@ -315,7 +315,7 @@ public function storeBatch(Request $request)
 
 
 
-    return redirect()->route('product.index')->with('success', 'Product scan code added successfully.');
+    return redirect()->route('product.index')->with('success', 'Device/Product scan code added successfully');
 
 }
 
@@ -329,7 +329,9 @@ public function deleteBatch($id)
 
     $batch->delete();
 
-    return redirect()->back()->with('success', 'Product batch deleted successfully.');
+    return redirect()->back()->with('success', 'Device/Product batch deleted successfully');
+
+
 
 } 
 
