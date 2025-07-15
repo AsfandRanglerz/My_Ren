@@ -15,6 +15,7 @@ class EmailOtp extends Model
         'otp',
         'otp_token',
         'verified',
+        'country',
         'expires_at',
     ];
 

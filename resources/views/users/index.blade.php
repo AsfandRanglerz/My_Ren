@@ -39,8 +39,9 @@
                                                     @endif
                                                 </td>
                                                 <td>{{ $user->name ?? '-' }}</td>
-                                                <td><a href="mailto:{{ $user->email }}">{{ $user->email }}</a></td>
-                                                <td>{{ $user->phone }}</td>
+                                                <td><a href="mailto:{{ $user->email }}">{{ $user->email ?? '-' }}</a>
+                                                </td>
+                                                <td>{{ $user->phone ?? '-' }}</td>
                                                 <td>
                                                     <label class="custom-switch">
                                                         <input type="checkbox" class="custom-switch-input toggle-status"

@@ -26,6 +26,8 @@ use Illuminate\Http\Request;
 
 use App\Mail\ResetPasswordMail;
 
+use App\Models\WithdrawRequest;
+
 use App\Models\AuthorizedDealer;
 
 use App\Models\SubAdminPermission;
@@ -35,7 +37,6 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Facades\Auth;
-
 use Illuminate\Support\Facades\Mail;
 
 
@@ -80,11 +81,12 @@ class AdminController extends Controller
 
         $users = User::all()->count();
 
-        $Products = Product::all()->count() ;
+        $Products = Product::all()->count();
+        $WithdrawalRequests = WithdrawRequest::all()->count();
 
 
 
-        return view('admin.index', compact('users', 'Products'));
+        return view('admin.index', compact('users', 'Products', 'WithdrawalRequests'));
 
     }
 
