@@ -20,6 +20,7 @@ class LoginController extends Controller
 // LoginController.php
 public function login(Request $request)
 {
+    
     $request->validate([
             'email' => 'required_without:phone|email',
             'password' => 'required|string|min:6',
