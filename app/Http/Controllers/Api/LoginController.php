@@ -20,12 +20,8 @@ class LoginController extends Controller
 // LoginController.php
 public function login(Request $request)
 {
-    
-    $request->validate([
-            'email' => 'required_without:phone|email',
-            'password' => 'required|string|min:6',
-            'fcm' => 'required|string',
-        ]);
+
+
     try {
         // Validate request
         
@@ -57,7 +53,7 @@ public function login(Request $request)
         }
 
         // Update FCM token
-        $user->fcm = $request->input('fcm');
+        $user->fcm = $request->fcm;
         $user->save();
        
 
@@ -86,7 +82,7 @@ public function logout(Request $request)
         if (!$user) {
             return response()->json([
                 'message' => 'User not authenticated',
-                'status' => false
+                
             ], 401);
         }
 
@@ -96,13 +92,12 @@ public function logout(Request $request)
 
         return response()->json([
             'message' => 'Logged out successfully',
-            'status' => true
         ], 200);
 
     } catch (\Exception $e) {
         return response()->json([
             'message' => 'Logged out failed: ' . $e->getMessage(),
-            'status' => false
+            
         ], 500);
     }
 }

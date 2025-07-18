@@ -112,7 +112,7 @@
                         },
                         success: function(response) {
                             swal({
-                                title: "Deleted!",
+                                title: "Success!",
                                 text: "Record deleted successfully!",
                                 icon: "success",
                                 timer: 1000,

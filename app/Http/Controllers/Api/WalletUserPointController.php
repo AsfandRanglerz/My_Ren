@@ -49,7 +49,7 @@ class WalletUserPointController extends Controller
             $rank = $rank !== false ? $rank + 1 : null;
 
             return response()->json([
-                'message' => 'Wallet Stats Fetched Successfully',
+                'message' => 'Wallet stats fetched successfully',
                 'user_id' => $user->id,
                 'total_points' => $totalPoints,
                 'monthly_points' => $monthlyPoints,
@@ -63,4 +63,66 @@ class WalletUserPointController extends Controller
             ], 500);
         }
     }
+
+
+    public function withdrawRequest()
+{
+    try {
+        $user = Auth::user();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'Unauthorized',
+            ], 401);
+        }
+
+        $withdrawRequests = $user->withdrawRequests()
+            ->whereNotNull('attachment')
+            ->where('status', 0)
+            ->select('withdrawal_details', 'account_number', 'voucher_points' , 'withdrawal_amount', 'created_at')
+            ->get();
+
+        return response()->json([
+            'message' => 'Withdraw Requests Fetched Successfully',
+            'data' => $withdrawRequests,
+        ], 200);
+
+    } catch (Exception $e) {
+        return response()->json([
+            'message' => 'Something Went Wrong',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
+
+
+public function getTotalPoints(Request $request)
+{
+    try {
+        $userId = Auth::id(); // or auth()->id()
+
+        if (!$userId) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Unauthorized user.',
+            ], 401);
+        }
+
+        $totalPoints = DB::table('user_wallets')
+            ->where('user_id', $userId)
+            ->value('total_points');
+
+        return response()->json([
+            'total_points' => $totalPoints ?? 0,
+        ]);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Something went wrong.',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
+
+
 }

@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Models\Voucher;
-use App\Models\Sale;
 use Exception;
+use App\Models\Voucher;
+use App\Models\UserWallet;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class VoucherDetailController extends Controller
 {
@@ -22,7 +23,9 @@ class VoucherDetailController extends Controller
                 ], 401);
             }
 
-            $totalPoints = Sale::where('user_id', $user->id)->sum('points_earned');
+            $totalPoints = DB::table('user_wallets')
+                ->where('user_id', $user->id)
+                ->value('total_points');
 
             $voucher = Voucher::find($id);
 
@@ -36,8 +39,8 @@ class VoucherDetailController extends Controller
                 'id' => $voucher->id,
                 'amount' => $voucher->amount,
                 'required_points' => $voucher->required_points,
-                'user_points' => $totalPoints,
-                'button' => $totalPoints >= $voucher->required_points ? 'Redeem Cash' : 'Insufficient Points'
+                'user_points' => $totalPoints ?? 0,
+                'button' => ($totalPoints >= $voucher->required_points) ? 'Redeem Cash' : 'Insufficient Points'
             ];
 
             return response()->json([
@@ -52,7 +55,8 @@ class VoucherDetailController extends Controller
             ], 500);
         }
     }
-     public function getVoucher()
+
+    public function getVoucher()
     {
         try {
             $user = Auth::user();
@@ -63,18 +67,18 @@ class VoucherDetailController extends Controller
                 ], 401);
             }
 
-            $totalPoints = Sale::where('user_id', $user->id)->sum('points_earned');
+            $totalPoints = DB::table('user_wallets')
+                ->where('user_id', $user->id)
+                ->value('total_points');
 
-            
-            $vouchers = Voucher::all();
+            $vouchers = UserWallet::all();
 
             $data = $vouchers->map(function ($voucher) use ($totalPoints) {
                 return [
                     'id' => $voucher->id,
                     'amount' => $voucher->amount,
                     'required_points' => $voucher->required_points,
-                    'user_points' => $totalPoints,
-                   
+                    'user_points' => $totalPoints ?? 0,
                 ];
             });
 

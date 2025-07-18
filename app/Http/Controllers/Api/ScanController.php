@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use Exception;
+use App\Models\Sale;
 use App\Models\Scan;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -14,34 +15,57 @@ class ScanController extends Controller
 {
     public function storeScanCode(Request $request)
 {
+
     try {
-        // $request->validate([
-        //     'product_id' => 'required|exists:products,id',
-        //     'scan_code' => 'required|string|max:255',
-        // ]);
+      
         $user = Auth::id();
-        $scan = Scan::create([
-            'user_id' => $user,
-            'product_id' => $request->product_id,
-            'scan_code' => $request->scan_code,
-        ]);
+      
+
+
+         $existingSale = Sale::where('scan_code', $request->scan_code)->first();
+
+    if ($existingSale) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Scan Code is Already Exist.'
+        ], 400);
+    }
+
+    // Get product points from products table
+    $product = Product::find($request->product_id);
+
+    if (!$product) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Product not found.'
+        ], 404);
+    }
+
+    // Create sale
+    $sale = Sale::create([
+        'user_id' => $user, // Make sure user_id is passed correctly
+        'product_id' => $request->product_id,
+        'scan_code' => $request->scan_code,
+        'points_earned' => $product->points // dynamically from products table
+    ]);
+
+    return response()->json([
+        'status' => true,
+        'message' => 'Sale Recorded Successfully.',
+        'data' => $sale
+    ], 201);
+
 
         return response()->json([
-            'message' => 'Scan code saved successfully',
+            'message' => 'Scan Code Saved Successfully.',
             'data' => $scan,
         ], 200);
 
-    // } catch (\Illuminate\Validation\ValidationException $e) {
-    //     return response()->json([
-    //         'success' => false,
-    //         'message' => 'Validation failed',
-    //         'errors' => $e->errors()
-    //     ], 422);
 
     } catch (Exception $e) {
-        Log::error('Scan code save error:', ['error' => $e->getMessage()]);
+        Log::error('Scan Code Save Error:', ['error' => $e->getMessage()]);
         return response()->json([
-            'message' => 'An error occurred while saving the scan code'
+            'message' => 'An Error Occurred While Saving the Scan Code'
         ], 500);
     }
 }

@@ -23,4 +23,9 @@ class UserWallet extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+     public function voucher(): BelongsTo
+    {
+        return $this->belongsTo(Voucher::class);
+    }
 }

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Seo;
 use Illuminate\Http\Request;
+use App\Models\PrivacyPolicy;
+use App\Models\TermCondition;
 
 class WebController extends Controller
 {
@@ -50,4 +52,26 @@ return view('web.contactpage', [
 ]);
 
     }
+
+
+    public function termsConditionspage() {
+
+        $data = TermCondition::first();
+        return view('web.termsConditions', compact('data'));
+    }
+
+
+
+    public function privacyPolicy() {
+
+        $data = PrivacyPolicy::first();
+        return view('web.privacy', compact('data'));
+    }
+
+
+
+  public function contactuspage() {
+    return view('web.contact');
+}
+
 }

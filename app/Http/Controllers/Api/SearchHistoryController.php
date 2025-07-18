@@ -36,42 +36,17 @@ class SearchHistoryController extends Controller
         });
 
         return response()->json([
-            'message' => 'Sales with product names fetched successfully',
+            'message' => 'Sales With Product Names Fetched Successfully',
             'data' => $data
         ]);
     } catch (\Exception $e) {
         return response()->json([
-            'message' => 'Something went wrong',
+            'message' => 'Something Went Wrong',
             'error' => $e->getMessage()
         ], 500);
     }
 }
-    public function store(Request $request)
-    {
-        try {
-           
 
-            SearchHistory::create([
-                'user_id' => $request->user_id,
-                'product_name' => $request->product_name,
-            ]);
-
-            
-            return response()->json([
-                'message' => 'Saved Successfully'
-            ], 201);
-
-        } catch (Exception $e) {
-            return response()->json([
-                'message' => 'Something Went Wrong',
-                'error' => $e->getMessage()
-            ], 500);
-        }
-    }
-
-    /**
-     * Retrieve all search history for the logged-in user.
-     */
     public function index()
     {
         try {
@@ -91,89 +66,44 @@ class SearchHistoryController extends Controller
         }
     }
 
-    /**
-     * Delete a specific search history entry.
-     */
-    public function destroy($id)
-    {
-        try {
-            $history = SearchHistory::where('id', $id)
-                ->where('user_id', auth()->id())
-                ->first();
-
-            if (!$history) {
-                return response()->json([
-                    'message' => 'Record Not Found'
-                ], 404);
-            }
-
-            $history->delete();
-
-            return response()->json([
-                'message' => 'Deleted Successfully'
-            ], 200);
-
-        } catch (Exception $e) {
-            return response()->json([
-                'message' => 'Unable To Delete Entry',
-                'error' => $e->getMessage()
-            ], 500);
-        }
-    }
-
-    /**
-     * Clear all search history for the logged-in user.
-     */
-    public function clearAll()
-    {
-        try {
-            SearchHistory::where('user_id', auth()->id())->delete();
-
-            return response()->json([
-                'message' => 'All History Deleted Successfully'
-            ], 200);
-
-        } catch (Exception $e) {
-            return response()->json([
-                'message' => 'Unable To Clear History',
-                'error' => $e->getMessage()
-            ], 500);
-        }
-    }
+  
 
 
     public function searchUserSalesByProductName(Request $request)
-{
-    try {
-        $userId = Auth::id();
+    {
 
-       
+        // return $request;
+    
+        try {
+            $userId = Auth::id();
 
-        // Step 1: Get matching product IDs
-        $sales = Sale::whereHas('product', function ($query) use ($request) {
-            $query->where('name', 'LIKE', '%' . $request->product_name . '%');
-            })
-            ->where('user_id', auth()->id()) // filter user-specific data
-            ->with('product') // eager load product details
-            ->get();
-
-
-            if (!$sales) {
-                        return response()->json([
-                            'message' => 'No matching sales found'
-                        ], 404);
-                    } else{
-
-                        return response()->json($sales, 200);
-                    }
-       
         
 
-    } catch (\Exception $e) {
-        return response()->json([
-            'message' => 'Something went wrong.',
-            'error'   => $e->getMessage()
-        ], 500);
+            // Step 1: Get matching product IDs
+            $sales = Sale::whereHas('product', function ($query) use ($request) {
+                $query->where('name', 'LIKE', '%' . $request->product_name . '%');
+                })
+                ->where('user_id', auth()->id()) // filter user-specific data
+                ->with('product') // eager load product details
+                ->get();
+
+
+                if ($sales->isEmpty()) {
+                    return response()->json([
+                        'message' => 'No Matching Sales Found'
+                    ], 404);
+                } else {
+
+                            return response()->json($sales, 200);
+                        }
+        
+            
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Something Went Wrong',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
-}
 }

@@ -221,7 +221,7 @@
 
                 {{-- Notifications --}}
 
-                <li class="dropdown {{ request()->is('admin/notification*') ? 'active' : '' }}">
+                {{-- <li class="dropdown {{ request()->is('admin/notification*') ? 'active' : '' }}">
 
                     <a href="
 
@@ -233,7 +233,7 @@
 
                     </a>
 
-                </li>
+                </li> --}}
             @endif
 
 

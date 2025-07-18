@@ -87,6 +87,14 @@ Route::get('/change_password/{id}', [AdminController::class, 'change_password'])
 
 Route::post('/admin-reset-password', [AdminController::class, 'ResetPassword']);
 
+    // ############ Web Pages #################
+
+   Route::get('/terms-conditions', [WebController::class, 'termsConditionspage'])->name('terms.conditions');
+
+   Route::get('/privacy-policy', [WebController::class, 'privacyPolicy'])->name('privacy.policy');
+
+   Route::get('/contact-us', [WebController::class, 'contactuspage'])->name('contact.us');
+
 
 
 Route::prefix('admin')->middleware(['admin', 'check.subadmin.status'])->group(function () {
@@ -119,7 +127,7 @@ Route::prefix('admin')->middleware(['admin', 'check.subadmin.status'])->group(fu
 
 
 
-
+            
 
 
 

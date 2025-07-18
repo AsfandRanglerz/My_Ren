@@ -24,6 +24,7 @@ use App\Http\Controllers\PermissionController;
 
 use App\Http\Controllers\Api\RankingController;
 use App\Http\Controllers\Api\EmailOtpController;
+use App\Http\Controllers\Api\ContactUsController;
 use App\Http\Controllers\Api\UserRankingController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\ProductDetailController;
@@ -111,9 +112,6 @@ Route::post('/sales-store', [SaleController::class, 'store'])
 Route::post('/verify-otp', [EmailOtpController::class, 'verifyOtp']);
 Route::post('/register-user', [EmailOtpController::class, 'registerUser']);
 
-
-Route::post('/userregistercomplete', [UserController::class, 'completeRegistration']);
-
 //user login
 
 Route::post('/user-login', [LoginController::class, 'login']);
@@ -134,6 +132,11 @@ Route::post('/clearnotification', [NotificationController::class, 'clearAll'])->
 // User Withdraw Requests
 Route::post('/withdraw-request', [WithdrawRequestController::class, 'store'])->middleware('auth:sanctum');
 
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/userwithdrawdata', [WalletUserPointController::class, 'withdrawRequest']);
+
+});
+
 
 //Scan Code
 Route::post('/scancode', [ScanController::class, 'storeScanCode'])->middleware('auth:sanctum');
@@ -152,6 +155,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/specific-userranking', [UserRankingController::class, 'monthlyRankings']);
 
     });
+
+
+
+    // user total points
+
+  Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/userwallettotalpoints', [WalletUserPointController::class, 'getTotalPoints']);
+
+    });
+
+
 
     //rankings of all users
 
@@ -172,6 +186,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     });
 
+
+// Withdraw Requests
+
+
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/userwalletpoints', [WalletUserPointController::class, 'getPoint']);
 });
@@ -179,11 +198,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // search history
 
     Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/searchhistory', [SearchHistoryController::class, 'store']);
      Route::get('/getsearchhistory', [SearchHistoryController::class, 'getUserSoldProductNames']);
     Route::get('/searchhistory', [SearchHistoryController::class, 'index']);
-    Route::delete('/searchhistory/{id}', [SearchHistoryController::class, 'destroy']);
-    Route::delete('/clearallsearchhistory', [SearchHistoryController::class, 'clearAll']);
+
 
     Route::get('/searchbyname', [SearchHistoryController::class, 'searchUserSalesByProductName']);
 });
@@ -199,6 +216,8 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
 
+    //
+
 
 
 
@@ -208,6 +227,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('get-profile', [AuthController::class, 'getProfile']); // Get Profile
 
     Route::put('update-profile', [AuthController::class, 'updateProfile']); // Update Profile
+
+
+    // Contact Us
+    Route::post('/contactus/{id}',[ContactUsController::class, 'contact'])->name('contactus');
+Route::get('/getcontactus/{id}',[ContactUsController::class, 'getContact'])->name('getcontactus');
 
 
 
