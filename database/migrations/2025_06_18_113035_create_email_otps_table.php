@@ -15,7 +15,7 @@ class CreateEmailOtpsTable extends Migration
     {
         Schema::create('email_otps', function (Blueprint $table) {
             $table->id();
-            $table->string('email')->unique();
+            $table->string('email');
             $table->string('phone');
             $table->string('otp');
             $table->timestamp('expires_at')->nullable();

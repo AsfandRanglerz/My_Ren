@@ -116,6 +116,8 @@ private function calculateNewActivePoints($rulePoints, $currentPoints, $latestWi
 {
     $newPoints = 0;
 
+    
+
     if ($latestWithdraw > 0) {
         $newPoints = $rulePoints - $latestWithdraw;
     } else {

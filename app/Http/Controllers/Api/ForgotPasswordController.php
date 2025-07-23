@@ -50,7 +50,7 @@ public function forgotPassword(Request $request)
         }
 
         // Generate OTP and token
-        $otp = rand(100000, 999999);
+        $otp = rand(1000, 9999);
         $otpToken = Str::uuid();
 
         // Store in database

@@ -57,16 +57,19 @@
                                                             ($sideMenuPermissions->has('Notifications') && $sideMenuPermissions['Notifications']->contains('delete')))
                                                         <form id="delete-form-{{ $notification->id }}"
                                                             action="{{ route('notification.destroy', $notification->id) }}"
-                                                            method="POST" style="display:inline-block; margin-left: 10px">
+                                                            method="POST">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <button class="show_confirm btn"
-                                                                data-form="delete-form-{{ $notification->id }}"
-                                                                style="background-color: #cb84fe;" type="submit">
-                                                                <i class="fa fa-trash"></i>
-                                                            </button>
                                                         </form>
+
+                                                        <button class="show_confirm btn d-flex "
+                                                            style="background-color: #cb84fe;"
+                                                            data-form="delete-form-{{ $notification->id }}" type="button">
+                                                            <span><i class="fa fa-trash"></i></span>
+                                                        </button>
                                                     @endif
+
+
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -186,40 +189,48 @@
                 $("#createBtn").prop("disabled", true);
             });
 
-            $('.show_confirm').click(function(event) {
-                event.preventDefault();
+            // Confirm delete action
+
+            $(document).on('click', '.show_confirm', function(event) {
                 var formId = $(this).data("form");
                 var form = document.getElementById(formId);
-
+                event.preventDefault();
                 swal({
-                    title: "Are you sure you want to delete this record?",
-                    text: "This action cannot be undone.",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true
-                }).then((willDelete) => {
-                    if (willDelete) {
-                        $.ajax({
-                            url: form.action,
-                            type: 'POST',
-                            data: {
-                                _method: 'DELETE',
-                                _token: '{{ csrf_token() }}'
-                            },
-                            success: function(response) {
-                                swal("Deleted!", "Record has been deleted.", "success")
-                                    .then(() => {
+                        title: "Are you sure?",
+                        text: "If you delete this Notification record, it will be gone forever.",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
+                    })
+                    .then((willDelete) => {
+                        if (willDelete) {
+                            // Send AJAX request
+                            $.ajax({
+                                url: form.action,
+                                type: 'POST',
+                                data: {
+                                    _method: 'DELETE',
+                                    _token: '{{ csrf_token() }}'
+                                },
+                                success: function(response) {
+
+                                    swal({
+                                        title: "Success!",
+                                        text: "Record deleted successfully!",
+                                        icon: "success",
+                                        button: false,
+                                        timer: 1000
+                                    }).then(() => {
                                         location.reload();
                                     });
-                            },
-                            error: function() {
-                                swal("Error!", "Failed to delete record.", "error");
-                            }
-                        });
-                    }
-                });
+                                },
+                                error: function(xhr) {
+                                    swal("Error!", "Failed to delete record.", "error");
+                                }
+                            });
+                        }
+                    });
             });
-
             $('.delete_all').click(function(event) {
                 var form = $(this).closest("form");
                 event.preventDefault();

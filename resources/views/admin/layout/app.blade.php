@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
@@ -12,14 +13,13 @@
     <!-- ========== Vendor CSS ========== -->
     <link rel="stylesheet" href="{{ asset('public/admin/assets/css/app.min.css') }}">
     <link rel="stylesheet" href="{{ asset('public/admin/assets/css/components.css') }}">
-    {{-- <link rel="stylesheet" href="{{ asset('public/admin/assets/toastr/toastr.css') }}"> --}}
     <link rel="stylesheet" href="{{ asset('public/admin/assets/bundles/datatables/datatables.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('public/admin/assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet"
+        href="{{ asset('public/admin/assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css') }}">
 
     <!-- ========== External CSS Libraries ========== -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
-    {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"> --}}
 
     <!-- ========== Your Custom CSS (Always Last) ========== -->
     <link rel="stylesheet" href="{{ asset('public/admin/assets/css/style.css') }}">
@@ -59,7 +59,8 @@
 
     <!-- ========== DataTables ========== -->
     <script src="{{ asset('public/admin/assets/bundles/datatables/datatables.min.js') }}"></script>
-    <script src="{{ asset('public/admin/assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js') }}"></script>
+    <script src="{{ asset('public/admin/assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js') }}">
+    </script>
     <script src="{{ asset('public/admin/assets/js/page/datatables.js') }}"></script>
 
     <!-- ========== Charts ========== -->
@@ -128,4 +129,5 @@
     @yield('js')
 
 </body>
+
 </html>
