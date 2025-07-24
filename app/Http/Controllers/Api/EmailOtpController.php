@@ -24,71 +24,71 @@ public function sendOtp(Request $request)
         // $rules = [];
         // $messages = [];
 
-        // if (!empty($data['email'])) {
-        //     $rules['email'] = ['unique:users,email'];
-        //     $messages['email.unique'] = 'This email is already used';
-        // }
+        if (!empty($data['email'])) {
+            $rules['email'] = [
+                'unique:users,email',
+            ];
+            $messages['email.unique'] = 'This email is already taken';
+        }
 
-        // if (!empty($data['phone'])) {
-        //     $rules['phone'] = ['unique:users,phone'];
-        //     $messages['phone.unique'] = 'This phone number is already used';
-        // }
+        
+        if (!empty($data['phone'])) {
+            $rules['phone'] = [
+                'unique:users,phone',
+            ];
+            $messages['phone.unique'] = 'This phone number is already taken';
+        }
 
-        // $request->validate($rules, $messages);
+        
 
-        // $otp = rand(1000, 9999);
-        // $otpToken = \Str::uuid();
-
-        // $condition = [];
-
-        // if (!empty($request->email)) {
-        //     $condition['email'] = $request->email;
-        // } else {
-        //     $condition['phone'] = $request->phone;
-        // }
-
-        // // ✅ Insert/Update with required fields
-        // EmailOtp::updateOrCreate(
-        //     $condition,
-        //     [
-        //         'phone'      => $request->phone,
-        //         'email'      => $request->email,
-        //         'country'    => $request->country, // Make sure this is in your request
-        //         'otp'        => $otp,
-        //         'otp_token'  => $otpToken,
-        //         'expires_at' => now()->addSeconds(50),
-        //     ]
-        // );
-
-        // if (!empty($request->email)) {
-        //     Mail::to($request->email)->send(new UserEmailOtp($otp, $request->name));
-        // }
+        $request->validate($rules, $messages);
 
           $otp = rand(1000, 9999);
         $otpToken = \Str::uuid();
 
+        $condition = [];
 
-        EmailOtp::updateOrCreate(    [
-                'phone'      => $request->phone,
-                'email'      => $request->email,
-                'country'    => $request->country, // Make sure this is in your request
-                'otp'        => $otp,
-                'otp_token'  => $otpToken,
-                'expires_at' => now()->addSeconds(50),
-            ]
-        );
+if (!empty($request->email)) {
+    $condition['email'] = $request->email;
+} else {
+    $condition['phone'] = $request->phone;
+}
+
+
+        // Update or create the OTP record
+
+EmailOtp::updateOrCreate(
+    $condition,
+    [
+        'phone' => $request->phone,
+        'email' => $request->email,
+        'country' => $request->country,
+        'otp' => $otp,
+        'otp_token' => $otpToken,
+        'expires_at' => now()->addSeconds(50),
+    ]
+);
+
+
+
+
+        // Mail::to($request->email)->send(new UserEmailOtp($otp, $request->name));
 
         return response()->json([
             'message' => !empty($request->email) 
-                ? 'A verification OTP has been sent to your email.' 
-                : 'A verification OTP has been sent to your phone.',
+                ? 'A verification OTP has been sent to your email' 
+                : 'A verification OTP has been sent to your phone',
         ], 200);
         
     } catch (\Illuminate\Validation\ValidationException $e) {
-        return response()->json(['errors' => $e->errors()], 422);
+        // Return only the first validation error message, as plain text
+        $firstError = collect($e->errors())->flatten()->first();
+        return response()->json([
+            'error' => $firstError
+        ], 422);
     } catch (\Exception $e) {
         return response()->json([
-            'error' => 'Something went wrong.',
+            'error' => 'Something went wrong',
             'message' => $e->getMessage()
         ], 500);
     }
@@ -115,18 +115,18 @@ public function sendOtp(Request $request)
 
         if (!$otpRecord) {
             return response()->json([
-                'message' => 'Invalid OTP.',
+                'message' => 'Invalid OTP',
             ], 400);
         }
 
         if (now()->gt($otpRecord->expires_at)) {
             return response()->json([
-                'message' => 'OTP expired, please request a new one.',
+                'message' => 'OTP expired, please request a new one',
             ], 410); // 410 Gone
         }
 
         return response()->json([
-            'message' => 'OTP verified successfully.',
+            'message' => 'OTP verified successfully',
              'email' => $data['email'],
         ], 200);
 
@@ -134,7 +134,7 @@ public function sendOtp(Request $request)
         return response()->json(['errors' => $e->errors()], 422);
     } catch (\Exception $e) {
         return response()->json([
-            'error' => 'Something went wrong.',
+            'error' => 'Something went wrong',
             'message' => $e->getMessage(),
         ], 500);
     }
@@ -160,7 +160,7 @@ public function resendOtp(Request $request)
         if ($lastOtp && $lastOtp->created_at->diffInSeconds(now()) < 50) {
             $remaining = 50 - $lastOtp->created_at->diffInSeconds(now());
             return response()->json([
-                'error' => 'OTP already sent recently. Please wait ' . $remaining . ' seconds.'
+                'error' => 'OTP already sent recently. Please wait ' . $remaining . ' seconds'
             ], 429);
         }
 
@@ -183,7 +183,7 @@ public function resendOtp(Request $request)
         // }
 
         return response()->json([
-            'message' => ucfirst($type) . ' OTP resent successfully.',
+            'message' => ucfirst($type) . ' OTP resent successfully',
             'otp_token' => $otpToken,
         ], 200);
 
@@ -199,6 +199,16 @@ public function resendOtp(Request $request)
     public function registerUser(Request $request)
     {
         try {
+
+            $request->validate([
+                'email' => 'nullable|unique:users,email',
+                'phone' => 'nullable|unique:users,phone',
+            ],
+            [
+                'email.unique' => 'This email is already taken',
+                'phone.unique' => 'This phone number is already taken',
+            ]
+        );
             
 
             if (!empty($data['email'])) {
@@ -233,15 +243,9 @@ public function resendOtp(Request $request)
                 'message' => 'Registered successfully',
             ], 200);
         } catch (\Illuminate\Validation\ValidationException $e) {
-            return response()->json([
-                'error' => 'Validation Error',
-                'messages' => $e->errors()
-            ], 422);
+            return response()->json($e->errors(), 422);
         } catch (\Exception $e) {
-            return response()->json([
-                'error' => 'Something Went Wrong',
-                'message' => $e->getMessage()
-            ], 500);
+            return response()->json($e->getMessage(), 500);
         }
     }
 
@@ -334,7 +338,7 @@ public function resendOtp(Request $request)
                     'country' => 'N/A',
                     'otp' => $otp,
                     'otp_token' => $otpToken,
-                    'expires_at' => now()->addMinutes(10),
+                    'expires_at' => now()->addMinutes(50),
                 ]);
 
                 return response()->json([

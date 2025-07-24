@@ -123,7 +123,7 @@ class AuthController extends Controller
     public function getProfile(Request $request)
     {
         // Check if the user is authenticated as Farmer
-        $user = Auth::guard('api')->user(); // Retrieve authenticated user
+        $user = Auth::user(); // Retrieve authenticated user
 
         if (!$user) {
             return response()->json(['message' => 'Unauthorized'], 401); // If no user found, return 401
@@ -156,7 +156,7 @@ class AuthController extends Controller
         }
 
         // Check if the user is authenticated as Farmer
-        $user = Auth::guard('api')->user(); // Retrieve authenticated user
+        $user = Auth::user(); // Retrieve authenticated user
 
         if ($user) {
             $user->update($data);

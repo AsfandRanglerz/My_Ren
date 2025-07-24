@@ -121,6 +121,7 @@ Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth:san
 //Forgot Password
 Route::post('/forgotpassword', [ForgotPasswordController::class, 'forgotPassword']);
 Route::post('/forgotverifyotp', [ForgotPasswordController::class, 'forgotverifyOtp']);
+Route::post('/resend-otp', [ForgotPasswordController::class, 'resendOtp']);
 Route::post('/resetpassword', [ForgotPasswordController::class, 'resetPassword']);
 
 
@@ -224,9 +225,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::middleware('auth:sanctum')->group(function () {
 
-    Route::get('get-profile', [AuthController::class, 'getProfile']); // Get Profile
+    Route::get('/get-profile', [AuthController::class, 'getProfile']); // Get Profile
 
-    Route::put('update-profile', [AuthController::class, 'updateProfile']); // Update Profile
+    Route::put('/update-profile', [AuthController::class, 'updateProfile']); // Update Profile
 
 
     // Contact Us
