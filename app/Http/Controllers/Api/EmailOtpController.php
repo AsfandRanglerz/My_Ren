@@ -18,68 +18,72 @@ class EmailOtpController extends Controller
 {
 public function sendOtp(Request $request)
 {
-   
     try {
-        $data = $request->only('email', 'phone', 'country');
+        // $data = $request->only('email', 'phone', 'country');
 
-        $rules = [];
-        $messages = [];
+        // $rules = [];
+        // $messages = [];
 
-        if (!empty($data['email'])) {
-            $rules['email'] = [
-                'unique:users,email',
-            ];
-            $messages['email.unique'] = 'This email is already used';
-        }
+        // if (!empty($data['email'])) {
+        //     $rules['email'] = ['unique:users,email'];
+        //     $messages['email.unique'] = 'This email is already used';
+        // }
 
-        
-        if (!empty($data['phone'])) {
-            $rules['phone'] = [
-                'unique:users,phone',
-            ];
-            $messages['phone.unique'] = 'This phone number is already used';
-        }
+        // if (!empty($data['phone'])) {
+        //     $rules['phone'] = ['unique:users,phone'];
+        //     $messages['phone.unique'] = 'This phone number is already used';
+        // }
 
-        
+        // $request->validate($rules, $messages);
 
-        $request->validate($rules, $messages);
+        // $otp = rand(1000, 9999);
+        // $otpToken = \Str::uuid();
 
-        $otp = rand(1000, 9999);
+        // $condition = [];
+
+        // if (!empty($request->email)) {
+        //     $condition['email'] = $request->email;
+        // } else {
+        //     $condition['phone'] = $request->phone;
+        // }
+
+        // // ✅ Insert/Update with required fields
+        // EmailOtp::updateOrCreate(
+        //     $condition,
+        //     [
+        //         'phone'      => $request->phone,
+        //         'email'      => $request->email,
+        //         'country'    => $request->country, // Make sure this is in your request
+        //         'otp'        => $otp,
+        //         'otp_token'  => $otpToken,
+        //         'expires_at' => now()->addSeconds(50),
+        //     ]
+        // );
+
+        // if (!empty($request->email)) {
+        //     Mail::to($request->email)->send(new UserEmailOtp($otp, $request->name));
+        // }
+
+          $otp = rand(1000, 9999);
         $otpToken = \Str::uuid();
 
-        $condition = [];
 
-if (!empty($request->email)) {
-    $condition['email'] = $request->email;
-} else {
-    $condition['phone'] = $request->phone;
-}
-
-
-        // Update or create the OTP record
-
-EmailOtp::updateOrCreate(
-    $condition,
-    [
-        'phone' => $request->phone,
-        'email' => $request->email,
-        'country' => $request->country,
-        'otp' => $otp,
-        'otp_token' => $otpToken,
-        'expires_at' => now()->addSeconds(50),
-    ]
-);
-
-
-
-
-        Mail::to($request->email)->send(new UserEmailOtp($otp, $request->name));
+        EmailOtp::updateOrCreate(    [
+                'phone'      => $request->phone,
+                'email'      => $request->email,
+                'country'    => $request->country, // Make sure this is in your request
+                'otp'        => $otp,
+                'otp_token'  => $otpToken,
+                'expires_at' => now()->addSeconds(50),
+            ]
+        );
 
         return response()->json([
             'message' => !empty($request->email) 
                 ? 'A verification OTP has been sent to your email.' 
                 : 'A verification OTP has been sent to your phone.',
         ], 200);
+        
     } catch (\Illuminate\Validation\ValidationException $e) {
         return response()->json(['errors' => $e->errors()], 422);
     } catch (\Exception $e) {

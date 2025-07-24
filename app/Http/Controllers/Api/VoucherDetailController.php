@@ -71,7 +71,8 @@ class VoucherDetailController extends Controller
                 ->where('user_id', $user->id)
                 ->value('total_points');
 
-            $vouchers = UserWallet::all();
+
+            $vouchers = Voucher::all();
 
             $data = $vouchers->map(function ($voucher) use ($totalPoints) {
                 return [
