@@ -60,7 +60,9 @@ public function forgotPassword(Request $request)
             'otp_token' => $otpToken,
         ]);
 
-        // Mail::to($request->email)->send(new ForgotOTPMail($otp));
+        //  if ($type === 'email') {
+        //     Mail::to($identifier)->send(new ForgotOTPMail($otp));
+        // }
 
         return response()->json([
             'message' => 'OTP sent successfully',
@@ -82,7 +84,7 @@ public function forgotverifyOtp(Request $request)
    try {
         // Validate input
         $request->validate([
-            'otp' => 'required|digits:6',
+            'otp' => 'required|digits:4',
             // 'otp_token' => 'required'
         ]);
 
@@ -137,6 +139,60 @@ public function forgotverifyOtp(Request $request)
         ], 500);
     }
 }
+
+public function resendOtp(Request $request)
+{
+    try {
+        $type = $request->type;
+        $identifier = $request->identifier;
+
+        if (!in_array($type, ['email', 'phone'])) {
+            return response()->json(['message' => 'Invalid type provided'], 400);
+        }
+
+        // Same 50-second check
+        $recentOtp = EmailOtp::where($type, $identifier)
+            ->where('created_at', '>=', now()->subSeconds(50))
+            ->latest()
+            ->first();
+
+        if ($recentOtp) {
+            return response()->json([
+                'message' => 'OTP already sent. Please wait before requesting again'
+            ], 429);
+        }
+
+        $otp = rand(1000, 9999);
+        $otpToken = Str::uuid();
+
+        EmailOtp::create([
+            $type => $identifier,
+            'otp' => $otp,
+            'otp_token' => $otpToken,
+        ]);
+
+        // if ($type === 'email') {
+        //     Mail::to($identifier)->send(new ForgotOTPMail($otp));
+        // }
+
+        return response()->json([
+            'message' => 'OTP resent successfully',
+            'otp_token' => $otpToken,
+        ], 200);
+
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        return response()->json([
+            'message' => 'Validation error',
+            'errors' => $e->errors()
+        ], 422);
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Something went wrong',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
+
 
 public function resetPassword(Request $request)
 {
