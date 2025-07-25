@@ -24,8 +24,6 @@ use App\Http\Controllers\UserController;
 
 use App\Http\Controllers\Admin\FaqController;
 
-// use App\Http\Controllers\Admin\SeoController;
-
 use App\Http\Controllers\Admin\AuthController;
 
 use App\Http\Controllers\Admin\AdminController;
