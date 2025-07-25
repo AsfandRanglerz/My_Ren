@@ -29,6 +29,7 @@ use App\Http\Controllers\Api\UserRankingController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\ProductDetailController;
 use App\Http\Controllers\Api\SearchHistoryController;
+use App\Http\Controllers\Api\UpdateProfileController;
 use App\Http\Controllers\Api\VoucherDetailController;
 use App\Http\Controllers\Api\ForgotPasswordController;
 use App\Http\Controllers\SideMenuPermissionController;
@@ -107,10 +108,17 @@ Route::post('/sales-store', [SaleController::class, 'store'])
      // User Registration
 
 
-     Route::post('/send-otp', [EmailOtpController::class, 'sendOtp']);
-
+Route::post('/send-otp', [EmailOtpController::class, 'sendOtp']);
 Route::post('/verify-otp', [EmailOtpController::class, 'verifyOtp']);
 Route::post('/register-user', [EmailOtpController::class, 'registerUser']);
+
+//get user profile
+Route::middleware('auth:sanctum')->group(function () {
+Route::get('/getprofiledetail', [UpdateProfileController::class, 'getProfile']);
+Route::post('/updateprofiledetail', [UpdateProfileController::class, 'sendOtp']);
+Route::post('/verifyprofiledetail', [UpdateProfileController::class, 'verifyOtp']);
+
+});
 
 //user login
 

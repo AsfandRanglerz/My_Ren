@@ -36,7 +36,7 @@ class SearchHistoryController extends Controller
         });
 
         return response()->json([
-            'message' => 'Sales With Product Names Fetched Successfully',
+            'message' => 'Sale products fetched successfully',
             'data' => $data
         ]);
     } catch (\Exception $e) {

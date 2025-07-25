@@ -67,7 +67,7 @@ class SaleController extends Controller
 
        return response()->json([
 
-    'message' => 'Sale Recorded Successfully.'
+    'message' => 'Sale recorded successfully'
 
 ], 201);
 

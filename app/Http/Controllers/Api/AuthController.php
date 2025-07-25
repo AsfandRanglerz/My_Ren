@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Models\Farmer;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use App\Mail\ResetPasswordMail;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
@@ -22,7 +23,7 @@ class AuthController extends Controller
         ]);
 
         // Try to find Farmer first
-        $user = Farmer::where('email', $request->email)->first();
+        $user = User::where('email', $request->email)->first();
 
         // Check if user exists and password matches
         if (!$user || !Hash::check($request->password, $user->password)) {
@@ -51,7 +52,7 @@ class AuthController extends Controller
             'email' => 'required|email',
         ]);
 
-        $farmer = Farmer::where('email', $request->email)->first();
+        $farmer = User::where('email', $request->email)->first();
 
         if (!$farmer) {
             return response()->json(['message' => 'Email not found.'], 404);
@@ -61,7 +62,7 @@ class AuthController extends Controller
 
         $existing = DB::table('password_resets')->where('email', $email)->first();
         if ($existing) {
-            return response()->json(['message' => 'Reset link already sent.'], 200);
+            return response()->json(['message' => 'Reset link already sent'], 200);
         }
 
         $token = Str::random(60);
@@ -74,7 +75,7 @@ class AuthController extends Controller
         $link = url("/api/verify-reset-token/{$token}");
         Mail::to($email)->send(new ResetPasswordMail(['url' => $link]));
 
-        return response()->json(['message' => 'Reset link sent successfully.'], 200);
+        return response()->json(['message' => 'Reset link sent successfully'], 200);
     }
 
     public function verifyResetToken($token)
@@ -82,7 +83,7 @@ class AuthController extends Controller
         $record = DB::table('password_resets')->where('token', $token)->first();
 
         if (!$record) {
-            return response()->json(['message' => 'Invalid or expired token.'], 404);
+            return response()->json(['message' => 'Invalid or expired token'], 404);
         }
 
         return response()->json(['message' => 'Token is valid.', 'email' => $record->email], 200);
@@ -107,12 +108,12 @@ class AuthController extends Controller
 
         $hashedPassword = Hash::make($request->password);
 
-        $farmer = Farmer::where('email', $request->email)->first();
+        $farmer = User::where('email', $request->email)->first();
 
         if ($farmer) {
             $farmer->update(['password' => $hashedPassword]);
         } else {
-            return response()->json(['message' => 'User not found.'], 404);
+            return response()->json(['message' => 'User not found'], 404);
         }
 
         DB::table('password_resets')->where('email', $request->email)->delete();

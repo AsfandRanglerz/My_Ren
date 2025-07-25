@@ -27,7 +27,7 @@ class ScanController extends Controller
     if ($existingSale) {
         return response()->json([
             'status' => false,
-            'message' => 'Scan Code is Already Exist.'
+            'message' => 'Scan Code is Already Exist'
         ], 400);
     }
 
@@ -37,7 +37,7 @@ class ScanController extends Controller
     if (!$product) {
         return response()->json([
             'status' => false,
-            'message' => 'Product not found.'
+            'message' => 'Product not found'
         ], 404);
     }
 
@@ -51,13 +51,13 @@ class ScanController extends Controller
 
     return response()->json([
         'status' => true,
-        'message' => 'Sale Recorded Successfully.',
+        'message' => 'Sale recorded successfully',
         'data' => $sale
     ], 201);
 
 
         return response()->json([
-            'message' => 'Scan Code Saved Successfully.',
+            'message' => 'Scan Code Saved Successfully',
             'data' => $scan,
         ], 200);
 

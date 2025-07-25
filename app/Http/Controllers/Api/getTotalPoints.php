@@ -18,7 +18,7 @@ class getTotalPoints extends Controller
         if (!$userId) {
             return response()->json([
                 'status' => false,
-                'message' => 'Unauthorized user.',
+                'message' => 'Unauthorized user',
             ], 401);
         }
 
@@ -34,7 +34,7 @@ class getTotalPoints extends Controller
     } catch (\Exception $e) {
 return response()->json([
     'status' => false,
-    'message' => 'Something went wrong.',
+    'message' => 'Something went wrong',
     'error' => $e->getMessage(),
 ]);
 
