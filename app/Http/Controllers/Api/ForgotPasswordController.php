@@ -67,7 +67,7 @@ public function forgotPassword(Request $request)
         }
 
         return response()->json([
-            'message' => 'OTP sent successfully',
+            'message' => 'OTP sent successfully to your email',
             'otp_token' => $otpToken
         ], 200);
         
@@ -197,7 +197,7 @@ public function resetPassword(Request $request)
         // Validate input
         $request->validate([
             'otp_token' => 'required|uuid',
-            'new_password' => 'required|string|min:6|confirmed',
+            'new_password' => 'required|min:8',
         ]);
 
         // Fetch OTP record using token
@@ -208,9 +208,11 @@ public function resetPassword(Request $request)
         }
 
         // Find the user by email or phone
-        $user = User::where('email', $otpRecord->email)
-                    ->orWhere('phone', $otpRecord->phone)
-                    ->first();
+         if($otpRecord->email !== null) {
+            $user = User::where('email', $otpRecord->email)->first();
+        } elseif($otpRecord->phone !== null) {
+            $user = User::where('phone', $otpRecord->phone)->first();
+        }
 
         if (!$user) {
             return response()->json(['message' => 'User not found'], 404);
@@ -224,9 +226,8 @@ public function resetPassword(Request $request)
         }
 
         // Update password
-        $user->update([
-            'password' => Hash::make($request->new_password),
-        ]);
+         $user->password = Hash::make($request->new_password);
+        $user->save();
 
         // Delete OTP record
         $otpRecord->delete();

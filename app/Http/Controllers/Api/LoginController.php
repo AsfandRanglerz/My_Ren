@@ -97,7 +97,6 @@ public function logout(Request $request)
     } catch (\Exception $e) {
         return response()->json([
             'message' => 'Logged out failed: ' . $e->getMessage(),
-            
         ], 500);
     }
 }
