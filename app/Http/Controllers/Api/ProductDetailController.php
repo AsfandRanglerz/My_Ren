@@ -9,32 +9,46 @@ use Illuminate\Http\Request;
 
 class ProductDetailController extends Controller
 {
-    public function getProductDetail(){
-        try{
-              $user = Auth::user();
+   public function getUserProductSales()
+{
+    try {
+        $user = Auth::user();
 
-            if (!$user) {
-                return response()->json([
-                    'message' => 'Unauthorized'
-                ], 401);
-            }
-            $products = Product::select('id','name','image','demissions','points_per_sale')->get();
-            if(!$products){
-                return response()->json([
-                   ' message' => 'No Product Found'
-                ],404);
-                
-            }
+        if (!$user) {
             return response()->json([
-                'message' => 'Products Detail Found Successfully',
-                'data' => $products
-            ],200);
+                'message' => 'Unauthorized'
+            ], 401);
         }
-        catch (Exception $e){
+
+        // user ke sales ke saath product relation ko eager load karein
+        $sales = $user->sales()->with('product:id,name,image')->get();
+
+        if ($sales->isEmpty()) {
             return response()->json([
-                'message' => 'Something Went Wrong',
-                'error' => $e->getMessage()
-            ],500);
+                'message' => 'No devices found for this user'
+            ], 404);
         }
+
+        // sales ko map kar ke sirf zaroori data nikalain
+        $productSales = $sales->map(function ($sale) {
+            return [
+                'product_name' => $sale->product->name ?? '',
+                'product_image' => $sale->product->image ?? '',
+                'sale_date' => $sale->created_at->format('Y-m-d'),
+            ];
+        });
+
+        return response()->json([
+            'message' => 'Sales found successfully',
+            'data' => $productSales
+        ], 200);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Something went wrong',
+            'error' => $e->getMessage()
+        ], 500);
     }
+}
+
 }

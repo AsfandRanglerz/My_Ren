@@ -117,6 +117,9 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::get('/getprofiledetail', [UpdateProfileController::class, 'getProfile']);
 Route::post('/updateprofiledetail', [UpdateProfileController::class, 'sendOtp']);
 Route::post('/verifyprofiledetail', [UpdateProfileController::class, 'verifyOtp']);
+Route::post('/update-profile', [EmailOtpController::class, 'requestUpdateOtp']);
+Route::post('/update-profile-verify', [EmailOtpController::class, 'verifyAndUpdateContact']);
+Route::get('/get-logged-in-user-info', [EmailOtpController::class, 'getLoggedInUserInfo']);
 
 });
 
@@ -154,7 +157,7 @@ Route::post('/scancode', [ScanController::class, 'storeScanCode'])->middleware('
 // products details
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/productdetail', [ProductDetailController::class, 'getProductDetail']);
+    Route::get('/productdetail', [ProductDetailController::class, 'getUserProductSales']);
 
     });
 
@@ -233,10 +236,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::middleware('auth:sanctum')->group(function () {
 
-    Route::get('/get-profile', [AuthController::class, 'getProfile']); // Get Profile
-
-    Route::put('/update-profile', [AuthController::class, 'updateProfile']); // Update Profile
-
 
     // Contact Us
     Route::post('/contactus/{id}',[ContactUsController::class, 'contact'])->name('contactus');
@@ -253,6 +252,3 @@ Route::get('/getcontactus/{id}',[ContactUsController::class, 'getContact'])->nam
     Route::post('/reset-password', [AuthController::class, 'resetPassword']);
 
 });
-
-
-

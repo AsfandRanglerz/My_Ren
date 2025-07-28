@@ -49,7 +49,7 @@ public function login(Request $request)
         }
 
         if (!Hash::check($request->password, $user->password)) {
-            return response()->json(['message' => 'Invalid credentials'], 401);
+            return response()->json(['message' => 'Invalid password'], 401);
         }
 
         // Update FCM token
