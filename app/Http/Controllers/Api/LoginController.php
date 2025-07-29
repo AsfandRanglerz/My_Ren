@@ -63,7 +63,15 @@ public function login(Request $request)
         return response()->json([
             'message' => 'Logged in successfully',
             'token' => $token,
-            'user' => $user,
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name ?? null,
+                'email' => $user->email ?? null,
+                'phone' => $user->phone ?? null,
+                'image' => $user->image ?? null,
+                'country' => $user->country ?? null,
+                'fcm' => $user->fcm ?? null,
+            ]
         ], 200);
 
     } catch (\Exception $e) {

@@ -32,6 +32,7 @@ class ProductDetailController extends Controller
         // sales ko map kar ke sirf zaroori data nikalain
         $productSales = $sales->map(function ($sale) {
             return [
+                'product_id' => $sale->product_id,
                 'product_name' => $sale->product->name ?? '',
                 'product_image' => $sale->product->image ?? '',
                 'sale_date' => $sale->created_at->format('Y-m-d'),
