@@ -57,7 +57,7 @@ use App\Http\Controllers\Admin\RolePermissionController;
 
 |
 
-| Here is where you can register web routes for your application. These
+| Here is where you can register web routes   your application. These
 
 | routes are loaded by the RouteServiceProvider within a group which
 
@@ -460,4 +460,3 @@ Route::post('/admin/contact-us-update/{id}', [ContactController::class, 'update'
 
 
 });
-

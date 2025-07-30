@@ -26,7 +26,7 @@ class ProductDetailController extends Controller
         if ($sales->isEmpty()) {
             return response()->json([
                 'message' => 'No devices found for this user'
-            ], 404);
+            ], 200);
         }
 
         // sales ko map kar ke sirf zaroori data nikalain
@@ -34,7 +34,7 @@ class ProductDetailController extends Controller
             return [
                 'product_id' => $sale->product_id,
                 'product_name' => $sale->product->name ?? '',
-                'product_image' => $sale->product->image ?? '',
+                'product_image' => 'public/' . $sale->product->image ?? '',
                 'sale_date' => $sale->created_at->format('Y-m-d'),
             ];
         });
