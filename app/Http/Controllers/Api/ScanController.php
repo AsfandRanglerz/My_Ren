@@ -13,60 +13,49 @@ use Illuminate\Support\Facades\Auth;
 
 class ScanController extends Controller
 {
-    public function storeScanCode(Request $request)
+  public function storeScanCode(Request $request)
 {
-
     try {
-      
+        
         $user = Auth::id();
-      
+        
 
+        $existingSale = Sale::where('scan_code', $request->scan_code)->first();
+        if ($existingSale) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Scan Code already exists.'
+            ], 400);
+        }
 
-         $existingSale = Sale::where('scan_code', $request->scan_code)->first();
+        $product = Product::find($request->product_id);
+        if (!$product) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Product not found.'
+            ], 404);
+        }
 
-    if ($existingSale) {
-        return response()->json([
-            'status' => false,
-            'message' => 'Scan Code is Already Exist'
-        ], 400);
-    }
-
-    // Get product points from products table
-    $product = Product::find($request->product_id);
-
-    if (!$product) {
-        return response()->json([
-            'status' => false,
-            'message' => 'Product not found'
-        ], 404);
-    }
-
-    // Create sale
-    $sale = Sale::create([
-        'user_id' => $user, // Make sure user_id is passed correctly
-        'product_id' => $request->product_id,
-        'scan_code' => $request->scan_code,
-        'points_earned' => $product->points // dynamically from products table
-    ]);
-
-    return response()->json([
-        'status' => true,
-        'message' => 'Sale recorded successfully',
-        'data' => $sale
-    ], 201);
-
+        $sale = Sale::create([
+            'user_id' => $user,
+            'product_id' => $request->product_id,
+            'scan_code' => $request->scan_code,
+            'points_earned' => $product->points_per_sale,
+        ]);
 
         return response()->json([
-            'message' => 'Scan Code Saved Successfully',
-            'data' => $scan,
-        ], 200);
-
+            'status' => true,
+            'message' => 'Sale recorded successfully.',
+            'data' => $sale
+        ], 201);
 
     } catch (Exception $e) {
         Log::error('Scan Code Save Error:', ['error' => $e->getMessage()]);
         return response()->json([
+            'error' => $e->getMessage(),
             'message' => 'An Error Occurred While Saving the Scan Code'
         ], 500);
     }
 }
+
 }

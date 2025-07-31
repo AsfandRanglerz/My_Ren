@@ -268,6 +268,19 @@ public function requestUpdateOtp(Request $request)
         // Rules for status-based restrictions
         $rules = [];
 
+        if (!empty($data['email']) && $data['email'] === $user->email) {
+        // Same email - allow
+        $user->email = $data['email'];
+        $updatedFields[] = 'email';
+        return response()->json([
+        'message' => 'Profile updated successfully.',
+        'name' => $user->name,
+        'email' => $user->email,
+        'phone' => $user->phone,
+        'image' => $user->image,
+        'country' => $user->country,
+    ], 200);
+    }
         if ($user->status == 1 && !empty($data['email'])) {
             return response()->json(['error' => 'Cannot update email'], 422);
         }
@@ -288,7 +301,14 @@ public function requestUpdateOtp(Request $request)
         $isSamePhone = isset($data['phone']) && $data['phone'] === $user->phone;
 
         if (($isSameEmail || $isSamePhone) && empty($rules)) {
-            return response()->json(['message' => 'Profile updated successfully'], 200);
+           return response()->json([
+        'message' => 'Profile updated successfully.',
+        'name' => $user->name,
+        'email' => $user->email,
+        'phone' => $user->phone,
+        'image' => $user->image,
+        'country' => $user->country,
+    ], 200);
         }
 
         // --- If New + Unique Email/Phone Provided, Send OTP ---
