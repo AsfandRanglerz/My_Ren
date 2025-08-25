@@ -2,41 +2,42 @@
 
 
 
-use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\RoleController;
+use App\Http\Controllers\Api\AllProductController;
 
 use App\Http\Controllers\Api\AuthController;
 
-use App\Http\Controllers\Api\SaleController;
+use App\Http\Controllers\Api\ContactUsController;
 
-use App\Http\Controllers\Api\ScanController;
+use App\Http\Controllers\Api\EmailOtpController;
 
-use App\Http\Controllers\Api\UserController;
-
-use App\Http\Controllers\Admin\SeoController;
+use App\Http\Controllers\Api\ForgotPasswordController;
 
 use App\Http\Controllers\Api\LoginController;
 
-use App\Http\Controllers\SideMenueController;
+use App\Http\Controllers\Api\LoginRewardRuleController;
 
-use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\Api\NotificationController;
+
+use App\Http\Controllers\Api\ProductDetailController;
 
 use App\Http\Controllers\Api\RankingController;
-use App\Http\Controllers\Api\EmailOtpController;
-use App\Http\Controllers\Api\ContactUsController;
-use App\Http\Controllers\Api\UserRankingController;
-use App\Http\Controllers\Api\NotificationController;
-use App\Http\Controllers\Api\ProductDetailController;
+use App\Http\Controllers\Api\SaleController;
+use App\Http\Controllers\Api\ScanController;
 use App\Http\Controllers\Api\SearchHistoryController;
 use App\Http\Controllers\Api\UpdateProfileController;
+use App\Http\Controllers\Api\UserActivePointsController;
+use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\UserRankingController;
 use App\Http\Controllers\Api\VoucherDetailController;
-use App\Http\Controllers\Api\ForgotPasswordController;
-use App\Http\Controllers\SideMenuPermissionController;
-use App\Http\Controllers\Api\LoginRewardRuleController;
 use App\Http\Controllers\Api\WalletUserPointController;
 use App\Http\Controllers\Api\WithdrawRequestController;
-use App\Http\Controllers\Api\UserActivePointsController;
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SideMenueController;
+use App\Http\Controllers\SideMenuPermissionController;
+use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -86,9 +87,6 @@ Route::post('/permission-insert', [SideMenuPermissionController::class, 'assignP
 
 // seo routes
 
-Route::post('/seo-bulk', [SeoController::class, 'storeBulk'])
-
-     ->name('seo.bulk-update');
 
 
      // User Active Points
@@ -158,7 +156,11 @@ Route::post('/scancode', [ScanController::class, 'storeScanCode'])->middleware('
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/productdetail', [ProductDetailController::class, 'getUserProductSales']);
+    });
 
+    
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/sales/products', [SaleController::class, 'getAllProducts']);
     });
 
 // user spcific rankings
@@ -240,15 +242,4 @@ Route::middleware('auth:sanctum')->group(function () {
     // Contact Us
     Route::post('/contactus/{id}',[ContactUsController::class, 'contact'])->name('contactus');
 Route::get('/getcontactus/{id}',[ContactUsController::class, 'getContact'])->name('getcontactus');
-
-
-
-    // Password reset for Admin & SubAdmin via API
-
-    Route::post('/forgot-password', [AuthController::class, 'sendResetLink']);
-
-    Route::get('/verify-reset-token/{token}', [AuthController::class, 'verifyResetToken']);
-
-    Route::post('/reset-password', [AuthController::class, 'resetPassword']);
-
 });

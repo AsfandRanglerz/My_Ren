@@ -8,4 +8,22 @@ use Illuminate\Http\Request;
 class AllProductController extends Controller
 {
     //
+public function getAllProducts()
+{
+    try {
+        $products = \App\Models\Product::all();
+
+        return response()->json([
+            'message' => 'Products retrieved successfully',
+            'data' => $products
+        ], 200);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'message' => 'Something went wrong',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
+
 }

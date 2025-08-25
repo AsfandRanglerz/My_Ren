@@ -12,7 +12,7 @@
 
             <div class="section-body">
 
-                <a class="btn btn-primary mb-3" href="{{ route('user.index') }}">Back </a>
+                <a class="btn btn-primary mb-3" href="{{ route('user.index') }}">Back</a>
 
 
 
