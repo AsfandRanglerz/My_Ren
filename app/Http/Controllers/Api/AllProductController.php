@@ -14,7 +14,7 @@ public function getAllProducts()
         $products = \App\Models\Product::all();
 
         return response()->json([
-            'message' => 'Products retrieved successfully',
+            'message' => 'Products Fetched successfully',
             'data' => $products
         ], 200);
 

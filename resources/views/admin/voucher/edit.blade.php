@@ -33,11 +33,11 @@
                             <!-- Amount -->
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="amount">Amount <span class="text-danger">*</span></label>
+                                    <label for="amount">Rupees Off <span class="text-danger">*</span></label>
                                     <div class="input-group">
-                                        <input type="number" step="0.01" name="amount" id="amount"
+                                        <input type="number" step="0.01" name="rupees" id="amount"
                                             class="form-control @error('amount') is-invalid @enderror"
-                                            value="{{ old('amount', $voucher->amount) }}" placeholder="Enter amount"
+                                            value="{{ old('amount', $voucher->rupees) }}" placeholder="Enter Rupees"
                                             required
                                             onfocus="this.closest('.form-group').querySelector('.invalid-feedback').style.display='none'; this.classList.remove('is-invalid')">
                                         <div class="input-group-append">

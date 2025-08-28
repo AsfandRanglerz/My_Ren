@@ -28,7 +28,7 @@
                                         <tr>
                                             <th>Sr.</th>
                                             <th>Required Points</th>
-                                            <th>Amount</th>
+                                            <th>Rupees Off</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -37,7 +37,7 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $voucher->required_points }}</td>
-                                                <td>{{ $voucher->amount }} PKR</td>
+                                                <td>{{ $voucher->rupees }} PKR</td>
                                                 <td>
                                                     <div class="d-flex">
                                                         @if (Auth::guard('admin')->check() ||

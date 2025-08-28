@@ -22,16 +22,16 @@ class VoucherController extends Controller
 
 
 public function store(Request $request)
-
 {
     $request->validate([
         'points' => 'required|integer|unique:vouchers,required_points',
-        'amount' => 'required|numeric|unique:vouchers,amount'
+        'rupees' => 'required|numeric|unique:vouchers,rupees'
     ]);
 
     Voucher::create([
         'required_points' => $request->points,
-        'amount' => $request->amount
+        'rupees'          => $request->rupees,
+        'coupon_code'     => rand(100000, 999999) 
     ]);
 
     return redirect()->route('voucher.index')->with('success', 'Voucher created successfully');
@@ -49,17 +49,19 @@ public function update(Request $request, $id)
 {
     $request->validate([
         'points' => 'required|integer|unique:vouchers,required_points,' . $id,
-        'amount' => 'required|numeric'
+        'rupees' => 'required|numeric'
     ]);
 
     $voucher = Voucher::findOrFail($id);
     $voucher->update([
         'required_points' => $request->points,
-        'amount' => $request->amount
+        'rupees'          => $request->rupees,
+        'coupon_code'     => rand(100000, 999999) // har update pe naya code
     ]);
 
     return redirect()->route('voucher.index')->with('success', 'Voucher updated successfully');
 }
+
 
 
 

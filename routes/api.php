@@ -163,10 +163,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/sales/products', [SaleController::class, 'getAllProducts']);
     });
 
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/all-products', [AllProductController::class, 'getAllProducts']);
+    });
+
 // user spcific rankings
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/specific-userranking', [UserRankingController::class, 'monthlyRankings']);
+    Route::get('/specific-monthlyranking', [UserRankingController::class, 'SpecificmonthlyRankings']);
 
     });
 

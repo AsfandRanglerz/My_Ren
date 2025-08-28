@@ -10,7 +10,6 @@
 
                 <form action="{{ route('voucher.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
-
                     <div class="card">
                         <h4 class="text-center my-4">Create Voucher</h4>
                         <div class="row px-4">
@@ -32,11 +31,11 @@
                             <!-- Amount -->
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="amount">Amount <span style="color: red;">*</span></label>
+                                    <label for="amount">Rupees Off <span style="color: red;">*</span></label>
                                     <div class="input-group">
-                                        <input type="number" step="0.01" name="amount" id="amount"
+                                        <input type="number" step="0.01" name="rupees" id="amount"
                                             class="form-control @error('amount') is-invalid @enderror"
-                                            value="{{ old('amount') }}" placeholder="Enter amount" required
+                                            value="{{ old('amount') }}" placeholder="Enter Rupees" required
                                             onfocus="hideError(this)">
                                         <div class="input-group-append">
                                             <span class="input-group-text">PKR</span>
