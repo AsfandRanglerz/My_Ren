@@ -15,7 +15,7 @@
                 <a class="btn btn-primary mb-3" href="{{ route('user.index') }}">Back</a>
 
 
-
+             <!-- form  -->
                 <form id="edit_farmer" action="{{ route('user.create') }}" method="POST" enctype="multipart/form-data">
 
                     @csrf

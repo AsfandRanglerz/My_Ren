@@ -94,7 +94,7 @@ class NotificationController extends Controller
 
     }
 
-    
+   // store 
 public function store(Request $request)
     {
         $request->validate ([
