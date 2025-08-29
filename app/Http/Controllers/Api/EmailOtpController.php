@@ -43,7 +43,7 @@ public function sendOtp(Request $request)
         $request->validate($rules, $messages);
 
         $otp = rand(1000, 9999);
-        $otpToken = \Str::uuid();
+        $otpToken = Str::uuid();
 
         $condition = [];
 
@@ -195,7 +195,7 @@ public function sendOtp(Request $request)
 
             return response()->json([
                 'name' => $user->name ?? null,
-                'image' => $user->image ?? null,
+                'image' => $user->image? 'public/' . $user->image :'https://ranglerzwp.xyz/myren/public/admin/assets/images/avator.png',
                 'country' => $user->country ?? null,
                 'email' => $user->email ?? null,
                 'phone' => $user->phone ?? null,
@@ -272,6 +272,7 @@ public function requestUpdateOtp(Request $request)
         // Same email - allow
         $user->email = $data['email'];
         $updatedFields[] = 'email';
+        $user->save();
         return response()->json([
         'message' => 'Profile updated successfully.',
         'name' => $user->name,

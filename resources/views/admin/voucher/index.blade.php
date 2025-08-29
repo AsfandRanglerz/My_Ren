@@ -9,9 +9,7 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4>Voucher Settings <small class="font-weight-bold text-danger">(Each voucher is created by
-                                        you, and based on the points and amount you set, users can redeem the voucher to
-                                        withdraw that amount.)</small></h4>
+                                <h4>Voucher Settings <small class="font-weight-bold text-danger">(Users can redeem the vouchers you create with points to get a discount on their next purchase.)</small></h4>
                             </div>
 
                             <div class="card-body table-striped table-bordered table-responsive">

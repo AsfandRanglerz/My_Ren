@@ -33,7 +33,7 @@
                                 <div class="form-group">
                                     <label for="amount">Rupees Off <span style="color: red;">*</span></label>
                                     <div class="input-group">
-                                        <input type="number" step="0.01" name="rupees" id="amount"
+                                        <input type="number" step="0.01" name="rupees" id="rupees"
                                             class="form-control @error('amount') is-invalid @enderror"
                                             value="{{ old('amount') }}" placeholder="Enter Rupees" required
                                             onfocus="hideError(this)">
