@@ -116,7 +116,7 @@
 
             @if (Auth::guard('admin')->check() ||
                     ($sideMenuPermissions->has('Reward Settings') && $sideMenuPermissions['Reward Settings']->contains('view')))
-                <li class="dropdown {{ request()->is('admin/login-reward-rules*') ? 'active' : '' }}">
+                <!-- <li class="dropdown {{ request()->is('admin/login-reward-rules*') ? 'active' : '' }}">
 
                     <a href="{{ url('admin/login-reward-rules') }}" class="nav-link">
 
@@ -126,8 +126,20 @@
 
                     </a>
 
-                </li>
+                </li> -->
             @endif
+
+              <li class="dropdown {{ request()->is('admin/signup-reward-setting*') ? 'active' : '' }}">
+
+                    <a href="{{ url('admin/signup-reward-setting') }}" class="nav-link">
+
+                        <i data-feather="gift"></i>
+
+                        <span>Signup Reward Settings</span>
+
+                    </a>
+
+                </li>
 
 
 

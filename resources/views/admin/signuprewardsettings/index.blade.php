@@ -1,5 +1,5 @@
 @extends('admin.layout.app')
-@section('title', 'Voucher Settings')
+@section('title', 'Signup Reward Settings')
 
 @section('content')
     <div class="main-content" style="min-height: 562px;">
@@ -9,59 +9,39 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4>Voucher Settings <small class="font-weight-bold text-danger">(Users can redeem the voucher you create with points to get a discount on their next purchase. They will be able to click the 'Claim' button in the mobile app, which will generate a coupon code. This coupon code can then be used on the website to receive the discount.)</small></h4>
+                                <h4>Signup Reward Settings <small class="font-weight-bold text-danger">(Points will be awarded to users on their first sign-up as specified below.)</small></h4>
                             </div>
 
                             <div class="card-body table-striped table-bordered table-responsive">
                                 <div class="clearfix mb-3">
-                                    @if (Auth::guard('admin')->check() ||
+                                    <!-- @if (Auth::guard('admin')->check() ||
                                             ($sideMenuPermissions->has('Voucher Settings') && $sideMenuPermissions['Voucher Settings']->contains('create')))
                                         <a class="btn btn-primary text-white"
                                             href="{{ route('voucher.create') }}">Create</a>
-                                    @endif
+                                    @endif -->
                                 </div>
 
                                 <table class="table" id="table_id_events">
                                     <thead>
                                         <tr>
                                             <th>Sr.</th>
-                                            <th>Voucher id</th>
-                                            <th>Required Points</th>
-                                            <th>Rupees Off</th>
-                                            <th>Actions</th>
+                                            <th>Required Signup Reward Points</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @forelse ($vouchers as $voucher)
+                                        @forelse ($setting as $setting)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $voucher->voucher_code ?? 'N/A' }}</td>
-                                                <td>{{ $voucher->required_points }}</td>
-                                                <td>{{ $voucher->rupees }} PKR</td>
+                                                <td>{{ $setting->points }}</td>
                                                 <td>
                                                     <div class="d-flex">
                                                         @if (Auth::guard('admin')->check() ||
                                                                 ($sideMenuPermissions->has('Voucher Settings') && $sideMenuPermissions['Voucher Settings']->contains('edit')))
-                                                            <a href="{{ url('admin/voucher-edit', $voucher->id) }}"
+                                                            <a href="{{ route('signup_reward_setting.edit', $setting->id) }}"
                                                                 class="btn btn-primary me-2">
                                                                 <i class="fa fa-edit"></i>
                                                             </a>
-                                                        @endif
-
-                                                        @if (Auth::guard('admin')->check() ||
-                                                                ($sideMenuPermissions->has('Voucher Settings') && $sideMenuPermissions['Voucher Settings']->contains('delete')))
-                                                            <form id="delete-form-{{ $voucher->id }}"
-                                                                action="{{ route('voucher.destroy', $voucher->id) }}"
-                                                                method="POST">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                            </form>
-
-                                                            <button class="show_confirm btn text-white"
-                                                                style="background-color: #cb84fe;"
-                                                                data-form="delete-form-{{ $voucher->id }}" type="button">
-                                                                <i class="fa fa-trash"></i>
-                                                            </button>
                                                         @endif
                                                     </div>
                                                 </td>

@@ -29,7 +29,7 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\AdminController;
 
 use App\Http\Controllers\Admin\SalesController;
-
+use App\Http\Controllers\SignupRewardSettingController;
 use App\Http\Controllers\Admin\ContactController;
 
 use App\Http\Controllers\Admin\ProductController;
@@ -321,28 +321,11 @@ Route::delete('admin/device-batch-delete/{id}', [ProductController::class, 'dele
 
     // ############ Points Conversions #################
 
-
-
-    Route::get('/point-conversions-index', [PointConversionController::class, 'index'])->name('point-conversions.index')->middleware('check.permission:Points Conversion,view');
-
-
-
-    Route::get('/point-conversions-create', [PointConversionController::class, 'create'])->name('point-conversions.create')->middleware('check.permission:Points Conversion,create');
-
-
-
- Route::post('point-conversions-store', [PointConversionController::class, 'store'])->name('point-conversions.store')
-
-        ->middleware('check.permission:Points Conversion,create');
-
-
-
-    Route::get('/point-conversions-edit/{id}', [PointConversionController::class, 'edit'])->name('point-conversions.edit')->middleware('check.permission:Points Conversion,edit');
-
-
-
-    Route::post('/point-conversions-update/{id}', [PointConversionController::class, 'update'])->name('point-conversions.update')->middleware('check.permission:Points Conversion,edit');
-
+Route::get('/signup-reward-setting', [SignupRewardSettingController::class, 'index'])->name('signup_reward_setting.index');
+    Route::post('signup-reward-setting', [SignupRewardSettingController::class, 'store'])->name('signup_reward_setting.store');
+    Route::get('signup-reward-setting/{id}/edit', [SignupRewardSettingController::class, 'edit'])->name('signup_reward_setting.edit');
+    Route::post('signup-reward-setting/{id}', [SignupRewardSettingController::class, 'update'])->name('signup_reward_setting.update');
+    
     // ############ Withdraw Requests #################
     Route::get('/withdrawrequest/count', [WithdrawRequestController::class, 'withdrawalCounter'])->name('withdraw.counter');
     Route::get('/withdrawrequest', [WithdrawRequestController::class, 'index'])->name('withdraw.requests')->middleware('check.permission:Withdrawal Requests,view');
