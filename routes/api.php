@@ -194,6 +194,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/loginrewardrules', [LoginRewardRuleController::class, 'index']);
 
+    Route::get('/specifc-userranking',[UserRankingController::class, 'SpecificmonthlyRankings'])->middleware('auth:sanctum');
+
 
 
 
