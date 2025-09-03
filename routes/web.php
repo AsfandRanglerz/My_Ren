@@ -417,9 +417,10 @@ Route::post('admin/voucher-update/{id}', [VoucherController::class, 'update'])->
 
 Route::delete('voucher-destroy/{id}', [VoucherController::class, 'destroy'])->name('voucher.destroy') ->middleware('check.permission:Voucher Settings,delete');
 
+Route::get('/claimed-vocher', [VoucherController::class, 'ClaimVoucher'])->name('voucher.claimed') ->middleware('check.permission:Voucher Settings,view');
     // ############ Rankings Routes #################
 
-Route::get('/ranking', [RankingController::class, 'index'])->name('ranking.index')->middleware('check.permission:Users Rankings,view');
+Route::get('/ranking', [RankingController::class, 'index'])->name('ranking.index')->middleware('check.permission:Voucher Settings,view');
 
 
 

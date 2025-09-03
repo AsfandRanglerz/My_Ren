@@ -124,7 +124,7 @@ class AuthController extends Controller
 
                 
 
-                return redirect('admin/dashboard')->with('success', 'Sub-Admin logged in successfully!');
+                return redirect('admin/dashboard')->with('success', 'Sub-Admin logged in successfully');
 
             } else {
 

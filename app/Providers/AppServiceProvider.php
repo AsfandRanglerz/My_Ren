@@ -31,6 +31,7 @@ public function boot()
 {
     View::composer('*', function ($view) {
         $sideMenuPermissions = collect();
+        $countClaimedVoucher = 0;
 
         if (Auth::guard('subadmin')->check()) {
             $user = Auth::guard('subadmin')->user();
@@ -53,9 +54,17 @@ public function boot()
             }
         }
 
-        $view->with('sideMenuPermissions', $sideMenuPermissions);
+        // Claimed Vouchers count
+        $countClaimedVoucher = \App\Models\ClaimVoucher::count();
+
+        // Pass variables to all views
+        $view->with([
+            'sideMenuPermissions' => $sideMenuPermissions,
+            'countClaimedVoucher' => $countClaimedVoucher,
+        ]);
     });
 }
+
 
 
 

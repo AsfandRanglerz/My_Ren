@@ -128,7 +128,7 @@
 
                 <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
 
-                    <a href="{{ url('admin/withdrawrequest') }}" class="text-decoration-none"
+                    <a href="{{ url('admin/voucher-index') }}" class="text-decoration-none"
                         style="text-decoration: none;">
 
                         <div class="card">
@@ -143,9 +143,7 @@
 
                                             <div class="card-content">
 
-                                                <h5 class="font-15">Total Withdrawal
-
-                                                    Requests </h5>
+                                                <h5 class="font-15">Total Vouchers</h5>
 
                                                 <h2 class="mb-3 font-18">
 

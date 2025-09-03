@@ -233,7 +233,7 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/voucherdetail/{id}', [VoucherDetailController::class, 'getVoucherDetail']);
     Route::get('/getvouchers', [VoucherDetailController::class, 'getVoucher']);
-
+    Route::post('/claimvoucher', [VoucherDetailController::class, 'claimVoucher']);
     });
 
 

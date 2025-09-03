@@ -35,7 +35,7 @@ use App\Models\SubAdminPermission;
 use Illuminate\Support\Facades\DB;
 
 use App\Http\Controllers\Controller;
-
+use App\Models\Voucher;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
@@ -50,42 +50,9 @@ class AdminController extends Controller
     public function getdashboard()
 
     {
-
-        // $totalFarmers = Farmer::all()->count();
-
-        // $totalDealers = AuthorizedDealer::all()->count();
-
-        // // $totalInsuranceCrops = EnsuredCrop::all()->count();
-
-        // // dd($totalFarmers);
-
-        // $sideMenuName = [];
-
-        // $sideMenuPermissions = [];
-
-
-
-        // if (Auth::guard('subadmin')->check()) {
-
-        //     $subAdminData = $this->getSubAdminPermissions();
-
-        //     $sideMenuPermissions = $subAdminData['sideMenuPermissions'];
-
-        //     $sideMenuName = $subAdminData['sideMenuName'];
-
-        // }
-
-        // dd($sideMenuName);
-
-
-
         $users = User::all()->count();
-
         $Products = Product::all()->count();
-        $WithdrawalRequests = WithdrawRequest::all()->count();
-
-
-
+        $WithdrawalRequests = Voucher::all()->count();
         return view('admin.index', compact('users', 'Products', 'WithdrawalRequests'));
 
     }
@@ -124,15 +91,6 @@ class AdminController extends Controller
 
     {
 
-        // $request->validate([
-
-        //     'name' => 'required',
-
-        //     'email' => 'required',
-
-        //     'phone' => 'required'
-
-        // ]);
 
         $data = $request->only(['name', 'email', 'phone']);
 
@@ -214,13 +172,11 @@ class AdminController extends Controller
 
 
 
-        // $exists = DB::table('password_resets')->where('email', $request->email)->first();
 
         if ($exists) {
 
             return back()->with('error', 'Reset Password link has been already sent');
 
-            // dd($subAdminExists);
 
         } else {
 
@@ -282,11 +238,9 @@ class AdminController extends Controller
 
         ]);
 
-        // return $request;
 
         if ($request->password != $request->confirmPassword) {
 
-        // return $request;
 
                        return back()->with('error', 'Password and confirm password do not match');
 
@@ -350,7 +304,6 @@ class AdminController extends Controller
 
         $adminExists = Auth::guard('admin')->logout();
 
-        // dd($adminExists);
 
         if (!$adminExists) {
 

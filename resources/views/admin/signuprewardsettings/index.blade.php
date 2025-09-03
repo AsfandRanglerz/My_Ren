@@ -37,7 +37,7 @@
                                                 <td>
                                                     <div class="d-flex">
                                                         @if (Auth::guard('admin')->check() ||
-                                                                ($sideMenuPermissions->has('Voucher Settings') && $sideMenuPermissions['Voucher Settings']->contains('edit')))
+                                                                ($sideMenuPermissions->has('Signup Reward Settings') && $sideMenuPermissions['Signup Reward Settings']->contains('edit')))
                                                             <a href="{{ route('signup_reward_setting.edit', $setting->id) }}"
                                                                 class="btn btn-primary me-2">
                                                                 <i class="fa fa-edit"></i>
