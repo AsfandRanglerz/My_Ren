@@ -96,13 +96,12 @@ public function ClaimVoucher()
 
 
         // ✅ 1. Get role_id of subadmin
-        $roleId = $user->role_id;
+        $roleId = optional($user->roles->first())->id;
 
         // ✅ 2. Get all permissions assigned to this role
         $permissions = UserRolePermission::with(['permission', 'sideMenue'])
             ->where('role_id', $roleId)
             ->get();
-
         // ✅ 3. Group permissions by side menu
         $sideMenuPermissions = $permissions->groupBy('sideMenue.name')->map(function ($items) {
             return $items->pluck('permission.name'); // ['view', 'create']

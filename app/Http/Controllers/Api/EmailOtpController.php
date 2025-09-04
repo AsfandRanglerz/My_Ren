@@ -131,58 +131,61 @@ public function sendOtp(Request $request)
 }
 
 
-    public function registerUser(Request $request)
-    {
-        try {
+   public function registerUser(Request $request)
+{
+    try {
+        $request->validate([
+            'email' => 'nullable|unique:users,email',
+            'phone' => 'nullable|unique:users,phone',
+        ],
+        [
+            'email.unique' => 'This email is already taken.',
+            'phone.unique' => 'This phone number is already taken.',
+        ]);
 
-            $request->validate([
-                'email' => 'nullable|unique:users,email',
-                'phone' => 'nullable|unique:users,phone',
-            ],
-            [
-                'email.unique' => 'This email is already taken.',
-                'phone.unique' => 'This phone number is already taken.',
-            ]
-        );
-            
-
-            if (!empty($data['email'])) {
-               
-            }
-
-            if (!empty($data['phone'])) {
-               
-            }
-
-           
-            $otpRecord = EmailOtp::where('email', $request->email)->first();
-
-            if (!$otpRecord) {
-                return response()->json([
-                    'error' => 'OTP record not found for the given email.'
-                ], 404);
-            }
-
-            $user = User::create([
-                'email' => $otpRecord->email,
-                'phone' => $otpRecord->phone,
-                'country' => $otpRecord->country,
-                'password' => Hash::make($request->password),
-                'status' => is_null($otpRecord->phone) ? 1 : (is_null($otpRecord->email) ? 2 : null),
-            ]);
-
-            $otpRecord->delete();
-            return $otpRecord;
-
+        // OTP Record Check
+        $otpRecord = EmailOtp::where('email', $request->email)->first();
+        if (!$otpRecord) {
             return response()->json([
-                'message' => 'Registered successfully.',
-            ], 200);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return response()->json($e->errors(), 422);
-        } catch (\Exception $e) {
-            return response()->json($e->getMessage(), 500);
+                'error' => 'OTP record not found for the given email.'
+            ], 404);
         }
+
+        // ✅ User Create
+        $user = User::create([
+            'email' => $otpRecord->email,
+            'phone' => $otpRecord->phone,
+            'country' => $otpRecord->country,
+            'password' => Hash::make($request->password),
+            'status' => is_null($otpRecord->phone) ? 1 : (is_null($otpRecord->email) ? 2 : null),
+        ]);
+
+        // ✅ Signup reward points read karo
+        $rewardPoints = \App\Models\SignupRewardSetting::first(); // Assuming 1 row hi hai
+        $points = $rewardPoints ? $rewardPoints->points : 0;
+
+        // ✅ User wallet me insert karo
+        \App\Models\UserWallet::create([
+            'user_id'      => $user->id,
+            'total_points' => $points,
+        ]);
+
+        // ✅ Delete OTP record
+        $otpRecord->delete();
+
+        return response()->json([
+            'message' => 'Registered successfully.',
+            'user_id' => $user->id,
+            'assigned_points' => $points,
+        ], 200);
+
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        return response()->json($e->errors(), 422);
+    } catch (\Exception $e) {
+        return response()->json($e->getMessage(), 500);
     }
+}
+
 
     public function getLoggedInUserInfo()
     {

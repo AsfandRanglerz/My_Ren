@@ -38,7 +38,7 @@
                                     </tr>
                                     @empty
                                     <tr>
-                                        <td colspan="4" class="text-center text-muted">No vouchers found.</td>
+                                        <td colspan="4" class="text-center text-muted">No data found.</td>
                                     </tr>
                                     @endforelse
                                 </tbody>
