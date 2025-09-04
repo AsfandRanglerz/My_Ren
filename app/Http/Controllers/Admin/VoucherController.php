@@ -39,7 +39,6 @@ public function store(Request $request)
     Voucher::create([
         'required_points' => $request->points,
         'rupees'          => $request->rupees,
-        'coupon_code'     => rand(100000, 999999),
         'voucher_code'    => $voucherCode,
     ]);
 
@@ -69,7 +68,6 @@ public function update(Request $request, $id)
     $voucher->update([
         'required_points' => $request->points,
         'rupees'          => $request->rupees,
-        'coupon_code'     => rand(100000, 999999) // har update pe naya code
     ]);
 
     return redirect()->route('voucher.index')->with('success', 'Voucher updated successfully');
