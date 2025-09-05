@@ -11,7 +11,10 @@ class AllProductController extends Controller
 public function getAllProducts()
 {
     try {
-        $products = \App\Models\Product::all();
+        $products = \App\Models\Product::all()->map(function ($product) {
+            $product->image = 'public/' . $product->image;
+            return $product;
+        });
 
         return response()->json([
             'message' => 'Products Fetched successfully',
@@ -25,5 +28,6 @@ public function getAllProducts()
         ], 500);
     }
 }
+
 
 }

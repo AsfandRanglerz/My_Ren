@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers\Api;
 
-use Exception;
-use App\Models\User;
-use App\Models\EmailOtp;
-use App\Mail\UserEmailOtp;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Mail\UserEmailOtp;
+use App\Models\EmailOtp;
+use App\Models\SignupRewardSetting;
+use App\Models\User;
+use App\Models\UserWallet;
+use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 
@@ -196,12 +199,17 @@ public function sendOtp(Request $request)
                 return response()->json(['error' => 'Unauthorized'], 401);
             }
 
+               $totalPoints = DB::table('user_wallets')
+            ->where('user_id', $user->id)
+            ->value('total_points');
+
             return response()->json([
                 'name' => $user->name ?? null,
                 'image' => $user->image? 'public/' . $user->image :'https://ranglerzwp.xyz/myren/public/admin/assets/images/avator.png',
                 'country' => $user->country ?? null,
                 'email' => $user->email ?? null,
                 'phone' => $user->phone ?? null,
+                'points' => $totalPoints ?? 0,
             ]);
         } catch (Exception $e) {
             return response()->json([

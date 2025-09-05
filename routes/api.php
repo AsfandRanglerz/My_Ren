@@ -231,8 +231,8 @@ Route::middleware('auth:sanctum')->group(function () {
 // voucher routes
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/voucherdetail/{id}', [VoucherDetailController::class, 'getVoucherDetail']);
-    Route::get('/getvouchers', [VoucherDetailController::class, 'getVoucher']);
+Route::get('/voucherdetail', [VoucherDetailController::class, 'getVoucherDetail']);
+Route::get('/getvouchers', [VoucherDetailController::class, 'getVoucher']);
     Route::post('/claimvoucher', [VoucherDetailController::class, 'claimVoucher']);
     });
 

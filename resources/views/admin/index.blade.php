@@ -89,7 +89,7 @@
 
                                             <div class="card-content">
 
-                                                <h5 class="font-15"> Total Products/Devices</h5>
+                                                <h5 class="font-15"> Total Products</h5>
 
                                                 <h2 class="mb-3 font-18">
 

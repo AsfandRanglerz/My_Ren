@@ -11,7 +11,7 @@
         <div style="text-align: center;">
             <img src="{{ asset('public/admin/assets/img/logo.png') }}" alt="Logo"
                 style="margin-bottom: 30px; height: 100px;">
-            <h2 style="color: #00aaff; margin-bottom: 20px;">Your One Time Password (OTP)</h2>
+            <h2 style="color: #d881fb; margin-bottom: 20px;">Your One Time Password (OTP)</h2>
         </div>
 
         <p>Dear {{ $name ?? 'User' }},</p>

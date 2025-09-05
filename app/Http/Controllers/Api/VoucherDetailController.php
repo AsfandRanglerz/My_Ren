@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 
 class VoucherDetailController extends Controller
 {
-    public function getVoucherDetail($id)
+    public function getVoucherDetail()
 {
     try {
         $user = Auth::user();
@@ -30,28 +30,24 @@ class VoucherDetailController extends Controller
             ->value('total_points');
 
         // Sirf required fields select karo
-        $voucher = DB::table('vouchers')
-            ->select('id', 'required_points', 'rupees')
-            ->where('id', $id)
-            ->first();
+     $claimedVouchers = DB::table('claim_vouchers')
+            ->join('vouchers', 'claim_vouchers.voucher_id', '=', 'vouchers.id')
+            ->where('claim_vouchers.user_id', $user->id)
+            ->select(
+                'claim_vouchers.coupon_code',
+                'vouchers.voucher_code'
+            )
+            ->get();
 
-        if (!$voucher) {
+        if (!$claimedVouchers) {
             return response()->json([
                 'message' => 'Voucher Not Found'
             ], 404);
         }
-
-        $data = [
-            'id'              => $voucher->id,
-            'required_points' => $voucher->required_points,
-            'rupees'          => $voucher->rupees,
-            'user_points'     => $totalPoints ?? 0,
-            'button'          => ($totalPoints >= $voucher->required_points) ? 'Claim Voucher' : 'Insufficient Points'
-        ];
-
-        return response()->json([
-            'message' => 'Voucher Fetched Successfully',
-            'data' => $data
+    return response()->json([
+            'message' => 'Claimed vouchers fetched successfully',
+            'data' => $claimedVouchers,
+            'user_points' => $totalPoints ?? 0
         ], 200);
 
     } catch (Exception $e) {
@@ -81,7 +77,7 @@ class VoucherDetailController extends Controller
 
         // Sirf required fields select karo
         $vouchers = DB::table('vouchers')
-            ->select('id', 'required_points', 'rupees')
+            ->select('id', 'required_points', 'rupees', 'voucher_code')
             ->get();
 
         // Data format
@@ -91,6 +87,7 @@ class VoucherDetailController extends Controller
                 'required_points'=> $voucher->required_points,
                 'rupees'         => $voucher->rupees,
                 'user_points'    => $totalPoints ?? 0,
+                'voucher_code'   => $voucher->voucher_code,
             ];
         });
 
