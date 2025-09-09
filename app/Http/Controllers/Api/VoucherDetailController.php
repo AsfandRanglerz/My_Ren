@@ -35,7 +35,8 @@ class VoucherDetailController extends Controller
             ->where('claim_vouchers.user_id', $user->id)
             ->select(
                 'claim_vouchers.coupon_code',
-                'vouchers.voucher_code'
+                'vouchers.voucher_code',
+                'vouchers.rupees',
             )
             ->get();
 
@@ -115,32 +116,64 @@ public function ClaimVoucher(Request $request)
             ], 401);
         }
 
+        // Voucher detail lo
+        $voucher = Voucher::find($request->voucher_id);
+
+        if (!$voucher) {
+            return response()->json([
+                'message' => 'Voucher not found'
+            ], 404);
+        }
+
+        // User wallet se current points lo
+        $wallet = DB::table('user_wallets')->where('user_id', $user->id)->first();
+
+        if (!$wallet || $wallet->total_points < $voucher->required_points) {
+            return response()->json([
+                'message' => 'Not Enough Points to Claim this Voucher'
+            ], 400);
+        }
+
         // 4 digit random coupon code
         $couponCode = strtoupper(Str::random(4));
 
-        // Insert record and get ID
+        DB::beginTransaction();
+
+        // 1. Minus points from user wallet
+        DB::table('user_wallets')
+            ->where('user_id', $user->id)
+            ->update([
+                'total_points' => $wallet->total_points - $voucher->required_points,
+                'updated_at'   => now()
+            ]);
+
+        // 2. Insert into claim_vouchers
         $id = DB::table('claim_vouchers')->insertGetId([
             'user_id'     => $user->id,
-            'voucher_id'  => $request->voucher_id,
+            'voucher_id'  => $voucher->id,
             'coupon_code' => $couponCode,
             'created_at'  => now(),
             'updated_at'  => now(),
         ]);
 
-        // Fetch created record
+        DB::commit();
+
+        // 3. Fetch created record
         $data = DB::table('claim_vouchers')->where('id', $id)->first();
 
         return response()->json([
             'message' => 'Voucher Claimed Successfully',
             'data'    => $data
-        ], 201);
+        ], 200);
 
     } catch (Exception $e) {
+        DB::rollBack();
         return response()->json([
             'message' => 'Something Went Wrong',
             'error'   => $e->getMessage()
         ], 500);
     }
 }
+
 
 }

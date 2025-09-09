@@ -9,7 +9,7 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4>Sub Admins</h4>
+                                <h4>Sub Admins<small class="font-weight-bold text-danger"> (The default password for all sub-admins is 12345678. This password is automatically generated when a new sub-admin is created.)</small></h4>
                             </div>
                             <div class="card-body table-striped table-bordered table-responsive">
                                 @if (Auth::guard('admin')->check() ||

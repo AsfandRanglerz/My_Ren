@@ -257,27 +257,27 @@ Route::post('/users/toggle-status', [UserController::class, 'toggleStatus'])->na
 
 
 
-    Route::get('/login-reward-rules', [\App\Http\Controllers\Admin\LoginRewardRuleController::class, 'index'])->name('login-reward-rules.index')->middleware('check.permission:Reward Settings,view');
+    Route::get('/lntall-rewards', [\App\Http\Controllers\Admin\InstallRewardController::class, 'index'])->name('intall-rewards.index')->middleware('check.permission:Reward Settings,view');
 
 
 
-    Route::get('/login-reward-rules-create', [\App\Http\Controllers\Admin\LoginRewardRuleController::class, 'create'])->name('login-reward-rules.create')->middleware('check.permission:Reward Settings,create');
+    Route::get('/lntall-rewards-create', [\App\Http\Controllers\Admin\InstallRewardController::class, 'create'])->name('lntall-rewards.create')->middleware('check.permission:Reward Settings,create');
 
 
 
-    Route::post('/login-reward-rules-store', [\App\Http\Controllers\Admin\LoginRewardRuleController::class, 'store'])->name('loginrewardrules.store')->middleware('check.permission:Reward Settings,create');
+    Route::post('/lntall-rewards-store', [\App\Http\Controllers\Admin\InstallRewardController::class, 'store'])->name('lntall-rewards.store')->middleware('check.permission:Reward Settings,create');
 
 
 
-    Route::get('/login-reward-rules-edit/{id}', [\App\Http\Controllers\Admin\LoginRewardRuleController::class, 'edit'])->name('login-reward-rules.edit')->middleware('check.permission:Reward Settings,edit');
+    Route::get('/lntall-rewards-edit/{id}', [\App\Http\Controllers\Admin\InstallRewardController::class, 'edit'])->name('lntall-rewards.edit')->middleware('check.permission:Reward Settings,edit');
 
 
 
-    Route::post('/login-reward-rules-update/{id}', [\App\Http\Controllers\Admin\LoginRewardRuleController::class, 'update'])->name('login-reward-rules.update');
+    Route::post('/lntall-rewards-update/{id}', [\App\Http\Controllers\Admin\InstallRewardController::class, 'update'])->name('lntall-rewards.update');
 
 
 
-    Route::delete('/login-reward-rules-destroy/{id}', [\App\Http\Controllers\Admin\LoginRewardRuleController::class, 'destroy'])->name('login-reward-rules.destroy')->middleware('check.permission:Reward Settings,delete');
+    Route::delete('/lntall-rewards-destroy/{id}', [\App\Http\Controllers\Admin\InstallRewardController::class, 'destroy'])->name('lntall-rewards.destroy')->middleware('check.permission:Reward Settings,delete');
 
 
 

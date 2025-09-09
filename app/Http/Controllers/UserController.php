@@ -11,7 +11,7 @@ use App\Models\Sale;
 use App\Models\User;
 
 use App\Models\UserWallet;
-
+use App\Mail\UserDeactivation;
 use Illuminate\Http\Request;
 
 use App\Models\UserRolePermission;
@@ -92,104 +92,31 @@ class UserController extends Controller
 
 
 public function toggleStatus(Request $request)
-
 {
-
     $user = User::find($request->id);
 
-    
-
     if ($user) {
-
         $user->toggle = $request->status;
-
         $user->save();
 
-        
-
         // If deactivating and reason provided
-
         if ($request->status == 0 && $request->reason) {
-
-            // Save the reason (you might want to create a separate table for this)
-
-            // $user->deactivation_reason = $request->reason;
-
-            // $user->save();
-
-            
-
-            // Send email notification
-
-            $this->sendDeactivationEmail($user, $request->reason);
-
+            // Send email notification using Mailable
+            Mail::to($user->email)->send(new UserDeactivation($user, $request->reason));
         }
 
-        
-
         return response()->json([
-
             'success' => true,
-
             'message' => 'Status updated successfully',
-
             'new_status' => $user->toggle ? 'Activated' : 'Deactivated'
-
         ]);
-
     }
-
-    
 
     return response()->json([
-
         'success' => false,
-
         'message' => 'User not found'
-
     ], 404);
-
 }
-
-
-
-protected function sendDeactivationEmail($user, $reason)
-
-{
-
-    $data = [
-
-        'name' => $user->name,
-
-        'email' => $user->email,
-
-        'reason' => $reason
-
-    ];
-
-    
-
-    try {
-
-        Mail::send('emails.user_deactivated', $data, function($message) use ($user) {
-
-            $message->to($user->email, $user->name)
-
-                    ->subject('Account Deactivation Notification');
-
-        });
-
-    } catch (\Exception $e) {
-
-        \Log::error("Failed to send deactivation email: " . $e->getMessage());
-
-    }
-
-}
-
-
-
-
 
     public function createview() {
 
@@ -288,22 +215,9 @@ protected function sendDeactivationEmail($user, $reason)
         // Store path to save in database (if needed)
 
         $imagePath = 'admin/assets/images/users/' . $imageName;
-
-        
-
-
-
-        
+    
 
     }
-
-
-
-     
-
-
-
-    // ✅ Save user
 
     User::create([
 

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLoginRewardRuleTable extends Migration
+class RenameLoginRewardRuleToInstallRewards extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateLoginRewardRuleTable extends Migration
      */
     public function up()
     {
-        Schema::create('login_reward_rule', function (Blueprint $table) {
-            $table->id();
-            $table->string('day');
+        Schema::table('login_reward_rule', function (Blueprint $table) {
+            //
+             $table->string('target_sales')->nullable(); // pehle day tha
             $table->integer('points');
-            $table->timestamps();
+        
         });
     }
 
@@ -28,6 +28,8 @@ class CreateLoginRewardRuleTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('login_reward_rule');
+        Schema::table('login_reward_rule', function (Blueprint $table) {
+            //
+        });
     }
 }
