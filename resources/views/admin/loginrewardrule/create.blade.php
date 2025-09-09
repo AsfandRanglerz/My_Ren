@@ -12,7 +12,7 @@
 
             <div class="section-body">
 
-                <!-- <a class="btn btn-primary mb-3" href="{{ route('lntall-rewards.store') }}">Back</a> -->
+                <a class="btn btn-primary mb-3" href="{{ route('intall-rewards.index') }}">Back</a>
 
 
 

@@ -92,6 +92,18 @@
             </li>
             @endif
 
+             <li class="dropdown {{ request()->is('admin/lntall-rewards*') ? 'active' : '' }}">
+
+                <a href="{{ url('admin/lntall-rewards') }}" class="nav-link">
+
+                    <i data-feather="award"></i>
+
+                    <span>Install Rewards</span>
+
+                </a>
+
+            </li>
+
 
 
 

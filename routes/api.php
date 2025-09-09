@@ -13,6 +13,8 @@ use App\Http\Controllers\Api\EmailOtpController;
 
 use App\Http\Controllers\Api\ForgotPasswordController;
 
+use App\Http\Controllers\Api\InstallRewardController;
+
 use App\Http\Controllers\Api\LoginController;
 
 use App\Http\Controllers\Api\LoginRewardRuleController;
@@ -20,7 +22,6 @@ use App\Http\Controllers\Api\LoginRewardRuleController;
 use App\Http\Controllers\Api\NotificationController;
 
 use App\Http\Controllers\Api\ProductDetailController;
-
 use App\Http\Controllers\Api\RankingController;
 use App\Http\Controllers\Api\SaleController;
 use App\Http\Controllers\Api\ScanController;
@@ -37,6 +38,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SideMenueController;
 use App\Http\Controllers\SideMenuPermissionController;
 use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -226,8 +228,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/searchbyname', [SearchHistoryController::class, 'searchUserSalesByProductName']);
 });
 
+//Install Reward 
 
+    Route::middleware('auth:sanctum')->group(function () {
 
+    Route::get('/install-reward', [InstallRewardController::class, 'index']);
+
+    });
 // voucher routes
 
 Route::middleware('auth:sanctum')->group(function () {

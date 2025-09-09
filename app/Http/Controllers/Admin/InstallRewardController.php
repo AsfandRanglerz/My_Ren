@@ -68,7 +68,7 @@ class InstallRewardController extends Controller
 
     public function edit($id)
     {
-        $data = LoginRewardRule::findOrFail($id);
+        $data = InstallReward::findOrFail($id);
         return view('admin.loginrewardrule.edit', compact('data'));
     }
 
@@ -92,7 +92,7 @@ class InstallRewardController extends Controller
     $data->points = $request->points;
     $data->save();
 
-    return redirect()->route('install-rewards.index')
+    return redirect()->route('intall-rewards.index')
                      ->with('success', 'Install reward updated successfully');
 }
 
@@ -102,6 +102,6 @@ class InstallRewardController extends Controller
         $data = InstallReward::findOrFail($id);
         $data->delete();
 
-        return redirect()->route('install-rewards.index')->with('success', 'Install reward deleted successfully');
+        return redirect()->route('intall-rewards.index')->with('success', 'Install reward deleted successfully');
     }
 }

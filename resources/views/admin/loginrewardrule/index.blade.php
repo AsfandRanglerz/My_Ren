@@ -47,11 +47,11 @@
 
                                         <th>Sr.</th>
 
-                                        <th>Sale Target</th>
+                                        <th>Sale Targets</th>
 
                                         <th>Points</th>
 
-                                        <th scope="col">Action</th>
+                                        <th scope="col">Actions</th>
 
                                     </tr>
 
@@ -76,7 +76,7 @@
                                                     style="float: left; margin-right: 8px;"><span><i
                                                             class="fa fa-edit"></i></span></a>
                                                 @endif
-                                                {{-- @if (Auth::guard('admin')->check() || ($sideMenuPermissions->has('Products') && $sideMenuPermissions['Products']->contains('delete')))
+                                                @if (Auth::guard('admin')->check() || ($sideMenuPermissions->has('Products') && $sideMenuPermissions['Products']->contains('delete')))
 
                                                             <form id="delete-form-{{ $data->id }}"
 
@@ -99,23 +99,9 @@
 
                                                 </button>
 
-                                                @endif --}}
-
-
-
-
+                                                @endif
 
                                         </td>
-
-
-
-
-
-
-
-
-
-
 
                         </div>
 
@@ -175,9 +161,9 @@
 
         swal({
 
-                title: "Are you sure?",
+                title: "If you delete this User, it will be gone forever.",
 
-                text: "If you delete this product record, it will be gone forever.",
+                text: "If you delete this Install Reward, it will be gone forever.",
 
                 icon: "warning",
 
