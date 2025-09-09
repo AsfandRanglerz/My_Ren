@@ -13,6 +13,12 @@ return [
     | a conventional file to locate the various service credentials.
     |
     */
+    
+    'shopify' => [
+        'store_url' => env('SHOPIFY_STORE_URL'),
+        'access_token' => env('SHOPIFY_ACCESS_TOKEN'),
+        'api_version' => env('SHOPIFY_API_VERSION', '2025-07'),
+    ],
 
     'mailgun' => [
         'domain' => env('MAILGUN_DOMAIN'),
