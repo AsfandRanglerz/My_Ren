@@ -92,6 +92,9 @@
             </li>
             @endif
 
+
+              @if (Auth::guard('admin')->check() ||
+            ($sideMenuPermissions->has('Install Rewards') && $sideMenuPermissions['Install Rewards']->contains('view')))
              <li class="dropdown {{ request()->is('admin/lntall-rewards*') ? 'active' : '' }}">
 
                 <a href="{{ url('admin/lntall-rewards') }}" class="nav-link">
@@ -103,8 +106,7 @@
                 </a>
 
             </li>
-
-
+             @endif
 
 
 

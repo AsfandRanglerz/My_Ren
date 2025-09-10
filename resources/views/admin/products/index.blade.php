@@ -119,8 +119,8 @@
             var form = document.getElementById(formId);
             event.preventDefault();
             swal({
-                    title: "Are you sure?",
-                    text: "If you delete this Device record, it will be gone forever.",
+                    title: "Are you sure you want to delete this record?",
+                    text: "If you delete this Device/Product record, it will be gone forever.",
                     icon: "warning",
                     buttons: true,
                     dangerMode: true,

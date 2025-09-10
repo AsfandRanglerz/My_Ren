@@ -33,7 +33,7 @@
                         <div class="card-body table-striped table-bordered table-responsive">
 
                             @if (Auth::guard('admin')->check() ||
-                                        ($sideMenuPermissions->has('Roles') && $sideMenuPermissions['Roles']->contains('create')))
+                                        ($sideMenuPermissions->has('Install Rewards') && $sideMenuPermissions['Install Rewards']->contains('create')))
                                     <a class="btn btn-primary mb-3 text-white"
                                         href="{{ url('admin/lntall-rewards-create') }}">Create</a>
                                 @endif
@@ -70,13 +70,13 @@
                                         <td>
                                             <div class="d-flex ">
                                                 @if (Auth::guard('admin')->check() ||
-                                                ($sideMenuPermissions->has('Reward Settings') && $sideMenuPermissions['Reward Settings']->contains('edit')))
+                                                ($sideMenuPermissions->has('Install Rewards') && $sideMenuPermissions['Install Rewards']->contains('edit')))
                                                 <a href="{{ route('lntall-rewards.edit', $data->id) }}"
                                                     class="btn btn-primary me-2"
                                                     style="float: left; margin-right: 8px;"><span><i
                                                             class="fa fa-edit"></i></span></a>
                                                 @endif
-                                                @if (Auth::guard('admin')->check() || ($sideMenuPermissions->has('Products') && $sideMenuPermissions['Products']->contains('delete')))
+                                                @if (Auth::guard('admin')->check() || ($sideMenuPermissions->has('Install Rewards') && $sideMenuPermissions['Install Rewards']->contains('delete')))
 
                                                             <form id="delete-form-{{ $data->id }}"
 
@@ -161,7 +161,7 @@
 
         swal({
 
-                title: "If you delete this User, it will be gone forever.",
+                title: "Are you sure you want to delete this record?",
 
                 text: "If you delete this Install Reward, it will be gone forever.",
 

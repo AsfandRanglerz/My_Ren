@@ -24,7 +24,7 @@
 
                             <div class="card">
 
-                                <h4 class="text-center my-4"> Scan Code</h4>
+                                <h4 class="text-center my-4"> Create Scan Code</h4>
 
                                 <div class="row mx-0 px-4">
 
