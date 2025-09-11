@@ -154,6 +154,8 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::post('/scancode', [ScanController::class, 'storeScanCode'])->middleware('auth:sanctum');
 
 
+
+
 // products details
 
 Route::middleware('auth:sanctum')->group(function () {

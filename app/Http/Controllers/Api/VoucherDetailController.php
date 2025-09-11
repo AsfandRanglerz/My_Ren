@@ -105,67 +105,63 @@ class VoucherDetailController extends Controller
     }
 }
 
-// public function ClaimVoucher(Request $request)
-// {
-//     try {
-//         $user = Auth::user();
+      public function ClaimVoucher(Request $request)
+{
+    try {
+        $user = Auth::user();
 
-//         if (!$user) {
-//             return response()->json([
-//                 'message' => 'Unauthorized'
-//             ], 401);
-//         }
+        if (!$user) {
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 401);
+        }
 
-//         // 4 digit random coupon code
-//         $couponCode = strtoupper(Str::random(4));
+        // Voucher detail lo
+        $voucher = Voucher::find($request->voucher_id);
 
-//         // Insert record and get ID
-//         $id = DB::table('claim_vouchers')->insertGetId([
-//             'user_id'     => $user->id,
-//             'voucher_id'  => $request->voucher_id,
-//             'coupon_code' => $couponCode,
-//             'created_at'  => now(),
-//             'updated_at'  => now(),
-//         ]);
+        if (!$voucher) {
+            return response()->json([
+                'message' => 'Voucher not found'
+            ], 404);
+        }
 
-//         // Fetch created record
-//         $data = DB::table('claim_vouchers')->where('id', $id)->first();
+        // User wallet se current points lo
+        $wallet = DB::table('user_wallets')->where('user_id', $user->id)->first();
 
-//         return response()->json([
-//             'message' => 'Voucher Claimed Successfully',
-//             'data'    => $data
-//         ], 201);
+        if (!$wallet || $wallet->total_points < $voucher->required_points) {
+            return response()->json([
+                'message' => 'Not Enough Points to Claim this Voucher'
+            ], 422);
+        }
 
-//     } catch (Exception $e) {
-//         return response()->json([
-//             'message' => 'Something Went Wrong',
-//             'error'   => $e->getMessage()
-//         ], 500);
-//     }
-// }
+        // 4 digit random coupon code
+        $couponCode = strtoupper(Str::random(4));
 
-    public function ClaimVoucher(Request $request)
-    {
         DB::beginTransaction();
-        try {
-            $user = Auth::user();
-            if (!$user) {
-                return response()->json([
-                    'message' => 'Unauthorized'
-                ], 401);
-            }
-            // 4 digit random coupon code
-            $couponCode = strtoupper(Str::random(4));
-            // Insert record and get ID
-            $id = DB::table('claim_vouchers')->insertGetId([
-                'user_id'     => $user->id,
-                'voucher_id'  => $request->voucher_id,
-                'coupon_code' => $couponCode,
-                'created_at'  => now(),
-                'updated_at'  => now(),
+
+        // 1. Minus points from user wallet
+        DB::table('user_wallets')
+            ->where('user_id', $user->id)
+            ->update([
+                'total_points' => $wallet->total_points - $voucher->required_points,
+                'updated_at'   => now()
             ]);
-            $data = DB::table('claim_vouchers')->where('id', $id)->first();
-            // Voucher amount from DB
+
+        // 2. Insert into claim_vouchers
+        $id = DB::table('claim_vouchers')->insertGetId([
+            'user_id'     => $user->id,
+            'voucher_id'  => $voucher->id,
+            'coupon_code' => $couponCode,
+            'created_at'  => now(),
+            'updated_at'  => now(),
+        ]);
+
+        DB::commit();
+
+        // 3. Fetch created record
+        $data = DB::table('claim_vouchers')->where('id', $id)->first();
+
+          // Voucher amount from DB
             $voucher = DB::table('vouchers')
                 ->where('id', $request->voucher_id)
                 ->select('rupees')
@@ -179,19 +175,21 @@ class VoucherDetailController extends Controller
                 return response()->json($shopifyResponse, 500);
             }
             DB::commit();
-            return response()->json([
-                'message' => 'Voucher Claimed Successfully',
-                'data'    => $data,
-                'shopify' => $shopifyResponse
-            ], 201);
-        } catch (Exception $e) {
-            DB::rollBack();
-            return response()->json([
-                'message' => 'Something Went Wrong',
-                'error'   => $e->getMessage()
-            ], 500);
-        }
+              return response()->json([
+            'message' => 'Voucher Claimed Successfully',
+            'data'    => $data,
+            // 'shopify' => $shopifyResponse
+        ], 200);
+
+
+    } catch (Exception $e) {
+        DB::rollBack();
+        return response()->json([
+            'message' => 'Something Went Wrong',
+            'error'   => $e->getMessage()
+        ], 500);
     }
+}    
 
   
     private function createShopifyDiscount($customerId, $couponCode, $discountValue)
@@ -264,4 +262,8 @@ class VoucherDetailController extends Controller
             'discount_code' => $discountCode['discount_code']
         ];
     }
+
+
+
+  
 }

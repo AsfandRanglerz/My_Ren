@@ -257,19 +257,19 @@ Route::post('/users/toggle-status', [UserController::class, 'toggleStatus'])->na
 
 
 
-    Route::get('/lntall-rewards', [\App\Http\Controllers\Admin\InstallRewardController::class, 'index'])->name('intall-rewards.index')->middleware('check.permission:Reward Settings,view');
+    Route::get('/lntall-rewards', [\App\Http\Controllers\Admin\InstallRewardController::class, 'index'])->name('intall-rewards.index')->middleware('check.permission:Install Rewards,view');
 
 
 
-    Route::get('/lntall-rewards-create', [\App\Http\Controllers\Admin\InstallRewardController::class, 'create'])->name('lntall-rewards.create')->middleware('check.permission:Reward Settings,create');
+    Route::get('/lntall-rewards-create', [\App\Http\Controllers\Admin\InstallRewardController::class, 'create'])->name('lntall-rewards.create')->middleware('check.permission:Install Rewards,create');
 
 
 
-    Route::post('/lntall-rewards-store', [\App\Http\Controllers\Admin\InstallRewardController::class, 'store'])->name('lntall-rewards.store')->middleware('check.permission:Reward Settings,create');
+    Route::post('/lntall-rewards-store', [\App\Http\Controllers\Admin\InstallRewardController::class, 'store'])->name('lntall-rewards.store')->middleware('check.permission:Install Rewards,create');
 
 
 
-    Route::get('/lntall-rewards-edit/{id}', [\App\Http\Controllers\Admin\InstallRewardController::class, 'edit'])->name('lntall-rewards.edit')->middleware('check.permission:Reward Settings,edit');
+    Route::get('/lntall-rewards-edit/{id}', [\App\Http\Controllers\Admin\InstallRewardController::class, 'edit'])->name('lntall-rewards.edit')->middleware('check.permission:Install Rewards,edit');
 
 
 
@@ -277,7 +277,7 @@ Route::post('/users/toggle-status', [UserController::class, 'toggleStatus'])->na
 
 
 
-    Route::delete('/lntall-rewards-destroy/{id}', [\App\Http\Controllers\Admin\InstallRewardController::class, 'destroy'])->name('lntall-rewards.destroy')->middleware('check.permission:Reward Settings,delete');
+    Route::delete('/lntall-rewards-destroy/{id}', [\App\Http\Controllers\Admin\InstallRewardController::class, 'destroy'])->name('lntall-rewards.destroy')->middleware('check.permission:Install Rewards,delete');
 
 
 
@@ -311,7 +311,7 @@ Route::post('/users/toggle-status', [UserController::class, 'toggleStatus'])->na
 
 Route::post('admin/device-batch-store', [ProductController::class, 'storeBatch'])->name('product.batch.store')->middleware('check.permission:Devices/Products,create');
 
-Route::delete('admin/device-batch-delete/{id}', [ProductController::class, 'deleteBatch'])->name('bactches.delete')->middleware('check.permission:Devices/Products,create');;
+Route::delete('admin/device-batch-delete/{id}', [ProductController::class, 'deleteBatch'])->name('bactches.delete')->middleware('check.permission:Devices/Products,create');
 
 
 
@@ -321,10 +321,10 @@ Route::delete('admin/device-batch-delete/{id}', [ProductController::class, 'dele
 
     // ############ Points Conversions #################
 
-Route::get('/signup-reward-setting', [SignupRewardSettingController::class, 'index'])->name('signup_reward_setting.index');
-    Route::post('signup-reward-setting', [SignupRewardSettingController::class, 'store'])->name('signup_reward_setting.store');
-    Route::get('signup-reward-setting/{id}/edit', [SignupRewardSettingController::class, 'edit'])->name('signup_reward_setting.edit');
-    Route::post('signup-reward-setting/{id}', [SignupRewardSettingController::class, 'update'])->name('signup_reward_setting.update');
+Route::get('/signup-reward-setting', [SignupRewardSettingController::class, 'index'])->name('signup_reward_setting.index')->middleware('check.permission:Signup Reward Settings,view');
+    Route::post('signup-reward-setting', [SignupRewardSettingController::class, 'store'])->name('signup_reward_setting.store')->middleware('check.permission:Signup Reward Settings,create');
+    Route::get('signup-reward-setting/{id}/edit', [SignupRewardSettingController::class, 'edit'])->name('signup_reward_setting.edit')->middleware('check.permission:Signup Reward Settings,edit');
+    Route::post('signup-reward-setting/{id}', [SignupRewardSettingController::class, 'update'])->name('signup_reward_setting.update')->middleware('check.permission:Signup Reward Settings,edit');
     
     // ############ Withdraw Requests #################
     Route::get('/withdrawrequest/count', [WithdrawRequestController::class, 'withdrawalCounter'])->name('withdraw.counter');

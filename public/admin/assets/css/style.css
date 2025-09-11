@@ -3845,7 +3845,11 @@ select.form-control:not([size]):not([multiple]) {
 
 .card .card-statistic-4 .banner-img img {
     max-width: 100%;
-    float: right
+    float: right;
+    width: 100%;
+    height: 150px;
+    object-fit: contain;
+
 }
 
 @media (max-width: 575.98px) {

@@ -4,10 +4,6 @@
 
 @section('content')
 
-
-
-
-
     <!-- Main Content -->
 
     <div class="main-content">
