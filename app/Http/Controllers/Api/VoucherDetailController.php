@@ -38,6 +38,7 @@ class VoucherDetailController extends Controller
                 'vouchers.voucher_code',
                 'vouchers.rupees',
             )
+             ->orderBy('claim_vouchers.id', 'desc')
             ->get();
 
         if (!$claimedVouchers) {
@@ -200,7 +201,7 @@ class VoucherDetailController extends Controller
         // Step 1: Price Rule
         $priceRuleData = [
             "price_rule" => [
-                "title" => "Customer-Discount-{$customerId}",
+                "title" => "Customer-Discount-{$customerId} | {$couponCode}",
                 "value_type" => "fixed_amount",
                 "value" => "-" . $discountValue,
                 "customer_selection" => "all",

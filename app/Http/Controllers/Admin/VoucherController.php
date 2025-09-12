@@ -84,7 +84,11 @@ public function destroy($id)
 
 public function ClaimVoucher()
 {
-    $data = ClaimVoucher::with('user', 'voucher')->get();
+    $data = ClaimVoucher::with('user', 'voucher')
+    ->orderBy('created_at', 'desc')
+    ->get();
+
+    ClaimVoucher::where('is_seen', 0)->update(['is_seen' => 1]);
 
         $sideMenuPermissions = collect();
 

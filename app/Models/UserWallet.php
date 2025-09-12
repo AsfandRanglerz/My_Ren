@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo; // 👈 یہ لائن add کریں
 
 class UserWallet extends Model
 {
@@ -11,10 +12,7 @@ class UserWallet extends Model
 
     protected $table = 'user_wallets';
 
-    protected $fillable = [
-        'user_id',
-        'total_points',
-    ];
+    protected $guarded = [];
 
     /**
      * Each wallet belongs to one user.
@@ -24,7 +22,7 @@ class UserWallet extends Model
         return $this->belongsTo(User::class);
     }
 
-     public function voucher(): BelongsTo
+    public function voucher(): BelongsTo
     {
         return $this->belongsTo(Voucher::class);
     }

@@ -13,7 +13,7 @@ class RankingController extends Controller
 {
     public function rank(Request $request)
     {
-        // return $request->all();
+       
         try {
             $authUser = Auth::user();
 

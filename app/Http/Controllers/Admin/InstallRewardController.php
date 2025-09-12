@@ -75,8 +75,8 @@ class InstallRewardController extends Controller
    public function update(Request $request, $id)
 {
     $validator = Validator::make($request->all(), [
-        'target_sales' => 'required|string|max:255|unique:install_rewards,target_sales,' . $id,
-        'points' => 'required|numeric|min:1|max:999',
+        'target_sales' => 'required|string|unique:install_rewards,target_sales,' . $id,
+        'points' => 'required|numeric',
     ], [
         'target_sales.unique' => 'This target sales value already exists, please enter a different value.'
     ]);

@@ -13,7 +13,8 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::all();
+        $products = Product::orderBy('id', 'desc')->get();
+
         return view('admin.products.index', compact('products'));
     }
 
@@ -33,6 +34,7 @@ class ProductController extends Controller
             'name.required' => 'Product name is required.',
             'demissions.required' => 'Demissions are required.',
             'image.required' => 'Product image is required.',
+             'image.max' => 'Image size must not exceed 2MB.',
             'points.required' => 'Points per sale are required.',
         ]);
 
@@ -70,6 +72,7 @@ class ProductController extends Controller
             'name.required' => 'Product name is required.',
             'demissions.required' => 'Demissions are required.',
             'image.image' => 'The image must be an image file.',
+             'image.max' => 'Image size must not exceed 2MB.',
             'points.required' => 'Points per sale are required.',
         ]);
 

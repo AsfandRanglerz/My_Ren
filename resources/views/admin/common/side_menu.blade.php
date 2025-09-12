@@ -159,7 +159,7 @@
 
 
             @if (Auth::guard('admin')->check() ||
-            ($sideMenuPermissions->has('Devices/Products') && $sideMenuPermissions['Devices/Products']->contains('view')))
+            ($sideMenuPermissions->has('Products') && $sideMenuPermissions['Products']->contains('view')))
             <li class="dropdown {{ request()->is('admin/devices*') ? 'active' : '' }}">
 
                 <a href="{{ url('admin/devices') }}" class="nav-link">
@@ -265,9 +265,8 @@
             ($sideMenuPermissions->has('Notifications') && $sideMenuPermissions['Notifications']->contains('view')))
             {{-- Notification --}}
 
-            {{-- Notifications --}}
 
-            {{-- <li class="dropdown {{ request()->is('admin/notification*') ? 'active' : '' }}">
+             <li class="dropdown {{ request()->is('admin/notification*') ? 'active' : '' }}">
 
             <a href="
 
@@ -279,7 +278,7 @@
 
             </a>
 
-            </li> --}}
+            </li> 
             @endif
 
 

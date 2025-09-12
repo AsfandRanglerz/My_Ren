@@ -68,7 +68,7 @@
 
                                     <label for="points">Points <span style="color: red;">*</span></label>
 
-                                    <input type="number" name="points" id="points" max="999"
+                                    <input type="number" name="points" id="points" 
 
                                         class="form-control @error('points') is-invalid @enderror"
 

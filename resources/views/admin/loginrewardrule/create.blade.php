@@ -30,26 +30,29 @@
 
                         <!-- day -->
 
-                        <div class="col-sm-6">
+                       <div class="col-sm-6">
 
-                            <div class="form-group">
+                                <div class="form-group">
 
-                                <label for="target">Sale Target <span style="color: red;">*</span></label>
+                                    <label for="target">Sale Target <span style="color: red;">*</span></label>
 
-                                <input type="number" name="target_sales" id="target"
+                                    <input type="text" name="target_sales" id="target_sales" 
 
-                                    class="form-control " value="{{ old('target_sales') }}"
+                                        
+                                    class="form-control @error('target_sales') is-invalid @enderror" placeholder="Enter target for sale"
 
-                                    placeholder="Enter target for sale" required>
+                                         required>
 
-                                @error('target_sales')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                    @error('target_sales')
 
+                                        <div class="invalid-feedback">{{ $message }}</div>
+
+                                    @enderror
+
+                                </div>
 
                             </div>
 
-                        </div>
                         <!-- Points -->
                         <div class="col-sm-6">
                             <div class="form-group">
@@ -73,17 +76,66 @@
 </div>
 <script>
     // Hide validation errors on focus
-   $(document).ready(function () {
-    $('input, select, textarea').on('focus', function () {
-        // sirf isi input ke liye invalid-feedback hide kare
-        const $feedback = $(this).siblings('.invalid-feedback');
+  
+        $(document).ready(function() {
 
-        if ($feedback.length) {
-            $feedback.hide();
-            $(this).removeClass('is-invalid');
-        }
-    });
-});
+            function validatePoints() {
+
+                let value = $('#points').val();
+
+                let numericValue = parseInt(value);
+
+                let isValid = value && numericValue >= 1 && numericValue <= 999;
+
+
+
+                if (!isValid) {
+
+                    $('#custom-error').show().text('Please enter a number between 1 and 999');
+
+                    $('#points').addClass('is-invalid');
+
+                    $('#submitBtn').prop('disabled', true);
+
+                } else {
+
+                    $('#custom-error').hide();
+
+                    $('#points').removeClass('is-invalid');
+
+                    $('#submitBtn').prop('disabled', false);
+
+                }
+
+
+
+                return isValid;
+
+            }
+
+
+
+            $('#points').on('input', validatePoints);
+
+            $('#points').on('focus', function() {
+
+                $('#custom-error').hide();
+
+                $('#points').removeClass('is-invalid');
+
+                $('#submitBtn').prop('disabled', false);
+
+            });
+
+            $('#points').on('blur', validatePoints);
+
+
+
+            // Initial validation on page load
+
+            validatePoints();
+
+        });
 
 </script>
 @endsection

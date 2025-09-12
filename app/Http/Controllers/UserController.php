@@ -370,23 +370,27 @@ public function toggleStatus(Request $request)
 
 
 
-    public function delete($id) {
+  public function delete($id) {
 
-        $user = User::find($id);
+    $user = User::find($id);
 
-        if ($user) {
+    if ($user) {
 
-            $user->delete();
+        
+        UserWallet::where('user_id', $user->id)->delete();
 
-            return redirect('/admin/user')->with('success', 'User deleted successfully');
+     
+        $user->delete();
 
-        } else {
+        return redirect('/admin/user')->with('success', 'User and related wallets deleted successfully');
 
-            return redirect('/user')->with('error', 'User not found');
+    } else {
 
-        }
+        return redirect('/user')->with('error', 'User not found');
 
     }
+
+}
 
 
 

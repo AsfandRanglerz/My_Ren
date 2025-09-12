@@ -37,7 +37,7 @@
                                             <th>Title</th>
                                             <th>Message</th>
                                             <th>Created At</th>
-                                            <th>Actions</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -196,7 +196,7 @@
                 var form = document.getElementById(formId);
                 event.preventDefault();
                 swal({
-                        title: "Are you sure?",
+                        title: "Are you sure you want to delete this record?",
                         text: "If you delete this Notification record, it will be gone forever.",
                         icon: "warning",
                         buttons: true,
