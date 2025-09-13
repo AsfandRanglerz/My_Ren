@@ -107,18 +107,11 @@ public function store(Request $request)
         
     
        
-        $imagePath = null;
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('admin/assets/images/users'), $imageName);
-            $imagePath = 'public/admin/assets/images/users/' . $imageName;
-        }
+       
 
         AdminNotification::create([
             'title' => $request->title,
             'description' => $request->description,
-            'image' => $imagePath,
         ]);
 
         // Iterate through the arrays and create notifications
@@ -127,7 +120,6 @@ public function store(Request $request)
                 'user_id' => $userId,
                 'title' => $request->title,
                 'description' => $request->description,
-                'image' => $imagePath,
                 'created_at' => now(),
             ]);
 
@@ -137,7 +129,7 @@ public function store(Request $request)
                     'id' => $notification->id,
                     'title' => $request->title,
                     'body' => $request->description,
-                    'image' => asset($imagePath),
+                    
                 ];
                 dispatch(new NotificationJob($customer->fcm_token, $request->title, $request->description, $data));
             }
