@@ -28,7 +28,7 @@
                                         <tr>
                                             <th>Sr.</th>
                                             <th>Product</th>
-                                            <th>Code (SN)</th>
+                                            <th>SN Code</th>
                                             <th>Points Per Sale</th>
                                         </tr>
                                     </thead>

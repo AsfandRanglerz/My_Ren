@@ -165,35 +165,9 @@ public function store(Request $request)
     {
 
          $notification = AdminNotification::find($id);
-
-        // $notificationName = $notification->name;
-
-        if (Auth::guard('subadmin')->check()) {
-
-            $subadmin = Auth::guard('subadmin')->user();
-
-            $subadminName = $subadmin->name;
-
-            SubAdminLog::create([
-
-                'subadmin_id' => Auth::guard('subadmin')->id(),
-
-                'section' => 'Notifications',
-
-                'action' => 'Delete',
-
-                'message' => "SubAdmin: {$subadminName} Deleted Notification",
-
-            ]);
-
-        }
-
         $notification->delete();
 
-        return redirect()->route('notification.index')->with(['message' => 'Notification Deleted Successfully']);
-
- 
-
+        return redirect()->route('notification.index')->with(['success' => 'Notification Deleted Successfully']);
     }
 
  
@@ -204,7 +178,7 @@ public function store(Request $request)
 
     AdminNotification::truncate();  // or Notification::query()->delete(); if you want model events to trigger
 
-    return redirect()->route('notification.index')->with('message', 'All notifications have been deleted');
+    return redirect()->route('notification.index')->with(['success' => 'All notifications have been deleted']);
 
 }
 

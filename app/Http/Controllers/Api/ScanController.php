@@ -27,7 +27,7 @@ public function storeScanCode(Request $request)
 if ($existingSale) {
     return response()->json([
         'status' => false,
-        'message' => 'This scan code already exists.'
+        'message' => 'This SN Code already exists.'
     ], 400);
 }
 
@@ -40,7 +40,7 @@ if ($existingSale) {
         if (!$productBatch) {
             return response()->json([
                 'status'  => false,
-                'message' => 'This scan code does not exist in any product batch.'
+                'message' => 'This SN Code does not exist against any product.'
             ], 400);
         }
 
@@ -107,10 +107,10 @@ if ($existingSale) {
         ], 200);
 
     } catch (Exception $e) {
-        Log::error('Scan Code Save Error:', ['error' => $e->getMessage()]);
+        Log::error('SN Code Save Error:', ['error' => $e->getMessage()]);
         return response()->json([
             'error'   => $e->getMessage(),
-            'message' => 'An Error Occurred While Saving the Scan Code'
+            'message' => 'An Error Occurred While Saving the SN Code'
         ], 500);
     }
 }

@@ -1,6 +1,6 @@
 @extends('admin.layout.app')
 
-@section('title', 'Create Scan Code')
+@section('title', 'Create SN Code')
 
 @section('content')
 
@@ -24,7 +24,7 @@
 
                             <div class="card">
 
-                                <h4 class="text-center my-4"> Create Scan Code</h4>
+                                <h4 class="text-center my-4"> Create SN Code</h4>
 
                                 <div class="row mx-0 px-4">
 
@@ -38,7 +38,7 @@
 
                                         <div class="form-group">
 
-                                            <label for="name">Scan Code <span style="color: red;">*</span></label>
+                                            <label for="name">SN Code <span style="color: red;">*</span></label>
 
                                             <input type="text"
 
@@ -46,7 +46,7 @@
 
                                                 id="scan_code" name="scan_code" value="{{ old('name') }}" required
 
-                                                placeholder="Enter Scan Code">
+                                                placeholder="Enter SN Code">
 
                                             @error('scan_code')
 

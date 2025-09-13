@@ -126,7 +126,7 @@ class ProductController extends Controller
             'scan_code' => $request->scan,
         ]);
 
-        return redirect()->route('product.index')->with('success', 'Scan code created successfully.');
+        return redirect()->route('product.index')->with('success', 'SN code created successfully.');
     }
 
     public function storeBatch(Request $request)
@@ -135,8 +135,8 @@ class ProductController extends Controller
             'product_id' => 'required|exists:products,id',
             'scan_code' => 'required|string|max:255|unique:product_batches,scan_code',
         ], [
-            'scan_code.unique' => 'This scan code already exists.',
-            'scan_code.required' => 'The scan code field is required.',
+            'scan_code.unique' => 'This SN code already exists.',
+            'scan_code.required' => 'The SN code field is required.',
         ]);
 
         if ($validator->fails()) {
@@ -150,14 +150,14 @@ class ProductController extends Controller
             'scan_code' => $request->scan_code,
         ]);
 
-        return redirect()->route('product.index')->with('success', 'Product scan code added successfully.');
+        return redirect()->route('product.index')->with('success', 'Product SN code added successfully.');
     }
 
     public function deleteBatch($id)
     {
         $batch = ProductBatch::findOrFail($id);
         $batch->delete();
-        return redirect()->back()->with('success', 'Product batch deleted successfully.');
+        return redirect()->back()->with('success', 'SN code deleted successfully.');
     }
 }
 

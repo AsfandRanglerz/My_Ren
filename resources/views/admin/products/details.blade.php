@@ -17,7 +17,7 @@
                         <div class="card">
                             <div class="card-header">
                                 <div class="col-12">
-                                    <h4>{{ $product->name }} - Scan Codes</h4>
+                                    <h4>{{ $product->name }} - SN Codes</h4>
                                 </div>
                             </div>
                             <div class="card-body table-striped table-bordered table-responsive">
@@ -38,10 +38,8 @@
                                     <thead>
                                         <tr>
                                             <th>Sr.</th>
-                                            <th>Scan Code</th>
+                                            <th>SN Code</th>
                                             <th scope="col">Action</th>
-
-
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -75,7 +73,7 @@
                                         @endforeach
                                         {{-- @else --}}
                                         {{-- <tr>
-                                                <td colspan="2">No scan codes found.</td>
+                                                <td colspan="2">No SN codes found.</td>
                                             </tr> --}}
                                         {{-- @endif --}}
                                     </tbody>
@@ -126,8 +124,8 @@
             var form = document.getElementById(formId);
             event.preventDefault();
             swal({
-                    title: "Are you sure?",
-                    text: "If you delete this Device/Product Scan Code, it will be gone forever.",
+                    title: "Are you sure you want to delete this record?",
+                    text: "If you delete this Device/Product SN Code, it will be gone forever.",
                     icon: "warning",
                     buttons: true,
                     dangerMode: true,

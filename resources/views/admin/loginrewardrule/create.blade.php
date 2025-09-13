@@ -28,7 +28,7 @@
 
 
 
-                        <!-- day -->
+                        <!-- Sale target -->
 
                        <div class="col-sm-6">
 
@@ -77,65 +77,21 @@
 <script>
     // Hide validation errors on focus
   
-        $(document).ready(function() {
+      $(document).ready(function () {
 
-            function validatePoints() {
+    
+    $('#target_sales').on('focus input', function () {
+        $(this).removeClass('is-invalid');
+        $(this).siblings('.invalid-feedback').hide(); 
+    });
 
-                let value = $('#points').val();
+    $('#points').on('focus input', function () {
+        $(this).removeClass('is-invalid'); // red border ختم
+        $(this).siblings('.invalid-feedback').hide(); // error text hide
+    });
 
-                let numericValue = parseInt(value);
+});
 
-                let isValid = value && numericValue >= 1 && numericValue <= 999;
-
-
-
-                if (!isValid) {
-
-                    $('#custom-error').show().text('Please enter a number between 1 and 999');
-
-                    $('#points').addClass('is-invalid');
-
-                    $('#submitBtn').prop('disabled', true);
-
-                } else {
-
-                    $('#custom-error').hide();
-
-                    $('#points').removeClass('is-invalid');
-
-                    $('#submitBtn').prop('disabled', false);
-
-                }
-
-
-
-                return isValid;
-
-            }
-
-
-
-            $('#points').on('input', validatePoints);
-
-            $('#points').on('focus', function() {
-
-                $('#custom-error').hide();
-
-                $('#points').removeClass('is-invalid');
-
-                $('#submitBtn').prop('disabled', false);
-
-            });
-
-            $('#points').on('blur', validatePoints);
-
-
-
-            // Initial validation on page load
-
-            validatePoints();
-
-        });
 
 </script>
 @endsection

@@ -29,7 +29,7 @@ class SaleController extends Controller
     {
 
         if (Sale::where('scan_code', $request->scan_code)->exists()) {
-            return response()->json(['message' => 'Scan code already exists'], 400);
+            return response()->json(['message' => 'SN code is Already Exists'], 400);
         }
 
 
