@@ -1,26 +1,13 @@
 <?php
 
-
-
-
 use App\Http\Controllers\Api\AllProductController;
-
-use App\Http\Controllers\Api\AuthController;
-
 use App\Http\Controllers\Api\ContactUsController;
-
 use App\Http\Controllers\Api\EmailOtpController;
-
 use App\Http\Controllers\Api\ForgotPasswordController;
-
 use App\Http\Controllers\Api\InstallRewardController;
-
 use App\Http\Controllers\Api\LoginController;
-
 use App\Http\Controllers\Api\LoginRewardRuleController;
-
 use App\Http\Controllers\Api\NotificationController;
-
 use App\Http\Controllers\Api\ProductDetailController;
 use App\Http\Controllers\Api\RankingController;
 use App\Http\Controllers\Api\SaleController;
@@ -28,7 +15,6 @@ use App\Http\Controllers\Api\ScanController;
 use App\Http\Controllers\Api\SearchHistoryController;
 use App\Http\Controllers\Api\UpdateProfileController;
 use App\Http\Controllers\Api\UserActivePointsController;
-use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\UserRankingController;
 use App\Http\Controllers\Api\VoucherDetailController;
 use App\Http\Controllers\Api\WalletUserPointController;
@@ -38,10 +24,6 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SideMenueController;
 use App\Http\Controllers\SideMenuPermissionController;
 use Illuminate\Support\Facades\Route;
-
-
-
-
 
 /*
 
@@ -63,80 +45,61 @@ use Illuminate\Support\Facades\Route;
 
 */
 
-
-
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 //     return $request->user();
 
 // });
 
-
-
 Route::post('/roles', [RoleController::class, 'store']);
-
-
 
 Route::post('/permissions', [PermissionController::class, 'store']);
 
 Route::post('/sidemenue', [SideMenueController::class, 'store']);
 
-
-
 Route::post('/permission-insert', [SideMenuPermissionController::class, 'assignPermissions']);
-
-
 
 // seo routes
 
+// User Active Points
 
+Route::post('/user-active-reward/{userId}', [UserActivePointsController::class, 'handleUserActiveReward']);
 
-     // User Active Points
-
-     Route::post('/user-active-reward/{userId}', [UserActivePointsController::class, 'handleUserActiveReward']);
-
-
-
-     //sales routes
+// sales routes
 
 Route::post('/sales-store', [SaleController::class, 'store'])
+    ->name('sales.store');
 
-     ->name('sales.store');
-
-
-
-     // User Registration
-
+// User Registration
 
 Route::post('/send-otp', [EmailOtpController::class, 'sendOtp']);
 Route::post('/verify-otp', [EmailOtpController::class, 'verifyOtp']);
 Route::post('/register-user', [EmailOtpController::class, 'registerUser']);
 
-//get user profile
+// get user profile
 Route::middleware('auth:sanctum')->group(function () {
-Route::get('/getprofiledetail', [UpdateProfileController::class, 'getProfile']);
-Route::post('/updateprofiledetail', [UpdateProfileController::class, 'sendOtp']);
-Route::post('/verifyprofiledetail', [UpdateProfileController::class, 'verifyOtp']);
-Route::post('/update-profile', [EmailOtpController::class, 'requestUpdateOtp']);
-Route::post('/update-profile-verify', [EmailOtpController::class, 'verifyAndUpdateContact']);
-Route::get('/get-logged-in-user-info', [EmailOtpController::class, 'getLoggedInUserInfo']);
+    Route::get('/getprofiledetail', [UpdateProfileController::class, 'getProfile']);
+    Route::post('/updateprofiledetail', [UpdateProfileController::class, 'sendOtp']);
+    Route::post('/verifyprofiledetail', [UpdateProfileController::class, 'verifyOtp']);
+    Route::post('/update-profile', [EmailOtpController::class, 'requestUpdateOtp']);
+    Route::post('/update-profile-verify', [EmailOtpController::class, 'verifyAndUpdateContact']);
+    Route::get('/get-logged-in-user-info', [EmailOtpController::class, 'getLoggedInUserInfo']);
 
 });
 
-//user login
+// user login
 
 Route::post('/user-login', [LoginController::class, 'login']);
 
 Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth:sanctum');
 
-//Forgot Password
+// Forgot Password
 Route::post('/forgotpassword', [ForgotPasswordController::class, 'forgotPassword']);
 Route::post('/forgotverifyotp', [ForgotPasswordController::class, 'forgotverifyOtp']);
 Route::post('/resend-otp', [ForgotPasswordController::class, 'resendOtp']);
 Route::post('/resetpassword', [ForgotPasswordController::class, 'resetPassword']);
 
-
-//Notifications
+// Notifications
 Route::get('/notifications', [NotificationController::class, 'getUserNotifications'])->middleware('auth:sanctum');
 Route::get('/notification/{id}', [NotificationController::class, 'showNotification'])->middleware('auth:sanctum');
 Route::post('/clearnotification', [NotificationController::class, 'clearAll'])->middleware('auth:sanctum');
@@ -149,27 +112,22 @@ Route::middleware('auth:sanctum')->group(function () {
 
 });
 
-
-//Scan Code
+// Scan Code
 Route::post('/scancode', [ScanController::class, 'storeScanCode'])->middleware('auth:sanctum');
-
-
-
 
 // products details
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/productdetail', [ProductDetailController::class, 'getUserProductSales']);
-    });
+});
 
-    
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/sales/products', [SaleController::class, 'getAllProducts']);
-    });
+});
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/all-products', [AllProductController::class, 'getAllProducts']);
-    });
+});
 
 // user spcific rankings
 
@@ -177,85 +135,67 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/specific-userranking', [UserRankingController::class, 'monthlyRankings']);
     Route::get('/specific-monthlyranking', [UserRankingController::class, 'SpecificmonthlyRankings']);
 
-    });
+});
 
+// user total points
 
-
-    // user total points
-
-  Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
     Route::get('/userwallettotalpoints', [WalletUserPointController::class, 'getTotalPoints']);
 
-    });
+});
 
+// rankings of all users
 
+Route::get('/ranking', [RankingController::class, 'rank'])->middleware('auth:sanctum');
 
-    //rankings of all users
+// Reward Points
 
-    Route::get('/ranking',[RankingController::class, 'rank'])->middleware('auth:sanctum');
+Route::get('/loginrewardrules', [LoginRewardRuleController::class, 'index']);
 
-    // Reward Points
+Route::get('/specifc-userranking', [UserRankingController::class, 'SpecificmonthlyRankings'])->middleware('auth:sanctum');
 
-    Route::get('/loginrewardrules', [LoginRewardRuleController::class, 'index']);
+// wallet points
 
-    Route::get('/specifc-userranking',[UserRankingController::class, 'SpecificmonthlyRankings'])->middleware('auth:sanctum');
-
-
-
-
-
-    // wallet points 
-
- Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
     Route::get('/userwalletpoints', [WalletUserPointController::class, 'getPoint']);
 
-    });
-
+});
 
 // Withdraw Requests
-
-
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/userwalletpoints', [WalletUserPointController::class, 'getPoint']);
 });
 
-    // search history
+// search history
 
-    Route::middleware('auth:sanctum')->group(function () {
-     Route::get('/getsearchhistory', [SearchHistoryController::class, 'getUserSoldProductNames']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/getsearchhistory', [SearchHistoryController::class, 'getUserSoldProductNames']);
     Route::get('/searchhistory', [SearchHistoryController::class, 'index']);
-
 
     Route::get('/searchbyname', [SearchHistoryController::class, 'searchUserSalesByProductName']);
 });
 
-//Install Reward 
+// Install Reward
 
-    Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/install-reward', [InstallRewardController::class, 'index']);
 
-    });
+});
 // voucher routes
 
 Route::middleware('auth:sanctum')->group(function () {
-Route::get('/voucherdetail', [VoucherDetailController::class, 'getVoucherDetail']);
-Route::get('/getvouchers', [VoucherDetailController::class, 'getVoucher']);
+    Route::get('/voucherdetail', [VoucherDetailController::class, 'getVoucherDetail']);
+    Route::get('/getvouchers', [VoucherDetailController::class, 'getVoucher']);
     Route::post('/claimvoucher', [VoucherDetailController::class, 'claimVoucher']);
-    });
+});
 
-
-    //
-
-
-
-
+//
 
 Route::middleware('auth:sanctum')->group(function () {
 
-
     // Contact Us
-    Route::post('/contactus/{id}',[ContactUsController::class, 'contact'])->name('contactus');
-Route::get('/getcontactus/{id}',[ContactUsController::class, 'getContact'])->name('getcontactus');
+    Route::post('/contactus/{id}', [ContactUsController::class, 'contact'])->name('contactus');
+    Route::get('/getcontactus/{id}', [ContactUsController::class, 'getContact'])->name('getcontactus');
 });

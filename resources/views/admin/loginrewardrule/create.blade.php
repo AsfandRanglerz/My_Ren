@@ -36,7 +36,7 @@
 
                                     <label for="target">Sale Target <span style="color: red;">*</span></label>
 
-                                    <input type="text" name="target_sales" id="target_sales" 
+                                    <input type="number" name="target_sales" id="target_sales" 
 
                                         
                                     class="form-control @error('target_sales') is-invalid @enderror" placeholder="Enter target for sale"
