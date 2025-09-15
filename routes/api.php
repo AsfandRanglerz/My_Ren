@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\LoginRewardRuleController;
 
 use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\TwillioController;
 
 use App\Http\Controllers\Api\ProductDetailController;
 use App\Http\Controllers\Api\RankingController;
@@ -107,6 +108,7 @@ Route::post('/sales-store', [SaleController::class, 'store'])
 
      // User Registration
 
+Route::post('/send', [TwillioController::class, 'sendSms']);
 
 Route::post('/send-otp', [EmailOtpController::class, 'sendOtp']);
 Route::post('/verify-otp', [EmailOtpController::class, 'verifyOtp']);

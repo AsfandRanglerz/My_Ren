@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Twilio\Rest\Client;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
 
@@ -65,7 +66,14 @@ public function forgotPassword(Request $request)
          if ($type === 'email') {
             Mail::to($identifier)->send(new ForgotOTPMail($otp));
         }
-
+        if ($type === 'phone') {
+            // Send SMS
+            $twilio = new Client(env('TWILIO_SID'), env('TWILIO_TOKEN'));
+            $twilio->messages->create($identifier, [
+                'from' => env('TWILIO_PHONE_NUMBER'),
+                'body' => "Dear user, your One-Time Password (OTP) is $otp. Please do not share this code with anyone. - RenSolutions"
+            ]);
+        }
         return response()->json([
             'message' => 'OTP sent successfully to your email',
             'otp_token' => $otpToken
@@ -169,6 +177,14 @@ public function resendOtp(Request $request)
 
         if ($type === 'email') {
             Mail::to($identifier)->send(new ForgotOTPMail($otp));
+        }
+         if ($type === 'phone') {
+            // Send SMS
+            $twilio = new Client(env('TWILIO_SID'), env('TWILIO_TOKEN'));
+            $twilio->messages->create($identifier, [
+                'from' => env('TWILIO_PHONE_NUMBER'),
+                'body' => "Dear user, your One-Time Password (OTP) is $otp. Please do not share this code with anyone. - RenSolutions"
+            ]);
         }
 
         return response()->json([
