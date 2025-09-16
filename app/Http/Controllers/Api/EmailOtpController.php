@@ -6,9 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Mail\UserEmailOtp;
 use App\Models\EmailOtp;
 use App\Models\SignupRewardSetting;
-use App\Models\User;
+use App\Models\User; 
 use App\Models\UserWallet;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -16,6 +15,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Twilio\Rest\Client;
+use Exception;
 
 
 
@@ -71,6 +72,12 @@ class EmailOtpController extends Controller
                 Mail::to($request->email)->send(new UserEmailOtp($otp));
             } else {
                 // Here you can implement sending OTP via SMS if needed
+                $phone = $request->phone;
+                $twilio = new Client(env('TWILIO_SID'), env('TWILIO_TOKEN'));
+                $twilio->messages->create($phone, [
+                    'from' => env('TWILIO_PHONE_NUMBER'),
+                    'body' => "Dear user, your One-Time Password (OTP) is $otp. Please do not share this code with anyone. - RenSolutions"
+                ]);
             }
 
             return response()->json([
@@ -344,7 +351,16 @@ class EmailOtpController extends Controller
                     Mail::to($data['email'])->send(new UserEmailOtp($otp));
                 }
                 // You can send SMS here for phone OTP
-
+                
+                if (!empty($data['phone'])) {
+                        // Send SMS
+                        $phone = $data['phone'];
+                        $twilio = new Client(env('TWILIO_SID'), env('TWILIO_TOKEN'));
+                        $twilio->messages->create($phone, [
+                            'from' => env('TWILIO_PHONE_NUMBER'),
+                            'body' => "Dear user, your One-Time Password (OTP) is $otp. Please do not share this code with anyone. - RenSolutions"
+                        ]);
+                }
                 return response()->json([
                     'message' => !empty($data['email'])
                         ? 'A verification OTP has been sent to your email'
