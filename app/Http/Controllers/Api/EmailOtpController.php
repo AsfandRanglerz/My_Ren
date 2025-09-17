@@ -5,20 +5,15 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Mail\UserEmailOtp;
 use App\Models\EmailOtp;
-use App\Models\SignupRewardSetting;
-use App\Models\User; 
+use App\Models\User;
 use App\Models\UserWallet;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
 use Twilio\Rest\Client;
-use Exception;
-
-
 
 class EmailOtpController extends Controller
 {
@@ -30,14 +25,14 @@ class EmailOtpController extends Controller
             $rules = [];
             $messages = [];
 
-            if (!empty($data['email'])) {
+            if (! empty($data['email'])) {
                 $rules['email'] = [
                     'unique:users,email',
                 ];
                 $messages['email.unique'] = 'This email is already taken';
             }
 
-            if (!empty($data['phone'])) {
+            if (! empty($data['phone'])) {
                 $rules['phone'] = [
                     'unique:users,phone',
                 ];
@@ -51,7 +46,7 @@ class EmailOtpController extends Controller
 
             $condition = [];
 
-            if (!empty($request->email)) {
+            if (! empty($request->email)) {
                 $condition['email'] = $request->email;
             } else {
                 $condition['phone'] = $request->phone;
@@ -68,7 +63,7 @@ class EmailOtpController extends Controller
                 ]
             );
 
-            if (!empty($request->email)) {
+            if (! empty($request->email)) {
                 Mail::to($request->email)->send(new UserEmailOtp($otp));
             } else {
                 // Here you can implement sending OTP via SMS if needed
@@ -76,24 +71,25 @@ class EmailOtpController extends Controller
                 $twilio = new Client(env('TWILIO_SID'), env('TWILIO_TOKEN'));
                 $twilio->messages->create($phone, [
                     'from' => env('TWILIO_PHONE_NUMBER'),
-                    'body' => "Dear user, your One-Time Password (OTP) is $otp. Please do not share this code with anyone. - RenSolutions"
+                    'body' => "Dear user, your One-Time Password (OTP) is $otp. Please do not share this code with anyone. - RenSolutions",
                 ]);
             }
 
             return response()->json([
-                'message' => !empty($request->email)
+                'message' => ! empty($request->email)
                     ? 'A verification OTP has been sent to your email'
                     : 'A verification OTP has been sent to your phone',
             ], 200);
         } catch (\Illuminate\Validation\ValidationException $e) {
             $firstError = collect($e->errors())->flatten()->first();
+
             return response()->json([
-                'error' => $firstError
+                'error' => $firstError,
             ], 422);
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'Something went wrong',
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], 500);
         }
     }
@@ -106,22 +102,21 @@ class EmailOtpController extends Controller
             // OTP base query
             $query = EmailOtp::where('otp', $request->otp);
 
-            if (!empty($data['email'])) {
+            if (! empty($data['email'])) {
                 $query->where('email', $data['email']);
             }
 
-            if (!empty($data['phone'])) {
+            if (! empty($data['phone'])) {
                 $query->where('phone', $data['phone']);
             }
 
             $otpRecord = $query->latest()->first();
 
-            if (!$otpRecord) {
+            if (! $otpRecord) {
                 return response()->json([
                     'message' => 'Invalid OTP',
                 ], 400);
             }
-
 
             return response()->json([
                 'message' => 'OTP verified successfully',
@@ -137,7 +132,6 @@ class EmailOtpController extends Controller
             ], 500);
         }
     }
-
 
     public function registerUser(Request $request)
     {
@@ -155,9 +149,9 @@ class EmailOtpController extends Controller
 
             // OTP Record Check
             $otpRecord = EmailOtp::where('email', $request->email)->first();
-            if (!$otpRecord) {
+            if (! $otpRecord) {
                 return response()->json([
-                    'error' => 'OTP record not found for the given email.'
+                    'error' => 'OTP record not found for the given email.',
                 ], 404);
             }
 
@@ -171,16 +165,14 @@ class EmailOtpController extends Controller
             ]);
 
             // ✅ Signup reward points read karo
-            $rewardPoints = \App\Models\SignupRewardSetting::first(); 
+            $rewardPoints = \App\Models\SignupRewardSetting::first();
             $points = $rewardPoints ? $rewardPoints->points : 0;
 
             // ✅ User wallet me insert karo
-          $testing =  \App\Models\UserWallet::create([
-                'user_id'      => $user->id,
+            $testing = \App\Models\UserWallet::create([
+                'user_id' => $user->id,
                 'total_points' => $points,
             ]);
-
-            
 
             // ✅ Delete OTP record
             $otpRecord->delete();
@@ -197,24 +189,22 @@ class EmailOtpController extends Controller
         }
     }
 
-
     public function getLoggedInUserInfo()
     {
         try {
             $user = Auth::user();
 
-
-            if (!$user) {
+            if (! $user) {
                 return response()->json(['error' => 'Unauthorized'], 401);
             }
 
-            $totalPoints =  UserWallet::with('user')
+            $totalPoints = UserWallet::with('user')
                 ->where('user_id', $user->id)
                 ->first();
 
             return response()->json([
                 'name' => $user->name ?? null,
-                'image' => $user->image ? 'public/' . $user->image : 'https://ranglerzwp.xyz/myren/public/admin/assets/images/avator.png',
+                'image' => $user->image ? 'public/'.$user->image : 'https://ranglerzwp.xyz/myren/public/admin/assets/images/avator.png',
                 'country' => $user->country ?? null,
                 'email' => $user->email ?? null,
                 'phone' => $user->phone ?? null,
@@ -223,49 +213,42 @@ class EmailOtpController extends Controller
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Something Went Wrong.',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
-
-
 
     public function requestUpdateOtp(Request $request)
     {
         try {
             $user = Auth::user();
-
-            if (!$user) {
+            if (! $user) {
                 return response()->json(['error' => 'Unauthorized'], 401);
             }
 
             $data = $request->only('email', 'phone', 'name', 'image');
             $updatedFields = [];
 
-            // Name update
-            if (!empty($data['name'])) {
+            // ✅ Name update
+            if (! empty($data['name'])) {
                 $user->name = $data['name'];
                 $updatedFields[] = 'name';
             }
 
-            // Image upload
+            // ✅ Image upload
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
-                $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                $imageName = time().'_'.uniqid().'.'.$image->getClientOriginalExtension();
                 $imagePath = 'admin/assets/images/users/';
                 $image->move(public_path($imagePath), $imageName);
 
-                $user->image = $imagePath . $imageName;
+                $user->image = $imagePath.$imageName;
                 $data['image'] = $user->image;
                 $updatedFields[] = 'image';
             }
 
-            if (empty($data['email']) && empty($data['phone']) && empty($updatedFields)) {
-                return response()->json(['error' => 'No data provided to update'], 422);
-            }
-
-            // --- Custom Email/Phone Check Before OTP ---
-            if (!empty($data['email']) && $data['email'] !== $user->email) {
+            // ✅ Check email or phone existence (new unique)
+            if (! empty($data['email']) && $data['email'] !== $user->email) {
                 $emailExists = User::where('email', $data['email'])
                     ->where('id', '!=', $user->id)
                     ->exists();
@@ -275,7 +258,7 @@ class EmailOtpController extends Controller
                 }
             }
 
-            if (!empty($data['phone']) && $data['phone'] !== $user->phone) {
+            if (! empty($data['phone']) && $data['phone'] !== $user->phone) {
                 $phoneExists = User::where('phone', $data['phone'])
                     ->where('id', '!=', $user->id)
                     ->exists();
@@ -285,43 +268,10 @@ class EmailOtpController extends Controller
                 }
             }
 
-            // Rules for status-based restrictions
-            $rules = [];
-
-            if (!empty($data['email']) && $data['email'] === $user->email) {
-                // Same email - allow
-                $user->email = $data['email'];
-                $updatedFields[] = 'email';
+            // ✅ Save name/image updates first if any
+            if (! empty($updatedFields) && empty($data['email']) && empty($data['phone'])) {
                 $user->save();
-                return response()->json([
-                    'message' => 'Profile updated successfully.',
-                    'name' => $user->name,
-                    'email' => $user->email,
-                    'phone' => $user->phone,
-                    'image' => $user->image,
-                    'country' => $user->country,
-                ], 200);
-            }
-            if ($user->status == 1 && !empty($data['email'])) {
-                return response()->json(['error' => 'Cannot update email'], 422);
-            }
 
-            if ($user->status == 2 && !empty($data['phone'])) {
-                return response()->json(['error' => 'Cannot update phone'], 422);
-            }
-
-            $request->validate($rules); // Still applies if needed
-
-            // Save name/image updates
-            if (!empty($updatedFields)) {
-                $user->save();
-            }
-
-            // --- Email/Phone Matching Current One (No OTP Needed) ---
-            $isSameEmail = isset($data['email']) && $data['email'] === $user->email;
-            $isSamePhone = isset($data['phone']) && $data['phone'] === $user->phone;
-
-            if (($isSameEmail || $isSamePhone) && empty($rules)) {
                 return response()->json([
                     'message' => 'Profile updated successfully.',
                     'name' => $user->name,
@@ -332,8 +282,8 @@ class EmailOtpController extends Controller
                 ], 200);
             }
 
-            // --- If New + Unique Email/Phone Provided, Send OTP ---
-            if (!empty($data['email']) || !empty($data['phone'])) {
+            // ✅ If email or phone updated → Send OTP
+            if (! empty($data['email']) || ! empty($data['phone'])) {
                 $otp = rand(1000, 9999);
                 $otpToken = Str::uuid();
 
@@ -347,29 +297,36 @@ class EmailOtpController extends Controller
                     'otp_token' => $otpToken,
                 ]);
 
-                if (!empty($data['email'])) {
+                if (! empty($data['email'])) {
                     Mail::to($data['email'])->send(new UserEmailOtp($otp));
                 }
-                // You can send SMS here for phone OTP
-                
-                if (!empty($data['phone'])) {
-                        // Send SMS
-                        $phone = $data['phone'];
-                        $twilio = new Client(env('TWILIO_SID'), env('TWILIO_TOKEN'));
-                        $twilio->messages->create($phone, [
-                            'from' => env('TWILIO_PHONE_NUMBER'),
-                            'body' => "Dear user, your One-Time Password (OTP) is $otp. Please do not share this code with anyone. - RenSolutions"
-                        ]);
+
+                if (! empty($data['phone'])) {
+                    // ✅ Ensure Twilio format
+                    $phone = $data['phone'];
+                    if (substr($phone, 0, 1) !== '+') {
+                        $phone = '+'.$phone; // ensure + laga ho
+                    }
+                    $twilio = new Client(env('TWILIO_SID'), env('TWILIO_TOKEN'));
+                    $twilio->messages->create($phone, [
+                        'from' => env('TWILIO_PHONE_NUMBER'),
+                        'body' => "Dear user, your One-Time Password (OTP) is $otp. Please do not share this code with anyone. - RenSolutions",
+                    ]);
                 }
+
+                // ✅ Message decide karo type ke hisaab se
+                $msg = ! empty($data['phone'])
+                    ? 'A verification OTP has been sent to your phone'
+                    : 'A verification OTP has been sent to your email';
+
                 return response()->json([
-                    'message' => !empty($data['email'])
-                        ? 'A verification OTP has been sent to your email'
-                        : 'A verification OTP has been sent to your phone',
+                    'message' => $msg,
                     'otp_token' => $otpToken,
                 ], 200);
             }
 
             return response()->json(['message' => 'Profile updated successfully'], 200);
+
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json(['error' => 'Validation failed', 'messages' => $e->errors()], 422);
         } catch (\Exception $e) {
@@ -382,33 +339,29 @@ class EmailOtpController extends Controller
         try {
             $user = Auth::user();
 
-            if (!$user) {
+            if (! $user) {
                 return response()->json(['error' => 'Unauthorized'], 401);
             }
 
-
-
             $otpRecord = EmailOtp::where('otp', $request->otp)->first();
 
-            if (!$otpRecord) {
+            if (! $otpRecord) {
                 return response()->json(['error' => 'Invalid Otp'], 400);
             }
 
-
-
             $updated = false;
 
-            if (!empty($otpRecord->email)) {
+            if (! empty($otpRecord->email)) {
                 $user->email = $otpRecord->email;
                 $updated = true;
             }
 
-            if (!empty($otpRecord->phone)) {
+            if (! empty($otpRecord->phone)) {
                 $user->phone = $otpRecord->phone;
                 $updated = true;
             }
 
-            if (!$updated) {
+            if (! $updated) {
                 return response()->json(['error' => 'Nothing to update'], 422);
             }
 
@@ -417,7 +370,7 @@ class EmailOtpController extends Controller
 
             return response()->json(['message' => 'Profile updated successfully'], 200);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Something went wrong' . $e->getMessage()], 500);
+            return response()->json(['error' => 'Something went wrong'.$e->getMessage()], 500);
         }
     }
 }

@@ -8,11 +8,7 @@ use App\Http\Controllers\Api\InstallRewardController;
 use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\LoginRewardRuleController;
 use App\Http\Controllers\Api\NotificationController;
-<<<<<<< HEAD
-=======
 use App\Http\Controllers\Api\TwillioController;
-
->>>>>>> 53992dd8b44f3e5d82fa686d287503015810b4a4
 use App\Http\Controllers\Api\ProductDetailController;
 use App\Http\Controllers\Api\RankingController;
 use App\Http\Controllers\Api\SaleController;
@@ -75,21 +71,8 @@ Route::post('/user-active-reward/{userId}', [UserActivePointsController::class, 
 Route::post('/sales-store', [SaleController::class, 'store'])
     ->name('sales.store');
 
-<<<<<<< HEAD
 // User Registration
-=======
-     ->name('sales.store');
-
-
-
-     // User Registration
-
 Route::post('/send', [TwillioController::class, 'sendSms']);
->>>>>>> 53992dd8b44f3e5d82fa686d287503015810b4a4
-
-Route::post('/send-otp', [EmailOtpController::class, 'sendOtp']);
-Route::post('/verify-otp', [EmailOtpController::class, 'verifyOtp']);
-Route::post('/register-user', [EmailOtpController::class, 'registerUser']);
 
 // get user profile
 Route::middleware('auth:sanctum')->group(function () {

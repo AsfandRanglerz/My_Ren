@@ -78,19 +78,19 @@
 
 
 
-                            <!-- Dimensions -->
+                            <!-- specifications -->
 
                             <div class="col-sm-6">
 
                                 <div class="form-group">
 
-                                    <label for="demissions">Dimension <span style="color: red;">*</span></label>
+                                    <label for="demissions">Specification <span style="color: red;">*</span></label>
 
                                     <input type="text" name="demissions" id="demissions"
 
                                         class="form-control @error('demissions') is-invalid @enderror"
 
-                                        value="{{ old('demissions') }}" placeholder="Enter dimensions" required>
+                                        value="{{ old('demissions') }}" placeholder="Enter specification" required>
 
                                     @error('demissions')
 
