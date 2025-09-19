@@ -52,7 +52,7 @@
                                             <tr>
                                                 <th style="width: 80px;">Rank</th>
                                                 <th>User Name</th>
-                                                <th>Install (Products)</th>
+                                                <th>Scanned (Products)</th>
                                                 <th>Earned Points</th>
                                             </tr>
                                         </thead>

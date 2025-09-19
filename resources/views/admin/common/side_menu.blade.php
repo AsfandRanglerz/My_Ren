@@ -101,7 +101,7 @@
 
                     <i data-feather="award"></i>
 
-                    <span>Install Rewards</span>
+                    <span>Rewards</span>
 
                 </a>
 

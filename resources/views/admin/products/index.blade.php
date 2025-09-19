@@ -32,7 +32,6 @@
                                             <th>Image</th>
                                             <th>Name</th>
                                             <th>Specification</th>
-                                            <th>Points Per Sale</th>
                                             <th scope="col">View Detail</th>
                                             <th scope="col">Actions</th>
                                         </tr>

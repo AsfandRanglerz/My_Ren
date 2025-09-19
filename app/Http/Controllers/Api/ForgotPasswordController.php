@@ -145,6 +145,59 @@ class ForgotPasswordController extends Controller
         }
     }
 
+    // public function resendOtp(Request $request)
+    // {
+    //     try {
+    //         $type = $request->type;
+    //         $identifier = $request->identifier;
+
+    //         if (! in_array($type, ['email', 'phone'])) {
+    //             return response()->json(['message' => 'Invalid type provided'], 400);
+    //         }
+
+    //         // Same 50-second check
+    //         $recentOtp = EmailOtp::where($type, $identifier)
+    //             ->latest()
+    //             ->first();
+
+    //         $otp = rand(1000, 9999);
+    //         $otpToken = Str::uuid();
+
+    //         $recentOtp->update([
+    //             'otp' => $otp,
+    //             'otp_token' => $otpToken,
+    //         ]);
+
+    //         if ($type === 'email') {
+    //             Mail::to($identifier)->send(new ForgotOTPMail($otp));
+    //         }
+    //         if ($type === 'phone') {
+    //             // Send SMS
+    //             $twilio = new Client(env('TWILIO_SID'), env('TWILIO_TOKEN'));
+    //             $twilio->messages->create($identifier, [
+    //                 'from' => env('TWILIO_PHONE_NUMBER'),
+    //                 'body' => "Dear user, your One-Time Password (OTP) is $otp. Please do not share this code with anyone. - RenSolutions",
+    //             ]);
+    //         }
+
+    //         return response()->json([
+    //             'message' => 'OTP resent successfully',
+    //             'otp_token' => $otpToken,
+    //         ], 200);
+
+    //     } catch (\Illuminate\Validation\ValidationException $e) {
+    //         return response()->json([
+    //             'message' => 'Validation error',
+    //             'errors' => $e->errors(),
+    //         ], 422);
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'message' => 'Something went wrong',
+    //             'error' => $e->getMessage(),
+    //         ], 500);
+    //     }
+    // }
+
     public function resendOtp(Request $request)
     {
         try {
@@ -155,10 +208,15 @@ class ForgotPasswordController extends Controller
                 return response()->json(['message' => 'Invalid type provided'], 400);
             }
 
-            // Same 50-second check
             $recentOtp = EmailOtp::where($type, $identifier)
                 ->latest()
                 ->first();
+
+            if (! $recentOtp) {
+                return response()->json([
+                    'message' => 'No OTP record found for this email',
+                ], 404);
+            }
 
             $otp = rand(1000, 9999);
             $otpToken = Str::uuid();
@@ -171,8 +229,8 @@ class ForgotPasswordController extends Controller
             if ($type === 'email') {
                 Mail::to($identifier)->send(new ForgotOTPMail($otp));
             }
+
             if ($type === 'phone') {
-                // Send SMS
                 $twilio = new Client(env('TWILIO_SID'), env('TWILIO_TOKEN'));
                 $twilio->messages->create($identifier, [
                     'from' => env('TWILIO_PHONE_NUMBER'),
@@ -181,7 +239,7 @@ class ForgotPasswordController extends Controller
             }
 
             return response()->json([
-                'message' => 'OTP resent successfully',
+                'message' => 'OTP resend kar diya gaya hai',
                 'otp_token' => $otpToken,
             ], 200);
 
@@ -192,7 +250,7 @@ class ForgotPasswordController extends Controller
             ], 422);
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Something went wrong',
+                'message' => 'Kuch ghalat ho gaya',
                 'error' => $e->getMessage(),
             ], 500);
         }

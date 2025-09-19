@@ -1,6 +1,6 @@
 @extends('admin.layout.app')
 
-@section('title', 'Install Rewards')
+@section('title', 'Rewards')
 
 @section('content')
 
@@ -24,7 +24,7 @@
 
                             <div class="col-12">
 
-                                <h4>Install Rewards <small class="font-weight-bold text-danger">(Points will be awarded to users who achieve the sales target mentioned below.)</small></h4>
+                                <h4>Rewards <small class="font-weight-bold text-danger">(Points will be awarded to users who achieve the sales target mentioned below.)</small></h4>
 
                             </div>
 

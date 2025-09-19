@@ -52,13 +52,13 @@
 
 
 
-                            <!-- Points Per Sale -->
+                            <!-- Earn Points -->
 
                             <div class="col-sm-6">
 
                                 <div class="form-group">
 
-                                    <label for="points">Points Per Sale <span style="color: red;">*</span></label>
+                                    <label for="points">Earn Points <span style="color: red;">*</span></label>
 
                                     <input type="number" name="points" id="points"
 

@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\User;
+use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\ProductBatch;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
@@ -34,15 +33,15 @@ class ProductController extends Controller
             'name.required' => 'Product name is required.',
             'demissions.required' => 'Demissions are required.',
             'image.required' => 'Product image is required.',
-             'image.max' => 'Image size must not exceed 2MB.',
-            'points.required' => 'Points per sale are required.',
+            'image.max' => 'Image size must not exceed 2MB.',
+            'points.required' => 'Earn Points are required.',
         ]);
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $imageName = time() . '_' . $image->getClientOriginalName();
+            $imageName = time().'_'.$image->getClientOriginalName();
             $image->move(public_path('admin/assets/products'), $imageName);
-            $imagePath = 'admin/assets/products/' . $imageName;
+            $imagePath = 'admin/assets/products/'.$imageName;
         }
 
         Product::create([
@@ -58,6 +57,7 @@ class ProductController extends Controller
     public function edit($id)
     {
         $product = Product::findOrFail($id);
+
         return view('admin.products.edit', compact('product'));
     }
 
@@ -72,7 +72,7 @@ class ProductController extends Controller
             'name.required' => 'Product name is required.',
             'demissions.required' => 'Demissions are required.',
             'image.image' => 'The image must be an image file.',
-             'image.max' => 'Image size must not exceed 2MB.',
+            'image.max' => 'Image size must not exceed 2MB.',
             'points.required' => 'Points per sale are required.',
         ]);
 
@@ -80,9 +80,9 @@ class ProductController extends Controller
 
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $imageName = time() . '_' . $image->getClientOriginalName();
+            $imageName = time().'_'.$image->getClientOriginalName();
             $image->move(public_path('admin/assets/products'), $imageName);
-            $product->image = 'admin/assets/products/' . $imageName;
+            $product->image = 'admin/assets/products/'.$imageName;
         }
 
         $product->name = $request->name;
@@ -97,6 +97,7 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
         $product->delete();
+
         return redirect()->route('product.index')->with('success', 'Product deleted successfully.');
     }
 
@@ -104,6 +105,7 @@ class ProductController extends Controller
     {
         $details = ProductBatch::where('product_id', $id)->latest()->get();
         $product = Product::find($id);
+
         return view('admin.products.details', compact('details', 'id', 'product'));
     }
 
@@ -111,6 +113,7 @@ class ProductController extends Controller
     {
         $details = ProductBatch::where('product_id', $id)->latest()->get();
         $product = Product::find($id);
+
         return view('admin.products.createdetails', compact('details', 'id', 'product'));
     }
 
@@ -118,7 +121,7 @@ class ProductController extends Controller
     {
         $request->validate([
             'scan' => 'required|string|max:255',
-            'product_id' => 'required|exists:products,id'
+            'product_id' => 'required|exists:products,id',
         ]);
 
         ProductBatch::create([
@@ -157,7 +160,7 @@ class ProductController extends Controller
     {
         $batch = ProductBatch::findOrFail($id);
         $batch->delete();
+
         return redirect()->back()->with('success', 'SN code deleted successfully.');
     }
 }
-

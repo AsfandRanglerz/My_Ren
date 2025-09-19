@@ -1,5 +1,5 @@
 @extends('admin.layout.app')
-@section('title', 'Installations Detail')
+@section('title', 'Reward Details')
 
 @section('content')
     <div class="main-content" style="min-height: 562px;">
@@ -10,7 +10,7 @@
                         <div class="card">
                             <!-- Card Header -->
                             <div class="card-header d-flex justify-content-between align-items-center">
-                                <h4 class="mb-0">{{ $data->name ?? 'N/A' }} - Installations Detail</h4>
+                                <h4 class="mb-0">{{ $data->name ?? 'N/A' }} - Reward Detail</h4>
                                 <div class="text-end">
                                     <div class="bg-success px-3 py-2 rounded d-inline-block">
                                         <h6 class="mb-0 text-light">Total Points: {{ $totalPoints ?? 0 }}</h6>
@@ -29,7 +29,7 @@
                                             <th>Sr.</th>
                                             <th>Product</th>
                                             <th>SN Code</th>
-                                            <th>Points Per Sale</th>
+                                            <th>Earn Points</th>
                                         </tr>
                                     </thead>
                                     <tbody>

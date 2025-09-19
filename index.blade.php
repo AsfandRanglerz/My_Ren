@@ -1,6 +1,5 @@
 @extends('admin.layout.app')
 @section('title', 'Users')
-
 @section('content')
 <div class="main-content" style="min-height: 562px;">
     <section class="section">
@@ -78,7 +77,6 @@
                                                     @csrf
                                                     @method('DELETE')
                                                 </form>
-
                                                 <button class="show_confirm btn p-2"
                                                     style="background-color: #cb84fe;"
                                                     data-form="delete-form-{{ $user->id }}" type="button">
@@ -87,7 +85,6 @@
                                                 @endif
                                             </div>
                                         </td>
-
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -99,7 +96,6 @@
         </div> <!-- /.section-body -->
     </section>
 </div>
-
 <!-- Deactivation Modal -->
 <div class="modal fade" id="deactivationModal" tabindex="-1" role="dialog" aria-labelledby="deactivationModalLabel"
     aria-hidden="true">
@@ -129,21 +125,16 @@
     </div>
 </div>
 @endsection
-
 @section('js')
-
 <script>
     $(document).ready(function() {
         $('#table_id_events').DataTable();
-
         let currentToggle = null;
         let currentUserId = null;
-
         $('.toggle-status').change(function() {
             let status = $(this).is(':checked') ? 1 : 0;
             currentToggle = $(this);
             currentUserId = $(this).data('id');
-
             if (status === 0) {
                 $('#deactivatingUserId').val(currentUserId);
                 $('#deactivationModal').modal('show');
@@ -151,7 +142,6 @@
                 updateUserStatus(currentUserId, 1);
             }
         });
-
         $('#confirmDeactivation').click(function() {
             let reason = $('#deactivationReason').val();
             if (reason.trim() === '') {
@@ -161,12 +151,10 @@
                 }, 800);
                 return;
             }
-
             $('#deactivationModal').modal('hide');
             $('#deactivationReason').val('');
             updateUserStatus(currentUserId, 0, reason);
         });
-
         $('#deactivationModal').on('hidden.bs.modal', function() {
             if ($('#deactivationReason').val().trim() === '') {
                 setTimeout(() => {
@@ -174,7 +162,6 @@
                 }, 500);
             }
         });
-
         function updateUserStatus(userId, status, reason = null) {
             let $descriptionSpan = currentToggle.siblings('.custom-switch-description');
             $.ajax({
@@ -202,30 +189,22 @@
                 }
             });
         }
-
-
         //deleting alert
-
         $(document).ready(function() {
             $(document).on('click', '.show_confirm', function(event) {
                 event.preventDefault();
-
                 // Get form ID and form element
                 var formId = $(this).data("form");
                 console.log("Form ID:", formId); // Debug
-
                 var form = document.getElementById(formId);
                 console.log("Form Element:", form); // Debug
-
                 if (!form) {
                     swal("Error", "Form not found. Please check data-form attribute.", "error");
                     return;
                 }
-
                 // Get CSRF token from meta tag
                 var csrfToken = $('meta[name="csrf-token"]').attr('content');
                 console.log("CSRF Token:", csrfToken); // Debug
-
                 // SweetAlert confirmation
                 swal({
                     title: "Are you sure you want to delete this record?",
