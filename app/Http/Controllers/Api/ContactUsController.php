@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\ContactUs;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Exception;
 
 class ContactUsController extends Controller
 {
@@ -18,64 +18,73 @@ class ContactUsController extends Controller
                 'email' => [
                     'unique:contact_us,email',
                 ],
-                'phone' => 'unique:contact_us,phone'
+                'phone' => 'unique:contact_us,phone',
             ]);
 
             if ($validator->fails()) {
                 return response()->json([
                     'status' => false,
-                    'error' => $validator->errors()->all()
+                    'error' => $validator->errors()->all(),
                 ], 422);
             }
-                $contact = ContactUs::find($id);
+            $contact = ContactUs::find($id);
 
-                if ($contact) {
-                    $contact->email = $request->email;
-                    $contact->phone = $request->phone;
-                    $contact->save();
-                }
-
+            if ($contact) {
+                $contact->email = $request->email;
+                $contact->phone = $request->phone;
+                $contact->save();
+            }
 
             return response()->json([
-                
+
                 'message' => 'Contact Us Updated Successfully',
-                'data' => $contact
+                'data' => $contact,
             ], 200);
 
         } catch (Exception $e) {
             return response()->json([
-                
+
                 'message' => 'Something Went Wrong',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
 
-    //  Get contact 
+    //  Get contact
     public function getContact($id)
     {
         try {
             $contact = ContactUs::select('email', 'phone')->find($id);
 
-            if (!$contact) {
+            if (! $contact) {
                 return response()->json([
-                   
-                    'message' => 'No Contact Found'
+
+                    'message' => 'No Contact Found',
                 ], 404);
             }
 
             return response()->json([
-            
+
                 'message' => 'Contact Found Successfully',
-                'data' => $contact
+                'data' => $contact,
             ], 200);
 
         } catch (Exception $e) {
             return response()->json([
-                
+
                 'message' => 'Unable To Fetch Contact',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
+    }
+
+    public function contactUs()
+    {
+        $contact = ContactUs::select('email', 'phone')->first();
+
+        return response()->json([
+            'message' => 'Contact Us details retrieved successfully',
+            'data' => $contact,
+        ]);
     }
 }

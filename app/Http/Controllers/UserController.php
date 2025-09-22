@@ -9,6 +9,7 @@ use App\Models\UserWallet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -145,10 +146,12 @@ class UserController extends Controller
                 'required',
                 'email',
                 'regex:/^[\w\.\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z]{2,6}$/',
+                Rule::unique('users', 'email')->ignore($user->id),
             ],
             'phone' => [
                 'required',
                 'regex:/^\+[1-9]\d{1,14}$/',
+                Rule::unique('users', 'phone')->ignore($user->id),
             ],
             'password' => 'nullable|min:6',
         ], [
@@ -160,9 +163,11 @@ class UserController extends Controller
             'email.required' => 'Email is required',
             'email.email' => 'Email must be a valid email address',
             'email.regex' => 'Email format is invalid',
+            'email.unique' => 'Email is already exist',
             'phone.required' => 'Phone number is required',
             'phone.regex' => 'Phone number must be in E.164 format like +923001234567.',
             'password.min' => 'Password must be at least 6 characters long',
+            'phone.unique' => 'Phone number already exist',
         ]);
         $imagePath = $user->image;
         // ✅ Image update (if provided)

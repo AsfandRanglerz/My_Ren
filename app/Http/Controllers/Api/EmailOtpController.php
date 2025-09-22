@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\NotificationJob;
 use App\Mail\UserEmailOtp;
 use App\Models\EmailOtp;
 use App\Models\User;
@@ -140,6 +141,7 @@ class EmailOtpController extends Controller
                 [
                     'email' => 'nullable|unique:users,email',
                     'phone' => 'nullable|unique:users,phone',
+                    'password' => 'required|min:6',
                 ],
                 [
                     'email.unique' => 'This email is already taken.',
@@ -169,7 +171,7 @@ class EmailOtpController extends Controller
             $points = $rewardPoints ? $rewardPoints->points : 0;
 
             // ✅ User wallet me insert karo
-            $testing = \App\Models\UserWallet::create([
+            \App\Models\UserWallet::create([
                 'user_id' => $user->id,
                 'total_points' => $points,
             ]);
@@ -177,15 +179,47 @@ class EmailOtpController extends Controller
             // ✅ Delete OTP record
             $otpRecord->delete();
 
+            // ✅ Notification send (Push + DB)
+            $title = 'Signup Reward Points';
+            $description = "Welcome {$user->email}, you’ve earned {$points} points for signing up!";
+
+            // push notification ke liye extra data
+            $data = [
+                'type' => 'signup_points',
+                'points' => $points,
+            ];
+
+            // Push notification (agar fcm_token ho)
+            if ($user->fcm_token) {
+                dispatch(new NotificationJob(
+                    $user->fcm_token,
+                    $title,
+                    $description,
+                    $data
+                ));
+            }
+
+            // DB notification store
+            \App\Models\Notification::create([
+                'customer_id' => $user->id,
+                'title' => $title,
+                'description' => $description,
+                'seenByUser' => 0,
+            ]);
+
             return response()->json([
                 'message' => 'Registered successfully.',
                 'user_id' => $user->id,
                 'assigned_points' => $points,
             ], 200);
+
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json($e->errors(), 422);
         } catch (\Exception $e) {
-            return response()->json($e->getMessage(), 500);
+            return response()->json([
+                'message' => 'Something went wrong',
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
 

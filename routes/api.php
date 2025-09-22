@@ -8,12 +8,12 @@ use App\Http\Controllers\Api\InstallRewardController;
 use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\LoginRewardRuleController;
 use App\Http\Controllers\Api\NotificationController;
-use App\Http\Controllers\Api\TwillioController;
 use App\Http\Controllers\Api\ProductDetailController;
 use App\Http\Controllers\Api\RankingController;
 use App\Http\Controllers\Api\SaleController;
 use App\Http\Controllers\Api\ScanController;
 use App\Http\Controllers\Api\SearchHistoryController;
+use App\Http\Controllers\Api\TwillioController;
 use App\Http\Controllers\Api\UpdateProfileController;
 use App\Http\Controllers\Api\UserActivePointsController;
 use App\Http\Controllers\Api\UserRankingController;
@@ -101,7 +101,8 @@ Route::post('/resetpassword', [ForgotPasswordController::class, 'resetPassword']
 Route::get('/notifications', [NotificationController::class, 'getUserNotifications'])->middleware('auth:sanctum');
 Route::get('/notification/{id}', [NotificationController::class, 'showNotification'])->middleware('auth:sanctum');
 Route::post('/clearnotification', [NotificationController::class, 'clearAll'])->middleware('auth:sanctum');
-
+Route::post('/notifications-seen', [NotificationController::class, 'seenNotification'])
+    ->name('notifications.seen');
 // User Withdraw Requests
 Route::post('/withdraw-request', [WithdrawRequestController::class, 'store'])->middleware('auth:sanctum');
 
@@ -190,7 +191,7 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 //
-
+Route::get('/getcontact', [ContactUsController::class, 'contactUs'])->name('getcontact');
 Route::middleware('auth:sanctum')->group(function () {
 
     // Contact Us

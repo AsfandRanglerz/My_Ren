@@ -1,99 +1,64 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
 use App\Models\Role;
 use App\Models\SideMenu;
 use App\Models\SubAdmin;
-use Illuminate\Http\Request;
 use App\Models\SubAdminPermission;
-
 use App\Models\UserRolePermission;
-
-use App\Mail\SubAdminLoginPassword;
-
-use App\Http\Controllers\Controller;
-
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
-use Illuminate\Support\Facades\File;
-
-use Illuminate\Support\Facades\Mail;
-
 use Illuminate\Support\Facades\Validator;
 
-
-
-
-
 class SubAdminController extends Controller
-
 {
-
     public function index()
-
     {
 
         $subAdmins = SubAdmin::with(['permissions.side_menu', 'roles'])
-
-                     ->orderBy('status', 'desc')
-
-                     ->latest()
-
-                     ->get();
+            ->orderBy('status', 'desc')
+            ->latest()
+            ->get();
 
         $sideMenus = SideMenu::all();
 
+        $sideMenuPermissions = collect();
 
+        // ✅ Check if user is not admin (normal subadmin)
 
-         $sideMenuPermissions = collect();
+        if (! Auth::guard('admin')->check()) {
 
+            $user = Auth::guard('subadmin')->user()->load('roles');
 
+            // ✅ 1. Get role_id of subadmin
 
-    // ✅ Check if user is not admin (normal subadmin)
+            $roleId = $user->role_id;
 
-    if (!Auth::guard('admin')->check()) {
+            // ✅ 2. Get all permissions assigned to this role
 
-        $user =Auth::guard('subadmin')->user()->load('roles');
+            $permissions = UserRolePermission::with(['permission', 'sideMenue'])
 
+                ->where('role_id', $roleId)
 
+                ->get();
 
+            // ✅ 3. Group permissions by side menu
 
+            $sideMenuPermissions = $permissions->groupBy('sideMenue.name')->map(function ($items) {
 
-        // ✅ 1. Get role_id of subadmin
+                return $items->pluck('permission.name'); // ['view', 'create']
 
-        $roleId = $user->role_id;
+            });
 
+        }
 
-
-        // ✅ 2. Get all permissions assigned to this role
-
-        $permissions = UserRolePermission::with(['permission', 'sideMenue'])
-
-            ->where('role_id', $roleId)
-
-            ->get();
-
-
-
-        // ✅ 3. Group permissions by side menu
-
-        $sideMenuPermissions = $permissions->groupBy('sideMenue.name')->map(function ($items) {
-
-            return $items->pluck('permission.name'); // ['view', 'create']
-
-        });
+        return view('admin.subadmin.index', compact('subAdmins', 'sideMenus', 'sideMenuPermissions'));
 
     }
-
-        
-
-        return view('admin.subadmin.index', compact('subAdmins', 'sideMenus' , 'sideMenuPermissions'));
-
-    }
-
-
 
     public function create()
-
     {
 
         $sideMenus = SideMenu::all();
@@ -106,262 +71,135 @@ class SubAdminController extends Controller
 
     }
 
-
-
-
-
-   public function store(Request $request)
-
-{
-
-    // return $request->all();
-
- $validator = Validator::make($request->all(), [
-
-        'name' => 'required|string|max:255',
-
-       'email' => [
-
-    'required',
-
-    'email',
-
-    'regex:/^[\w\.\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z]{2,6}$/',
-
-    'unique:sub_admins,email',
-
-],
-
-
-
-        'role' => 'required|exists:roles,id',
-
-        'image' => 'nullable|image|max:2048',
-
-        'password' => 'nullable|min:6'
-
-    ]);
-
-
-
-    if ($validator->fails()) {
-
-        return redirect()->back()
-
-                    ->withErrors($validator) // Pass validation errors
-
-                    ->withInput();
-
-    }
-
-// If validation passes
-
-$validatedData = $validator->validated();
-
-
-
-
-
-    if ($request->hasFile('image')) {
-
-        $file = $request->file('image');
-
-        $filename = time() . '.' . $file->getClientOriginalExtension();
-
-        $file->move(public_path('admin/assets/images/users/'), $filename);
-
-        $image = 'public/admin/assets/images/users/' . $filename;
-
-    } else {
-
-        $image = 'public/admin/assets/images/avator.png';
-
-    }
-
-
-
-    // $password = random_int(10000000, 99999999);
-
-
-
-    $password = '12345678'; // Default password
-
-
-
-    $subAdmin = SubAdmin::create([
-
-        'name' => $request->name,
-
-        'email' => $request->email,
-
-        'password' => bcrypt($password),
-
-        'status' => $request->status ?? 1,
-
-        'image' => $image,
-
-    ]);
-
-
-
-    // Attach role to pivot table
-
-
-
-    $subAdmin->roles()->attach($request->role);
-
- 
-
-
-
-    return redirect()->route('subadmin.index')->with(['success' => 'Sub-Admin created successfully']);
-
-}
-
-
-
-
-
-public function edit($id)
-
-{
-
-    $subAdmin = SubAdmin::findOrFail($id);
-
-    $roles = Role::all();
-
-
-
-    // ✅ Get only one role ID (assumes one role per subadmin)
-
-    $currentRoleId = $subAdmin->roles->pluck('id')->first();
-
-
-
-    return view('admin.subadmin.edit', compact('subAdmin', 'roles', 'currentRoleId'));
-
-}
-
-
-
-
-
-
-
-    public function update(Request $request, $id)
-
+    public function store(Request $request)
     {
 
-    $validator = Validator::make($request->all(), [
+        // return $request->all();
 
-        'name' => 'required|string|max:255',
+        $validator = Validator::make($request->all(), [
 
-        'email' => [
+            'name' => 'required|string|max:255',
 
-            'required',
+            'email' => [
 
-            'email',
+                'required',
 
-            'regex:/^[\w\.\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z]{2,6}$/'
+                'email',
 
-        ],
+                'regex:/^[\w\.\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z]{2,6}$/',
 
-        'role' => 'required|exists:roles,id',
+                'unique:sub_admins,email',
 
-        'image' => 'nullable|image|max:2048',
+            ],
 
-        'password' => 'nullable|min:6', // Optional password field
+            'role' => 'required|exists:roles,id',
 
-    ]);
+            'image' => 'nullable|image|max:2048',
 
+            'password' => 'nullable|min:6',
 
+        ]);
 
-    if ($validator->fails()) {
+        if ($validator->fails()) {
 
-        return redirect()->back()
-
-                    ->withErrors($validator) // Pass validation errors
-
-                    ->withInput();
-
-    }
-
-
-
-// Only reached if validation passes
-
-$validatedData = $validator->validated();
-
-
-
-
-
-        $subAdmin = SubAdmin::findOrFail($id);
-
-
-
-        $image = $subAdmin->image;
-
-
-
-        if ($request->hasFile('image')) {
-
-            $destination = 'public/admin/assets/images/users/' . $subAdmin->image;
-
-            if (File::exists($destination)) {
-
-                File::delete($destination);
-
-            }
-
-
-
-            $file = $request->file('image');
-
-            $extension = $file->getClientOriginalExtension();
-
-            $filename = time() . '.' . $extension;
-
-            $file->move('public/admin/assets/images/users', $filename);
-
-            $image = 'public/admin/assets/images/users/' . $filename;
-
-            $subAdmin->image = $image;
+            return redirect()->back()
+                ->withErrors($validator) // Pass validation errors
+                ->withInput();
 
         }
 
+        // If validation passes
+
+        $validatedData = $validator->validated();
+
+        if ($request->hasFile('image')) {
+
+            $file = $request->file('image');
+
+            $filename = time().'.'.$file->getClientOriginalExtension();
+
+            $file->move(public_path('admin/assets/images/users/'), $filename);
+
+            $image = 'public/admin/assets/images/users/'.$filename;
+
+        } else {
+
+            $image = 'public/admin/assets/images/avator.png';
+
+        }
+
+        // $password = random_int(10000000, 99999999);
+
         $password = '12345678'; // Default password
 
-        $subAdmin->update([
+        $subAdmin = SubAdmin::create([
 
             'name' => $request->name,
 
             'email' => $request->email,
 
-            // 'status' => $request->status,
+            'password' => bcrypt($password),
+
+            'status' => $request->status ?? 1,
 
             'image' => $image,
 
-            'password' => $request->password ? bcrypt($password) : $subAdmin->password,
-
         ]);
 
+        // Attach role to pivot table
 
+        $subAdmin->roles()->attach($request->role);
 
-         // Single role update
-
-        $subAdmin->roles()->sync([$request->role]);
-
-
-
-        return redirect()->route('subadmin.index')->with('success', 'Sub-Admin updated successfully');
+        return redirect()->route('subadmin.index')->with(['success' => 'Sub-Admin created successfully']);
 
     }
 
+    public function edit($id)
+    {
 
+        $subAdmin = SubAdmin::findOrFail($id);
+
+        $roles = Role::all();
+
+        // ✅ Get only one role ID (assumes one role per subadmin)
+
+        $currentRoleId = $subAdmin->roles->pluck('id')->first();
+
+        return view('admin.subadmin.edit', compact('subAdmin', 'roles', 'currentRoleId'));
+
+    }
+
+    public function showNotification($id)
+    {
+        try {
+            $user = Auth::id();
+
+            $notification = Notification::find($id);
+
+            if (! $notification) {
+                return response()->json(['message' => 'Notification not found'], 404);
+            }
+
+            if (! $notification->seenByUser) {
+                $notification->seenByUser = true;
+                $notification->save();
+            }
+
+            return response()->json([
+                'data' => $notification,
+            ], 200);
+
+        } catch (\Exception $e) {
+            Log::error('Error showing notification ID '.$id.': '.$e->getMessage());
+
+            return response()->json([
+                'message' => 'Something went wrong while fetching the notification',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
 
     public function destroy($id)
-
     {
 
         // return $id;
@@ -372,10 +210,7 @@ $validatedData = $validator->validated();
 
     }
 
-
-
     public function updatePermissions(Request $request, $id)
-
     {
 
         $data = $request->validate([
@@ -386,13 +221,11 @@ $validatedData = $validator->validated();
 
         ]);
 
-
-
         // dd($request);
 
         $permissions = [];
 
-        if (!empty($data['side_menu_id'])) {
+        if (! empty($data['side_menu_id'])) {
 
             foreach ($data['side_menu_id'] as $sideMenuId => $permissionArray) {
 
@@ -414,31 +247,22 @@ $validatedData = $validator->validated();
 
         }
 
-        
-
         SubAdminPermission::where('sub_admin_id', $id)->delete();
 
-
-
         SubAdminPermission::insert($permissions);
-
-
 
         return redirect()->route('subadmin.index')->with('message', 'Permissions Updated Successfully');
 
     }
 
-
-
     public function StatusChange(Request $request)
-
     {
 
         $subAdmin = SubAdmin::find($request->id);
 
         $subAdmin->update([
 
-            'status' => $request->status
+            'status' => $request->status,
 
         ]);
 
@@ -446,55 +270,44 @@ $validatedData = $validator->validated();
 
     }
 
+    public function toggleStatus(Request $request)
+    {
 
+        $request->validate([
 
-public function toggleStatus(Request $request)
+            'id' => 'required|exists:sub_admins,id',
 
-{
-
-    $request->validate([
-
-        'id' => 'required|exists:sub_admins,id',
-
-        'status' => 'required|boolean'
-
-    ]);
-
-
-
-    try {
-
-        $subAdmin = SubAdmin::findOrFail($request->id);
-
-        $subAdmin->status = $request->status;
-
-        $subAdmin->save();
-
-
-
-        return response()->json([
-
-            'success' => true,
-
-            'message' => $request->status ? 'Status activated successfully' : 'Status deactivated successfully',
+            'status' => 'required|boolean',
 
         ]);
 
-    } catch (\Exception $e) {
+        try {
 
-        return response()->json([
+            $subAdmin = SubAdmin::findOrFail($request->id);
 
-            'success' => false,
+            $subAdmin->status = $request->status;
 
-            'message' => 'Failed to update status: ' . $e->getMessage()
+            $subAdmin->save();
 
-        ], 500);
+            return response()->json([
+
+                'success' => true,
+
+                'message' => $request->status ? 'Status activated successfully' : 'Status deactivated successfully',
+
+            ]);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+
+                'success' => false,
+
+                'message' => 'Failed to update status: '.$e->getMessage(),
+
+            ], 500);
+
+        }
 
     }
-
 }
-
-
-
-}
-
