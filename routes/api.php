@@ -74,6 +74,10 @@ Route::post('/sales-store', [SaleController::class, 'store'])
 // User Registration
 Route::post('/send', [TwillioController::class, 'sendSms']);
 
+Route::post('/send-otp', [EmailOtpController::class, 'sendOtp']);
+Route::post('/verify-otp', [EmailOtpController::class, 'verifyOtp']);
+Route::post('/register-user', [EmailOtpController::class, 'registerUser']);
+
 // get user profile
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/getprofiledetail', [UpdateProfileController::class, 'getProfile']);
