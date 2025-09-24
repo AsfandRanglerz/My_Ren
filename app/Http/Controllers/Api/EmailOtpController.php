@@ -28,14 +28,14 @@ class EmailOtpController extends Controller
             $rules = [];
             $messages = [];
 
-            if (! empty($data['email'])) {
+            if (!empty($data['email'])) {
                 $rules['email'] = [
                     'unique:users,email',
                 ];
                 $messages['email.unique'] = 'This email is already taken';
             }
 
-            if (! empty($data['phone'])) {
+            if (!empty($data['phone'])) {
                 $rules['phone'] = [
                     'unique:users,phone',
                 ];
@@ -49,7 +49,7 @@ class EmailOtpController extends Controller
 
             $condition = [];
 
-            if (! empty($request->email)) {
+            if (!empty($request->email)) {
                 $condition['email'] = $request->email;
             } else {
                 $condition['phone'] = $request->phone;
@@ -66,7 +66,7 @@ class EmailOtpController extends Controller
                 ]
             );
 
-            if (! empty($request->email)) {
+            if (!empty($request->email)) {
                 Mail::to($request->email)->send(new UserEmailOtp($otp));
             } else {
                 // Here you can implement sending OTP via SMS if needed
@@ -79,7 +79,7 @@ class EmailOtpController extends Controller
             }
 
             return response()->json([
-                'message' => ! empty($request->email)
+                'message' => !empty($request->email)
                     ? 'A verification OTP has been sent to your email'
                     : 'A verification OTP has been sent to your phone',
             ], 200);
@@ -105,11 +105,11 @@ class EmailOtpController extends Controller
             // OTP base query
             $query = EmailOtp::where('otp', $request->otp);
 
-            if (! empty($data['email'])) {
+            if (!empty($data['email'])) {
                 $query->where('email', $data['email']);
             }
 
-            if (! empty($data['phone'])) {
+            if (!empty($data['phone'])) {
                 $query->where('phone', $data['phone']);
             }
 
@@ -255,197 +255,8 @@ class EmailOtpController extends Controller
         }
     }
 
-    // public function requestUpdateOtp(Request $request)
-    // {
-    //     try {
-    //         $user = Auth::user();
-    //         if (! $user) {
-    //             return response()->json(['error' => 'Unauthorized'], 401);
-    //         }
-
-    //         $request->validate([
-    //             'email' => [
-    //                 'nullable',
-    //                 'email',
-    //                 Rule::unique('users', 'email')->ignore($user->id),
-    //             ],
-    //             'phone' => [
-    //                 'nullable',
-    //                 Rule::unique('users', 'phone')->ignore($user->id),
-    //             ],
-    //         ], [
-    //             'email.unique' => 'This email is already taken by another user.',
-    //             'phone.unique' => 'This phone number is already taken by another user.',
-    //         ]);
-
-    //         $data = $request->only('email', 'phone', 'name', 'image');
-    //         $status = (string) $user->status; // varchar handle
-    //         $updatedFields = [];
-
-    //         // ✅ Name update
-    //         if (! empty($data['name'])) {
-    //             $updatedFields['name'] = $data['name'];
-    //         }
-
-    //         // ✅ Image upload
-    //         if ($request->hasFile('image')) {
-    //             $image = $request->file('image');
-    //             $imageName = time().'_'.uniqid().'.'.$image->getClientOriginalExtension();
-    //             $imagePath = 'admin/assets/images/users/';
-    //             $image->move(public_path($imagePath), $imageName);
-    //             $updatedFields['image'] = $imagePath.$imageName;
-    //         }
-
-    //         $otp = null;
-    //         $otpToken = null;
-    //         $sendOtpTo = null;
-
-    //         $pendingData = [
-    //             'email' => $user->email,  // Default original email
-    //             'phone' => $user->phone,  // Default original phone
-    //             'name' => $data['name'] ?? null,
-    //             'image' => $updatedFields['image'] ?? null,
-    //             'country' => $user->country ?? 'N/A',
-    //         ];
-
-    //         // === Status 1 → Email locked ===
-    //         if ($status === '1') {
-    //             if (! empty($data['email']) && $data['email'] !== $user->email) {
-    //                 if (empty($data['phone']) && empty($updatedFields)) {
-    //                     return response()->json(['error' => "You can't update your email"], 422);
-    //                 }
-    //                 // Email cannot update → keep original in EmailOtp
-    //             }
-
-    //             // Phone provided → send OTP to phone
-    //             if (! empty($data['phone']) && $data['phone'] !== $user->phone) {
-    //                 if ($data['phone'] === $user->phone) {
-    //                     return 'This phone is already taken';
-    //                 }
-    //                 $otp = rand(1000, 9999);
-    //                 $otpToken = Str::uuid();
-    //                 $pendingData['phone'] = $data['phone'];
-    //                 $sendOtpTo = 'phone';
-    //             }
-
-    //             // Name/Image update → update only if no phone provided
-    //             if (empty($data['phone']) && ! empty($updatedFields)) {
-    //                 $user->name = $updatedFields['name'] ?? $user->name;
-    //                 $user->image = $updatedFields['image'] ?? $user->image;
-    //                 $user->save();
-
-    //                 return response()->json([
-    //                     'message' => 'Profile updated successfully.',
-    //                     'name' => $user->name,
-    //                     'email' => $user->email,
-    //                     'phone' => $user->phone,
-    //                     'image' => $user->image,
-    //                     'country' => $user->country,
-    //                 ], 200);
-    //             }
-    //         }
-
-    //         // === Status 2 → Phone locked ===
-    //         elseif ($status === '2') {
-    //             if (! empty($data['phone']) && $data['phone'] !== $user->phone) {
-    //                 if (empty($data['email']) && empty($updatedFields)) {
-
-    //                     return response()->json(['error' => "You can't update your phone"], 422);
-    //                 }
-    //                 // Phone cannot update → keep original in EmailOtp
-    //             }
-
-    //             // Email provided → send OTP to email
-    //             if (! empty($data['email']) && $data['email'] !== $user->email) {
-    //                 if ($data['email'] === $user->email) {
-    //                     return 'This email is already taken';
-    //                 }
-    //                 $otp = rand(1000, 9999);
-    //                 $otpToken = Str::uuid();
-    //                 $pendingData['email'] = $data['email'];
-    //                 $sendOtpTo = 'email';
-    //             }
-
-    //             // Name/Image update → update only if no email provided
-    //             if (empty($data['email']) && ! empty($updatedFields)) {
-    //                 $user->name = $updatedFields['name'] ?? $user->name;
-    //                 $user->image = $updatedFields['image'] ?? $user->image;
-    //                 $user->save();
-
-    //                 return response()->json([
-    //                     'message' => 'Profile updated successfully (Phone locked).',
-    //                     'name' => $user->name,
-    //                     'email' => $user->email,
-    //                     'phone' => $user->phone,
-    //                     'image' => $user->image,
-    //                     'country' => $user->country,
-    //                 ], 200);
-    //             }
-    //         }
-
-    //         // === Status 0 / null → no restriction ===
-    //         else {
-    //             if (! empty($data['email'])) {
-    //                 $user->email = $data['email'];
-    //             }
-    //             if (! empty($data['phone'])) {
-    //                 $user->phone = $data['phone'];
-    //             }
-    //             if (! empty($updatedFields['name'])) {
-    //                 $user->name = $updatedFields['name'];
-    //             }
-    //             if (! empty($updatedFields['image'])) {
-    //                 $user->image = $updatedFields['image'];
-    //             }
-    //             $user->save();
-
-    //             return response()->json(['message' => 'Profile updated successfully.'], 200);
-    //         }
-
-    //         // === Create EmailOtp record if OTP needed ===
-    //         if ($otp && $otpToken) {
-    //             $pendingData['otp'] = $otp;
-    //             $pendingData['otp_token'] = $otpToken;
-
-    //             EmailOtp::create($pendingData);
-
-    //             if ($sendOtpTo === 'phone') {
-    //                 $phone = $pendingData['phone'];
-    //                 if (substr($phone, 0, 1) !== '+') {
-    //                     $phone = '+'.$phone;
-    //                 }
-    //                 try {
-    //                     $twilio = new Client(env('TWILIO_SID'), env('TWILIO_TOKEN'));
-    //                     $twilio->messages->create($phone, [
-    //                         'from' => env('TWILIO_PHONE_NUMBER'),
-    //                         'body' => "Your OTP is $otp",
-    //                     ]);
-    //                 } catch (\Exception $e) {
-    //                     return response()->json([
-    //                         'error' => 'Twilio failed',
-    //                         'message' => $e->getMessage(),
-    //                     ], 500);
-    //                 }
-
-    //                 $msg = 'A verification OTP has been sent to your phone.';
-    //             } else {
-    //                 Mail::to($pendingData['email'])->send(new UserEmailOtp($otp));
-    //                 $msg = 'A verification OTP has been sent to your email.';
-    //             }
-
-    //             return response()->json([
-    //                 'message' => $msg,
-    //                 'otp_token' => $otpToken,
-    //             ], 200);
-    //         }
-
-    //         return response()->json(['message' => 'No changes applied.'], 200);
-    //     } catch (\Exception $e) {
-    //         return response()->json(['error' => 'Something went wrong', 'message' => $e->getMessage()], 500);
-    //     }
-    // }
-
-    public function requestUpdateOtp(Request $request)
+ 
+     public function requestUpdateOtp(Request $request)
     {
         try {
             $user = Auth::user();
@@ -481,7 +292,7 @@ class EmailOtpController extends Controller
             $updatedFields = [];
 
             // ✅ Name
-            if (! empty($data['name'])) {
+            if (!empty($data['name'])) {
                 $updatedFields['name'] = $data['name'];
             }
 
@@ -506,20 +317,40 @@ class EmailOtpController extends Controller
                 'country' => $user->country ?? 'N/A',
             ];
 
+			
+
             // ======= STATUS HANDLING =======
             if ($status === '1') {
-                if (! empty($data['email']) && empty($updatedFields) && empty('phone')) {
+               if (isset($data['email']) && empty($updatedFields) && empty($data['phone'])) {
+
                     return response()->json(['message' => "You can't update your email"], 200);
                 }
+
+				if (isset($data['phone']) && trim($data['phone']) === trim($user->phone)) {
+
+					if (isset($data['name']) && trim($data['name']) !== '') {
+						$user->name = $data['name'];
+					}
+
+					if (isset($data['image']) && trim($data['image']) !== '') {
+						$user->image = $data['image'];
+					}
+
+					$user->save(); // changes persist in DB
+
+					return response()->json([
+						'message' => "Profile updated successfully."
+					]);
+				}
                 // email locked
-                if (! empty($data['phone']) && $data['phone'] !== $user->phone) {
+                if (!empty($data['phone']) && $data['phone'] !== $user->phone) {
                     $otp = rand(1000, 9999);
                     $otpToken = Str::uuid();
                     $pendingData['phone'] = $data['phone'];
                     $sendOtpTo = 'phone';
                 }
 
-                if (empty($data['phone']) && ! empty($updatedFields)) {
+                if (empty($data['phone']) && !empty($updatedFields)) {
                     $user->name = $updatedFields['name'] ?? $user->name;
                     $user->image = $updatedFields['image'] ?? $user->image;
                     $user->save();
@@ -527,17 +358,17 @@ class EmailOtpController extends Controller
                     return response()->json(['message' => 'Profile updated successfully.'], 200);
                 }
             } elseif ($status === '2') { // phone locked
-                if (! empty($data['phone']) && empty($updatedFields) && empty('email')) {
+                 if (isset($data['phone']) && empty($updatedFields) && empty($data['email'])) {
                     return response()->json(['message' => "You can't update your phone"], 200);
                 }
-                if (! empty($data['email']) && $data['email'] !== $user->email) {
+                if (!empty($data['email']) && $data['email'] !== $user->email) {
                     $otp = rand(1000, 9999);
                     $otpToken = Str::uuid();
                     $pendingData['email'] = $data['email'];
                     $sendOtpTo = 'email';
                 }
 
-                if (empty($data['email']) && ! empty($updatedFields)) {
+                if (empty($data['email']) && !empty($updatedFields)) {
                     $user->name = $updatedFields['name'] ?? $user->name;
                     $user->image = $updatedFields['image'] ?? $user->image;
                     $user->save();
@@ -545,16 +376,18 @@ class EmailOtpController extends Controller
                     return response()->json(['message' => 'Profile updated successfully.'], 200);
                 }
             } else { // no restriction
-                if (! empty($data['email'])) {
+
+				
+                if (!empty($data['email'])) {
                     $user->email = $data['email'];
                 }
-                if (! empty($data['phone'])) {
+                if (!empty($data['phone'])) {
                     $user->phone = $data['phone'];
                 }
-                if (! empty($updatedFields['name'])) {
+                if (!empty($updatedFields['name'])) {
                     $user->name = $updatedFields['name'];
                 }
-                if (! empty($updatedFields['image'])) {
+                if (!empty($updatedFields['image'])) {
                     $user->image = $updatedFields['image'];
                 }
                 $user->save();
@@ -592,19 +425,20 @@ class EmailOtpController extends Controller
                 return response()->json(['message' => $msg, 'otp_token' => $otpToken], 200);
             }
 
-            if (! empty($updatedFields)) {
-                if (! empty($updatedFields['image'])) {
+            if (!empty($updatedFields)) {
+                if (!empty($updatedFields['image'])) {
                     $user->image = $updatedFields['image'];
                 }
-                if (! empty($updatedFields['name'])) {
+                if (!empty($updatedFields['name'])) {
                     $user->name = $updatedFields['name'];
                 }
 
                 $user->save();
 
                 return response()->json([
-                    'message' => 'Profile updated successfully and no changes applied in email.',
+                    'message' => 'Profile updated successfully.',
                 ], 200);
+
             }
         } catch (\Exception $e) {
             return response()->json(['error' => 'Something went wrong', 'message' => $e->getMessage()], 500);
@@ -620,6 +454,28 @@ class EmailOtpController extends Controller
                 return response()->json(['error' => 'Unauthorized'], 401);
             }
 
+
+			 try {
+                $request->validate([
+                    'email' => [
+                        'nullable',
+                        'email',
+                        Rule::unique('users', 'email')->ignore($user->id),
+                    ],
+                    'phone' => [
+                        'nullable',
+                        Rule::unique('users', 'phone')->ignore($user->id),
+                    ],
+                ], [
+                    'email.unique' => 'This email is already taken by another user.',
+                    'phone.unique' => 'This phone number is already taken by another user.',
+                ]);
+            } catch (ValidationException $e) {
+                $errors = $e->validator->errors()->first();
+
+                return response()->json(['message' => $errors], 422);
+            }
+
             $otpRecord = EmailOtp::where('otp', $request->otp)->first();
 
             if (! $otpRecord) {
@@ -628,22 +484,22 @@ class EmailOtpController extends Controller
 
             $updated = false;
 
-            if (! empty($otpRecord->email)) {
+            if (!empty($otpRecord->email) && $otpRecord->email !== $user->email) {
                 $user->email = $otpRecord->email;
                 $updated = true;
             }
 
-            if (! empty($otpRecord->phone)) {
+            if (!empty($otpRecord->email) && $otpRecord->phone !== $user->phone) {
                 $user->phone = $otpRecord->phone;
                 $updated = true;
             }
 
-            if (! empty($otpRecord->name)) {
+            if (!empty($otpRecord->name)) {
                 $user->name = $otpRecord->name;
                 $updated = true;
             }
 
-            if (! empty($otpRecord->image)) {
+            if (!empty($otpRecord->image)) {
                 $user->image = $otpRecord->image;
                 $updated = true;
             }

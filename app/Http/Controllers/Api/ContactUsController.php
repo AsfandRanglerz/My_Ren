@@ -4,9 +4,13 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\ContactUs;
+use App\Models\Getcontactus;
 use Exception;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Mail\ContactUsMail; 
+
 
 class ContactUsController extends Controller
 {
@@ -78,7 +82,7 @@ class ContactUsController extends Controller
         }
     }
 
-    public function contactUs()
+    public function getContactUsDetails()
     {
         $contact = ContactUs::select('email', 'phone')->first();
 
@@ -87,4 +91,22 @@ class ContactUsController extends Controller
             'data' => $contact,
         ]);
     }
+
+	
+	public function Submitcontact(Request $request){
+    $contact = Getcontactus::create([
+        'email' => $request->email,
+        'message' => $request->message,
+    ]);
+
+    $adminEmail = ContactUs::value('email');
+    Mail::to($adminEmail)->send(new ContactUsMail($contact->email, $contact->message));
+    return response()->json([
+        // 'status' => true,
+        'message' => 'Your message has been sent successfully.',
+        'data' => $contact
+    ],200);
+    }
+
+   
 }

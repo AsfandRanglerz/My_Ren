@@ -77,6 +77,8 @@ Route::post('/send', [TwillioController::class, 'sendSms']);
 Route::post('/send-otp', [EmailOtpController::class, 'sendOtp']);
 Route::post('/verify-otp', [EmailOtpController::class, 'verifyOtp']);
 Route::post('/register-user', [EmailOtpController::class, 'registerUser']);
+Route::post('/submit-contact-us', [ContactUsController::class, 'Submitcontact'])->name('contact.send');
+
 
 // get user profile
 Route::middleware('auth:sanctum')->group(function () {
@@ -86,6 +88,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/update-profile', [EmailOtpController::class, 'requestUpdateOtp']);
     Route::post('/update-profile-verify', [EmailOtpController::class, 'verifyAndUpdateContact']);
     Route::get('/get-logged-in-user-info', [EmailOtpController::class, 'getLoggedInUserInfo']);
+	Route::post('/submit-contact-us', [ContactUsController::class, 'Submitcontact'])->name('contact.send');
+
 
 });
 
@@ -193,6 +197,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/getvouchers', [VoucherDetailController::class, 'getVoucher']);
     Route::post('/claimvoucher', [VoucherDetailController::class, 'claimVoucher']);
 });
+
 
 //
 Route::get('/getcontact', [ContactUsController::class, 'contactUs'])->name('getcontact');
