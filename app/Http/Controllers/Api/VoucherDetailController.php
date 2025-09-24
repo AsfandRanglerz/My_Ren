@@ -197,7 +197,7 @@ class VoucherDetailController extends Controller
     {
         $shopUrl = config('services.shopify.store_url');
         $accessToken = config('services.shopify.access_token');
-        $apiVersion = config('services.shopify.api_version', '2025-07');
+        $apiVersion = config('services.shopify.api_version', '2025-01');
         // Step 1: Price Rule
         $priceRuleData = [
             "price_rule" => [
