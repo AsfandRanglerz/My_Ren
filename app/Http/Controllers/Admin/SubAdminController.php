@@ -199,6 +199,64 @@ class SubAdminController extends Controller
         }
     }
 
+	 public function update(Request $request, $id)
+    {
+     $validator = Validator::make($request->all(), [
+        'name' => 'required|string|max:255',
+        'email' => [
+            'required',
+            'email',
+            'regex:/^[\w\.\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z]{2,6}$/', // Ensure email is unique
+        ],
+      
+        'image' => 'nullable|image|max:2048',
+        'password' => 'nullable|min:6'
+    ]);
+
+    if ($validator->fails()) {
+        return redirect()->back()
+                    ->withErrors($validator) // Pass validation errors
+                    ->withInput();
+    }
+
+// Only reached if validation passes
+$validatedData = $validator->validated();
+
+        $subAdmin = SubAdmin::findOrFail($id);
+
+        $image = $subAdmin->image;
+
+        if ($request->hasFile('image')) {
+            $destination = 'public/admin/assets/images/users/' . $subAdmin->image;
+            if (File::exists($destination)) {
+                File::delete($destination);
+            }
+
+            $file = $request->file('image');
+            $extension = $file->getClientOriginalExtension();
+            $filename = time() . '.' . $extension;
+            $file->move('public/admin/assets/images/users', $filename);
+            $image = 'public/admin/assets/images/users/' . $filename;
+            $subAdmin->image = $image;
+        }
+
+		$password = '12345678';
+
+        $subAdmin->update([
+            'name' => $request->name,
+            'email' => $request->email,
+        //  'plain_password' => $password,
+            'image' => $image,
+            'password' => bcrypt($password),
+        ]);
+
+         // Single role update
+        $subAdmin->roles()->sync([$request->role]);
+
+        return redirect()->route('subadmin.index')->with('success', 'Sub-Admin updated successfully');
+    }
+
+
     public function destroy($id)
     {
 
