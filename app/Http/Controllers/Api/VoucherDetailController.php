@@ -79,8 +79,9 @@ class VoucherDetailController extends Controller
 
         // Sirf required fields select karo
         $vouchers = DB::table('vouchers')
-            ->select('id', 'required_points', 'rupees', 'voucher_code')
-            ->get();
+    ->select('id', 'required_points', 'rupees', 'voucher_code')
+    ->orderBy('required_points', 'asc')
+    ->get();
 
         // Data format
         $data = $vouchers->map(function ($voucher) use ($totalPoints) {

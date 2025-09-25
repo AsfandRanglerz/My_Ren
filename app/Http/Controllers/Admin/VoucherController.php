@@ -15,7 +15,7 @@ class VoucherController extends Controller
 
     public function index()
     {
-        $vouchers = Voucher::orderBy('id', 'desc')->get();
+        $vouchers = Voucher::orderBy('required_points', 'asc')->get();
 
         return view('admin.voucher.index', compact('vouchers'));
     }
