@@ -94,6 +94,7 @@ class ContactUsController extends Controller
 
 	
 	public function Submitcontact(Request $request){
+		return $request;
     $contact = Getcontactus::create([
         'email' => $request->email,
         'message' => $request->message,
