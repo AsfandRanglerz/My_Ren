@@ -5,7 +5,7 @@
 </head>
 <body style="font-family: Arial, sans-serif; color: #333;">
     <div style="text-align: center; margin-bottom: 30px;">
-        <img src="{{ asset('public/admin/assets/img/sahar_logo(1).png') }}" 
+        <img src="{{ asset('public/admin/assets/img/logo.png}}" 
              alt="{{ config('app.name') }} Logo" 
              style="height: 100px;">
     </div>

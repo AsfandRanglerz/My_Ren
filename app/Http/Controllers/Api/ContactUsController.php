@@ -108,5 +108,14 @@ class ContactUsController extends Controller
     ],200);
     }
 
+public function contactUs() 
+{
+    $data = ContactUs::first();
+    return response()->json([
+        'data' => $data,
+    ]);
+}
+
+
    
 }
