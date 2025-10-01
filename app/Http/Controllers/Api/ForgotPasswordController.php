@@ -25,6 +25,8 @@ class ForgotPasswordController extends Controller
             if (! in_array($type, ['email', 'phone'])) {
                 return response()->json(['message' => 'Invalid type provided'], 400);
             }
+
+            
             // Cross validation: If type = email but phone entered
 
             // Find user by email or phone
@@ -43,7 +45,7 @@ class ForgotPasswordController extends Controller
             $otpToken = Str::uuid();
 
             // Store in database
-			EmailOtp::updateOrCreate(
+           EmailOtp::updateOrCreate(
 				[$type => $identifier], // condition (email OR phone)
 				[
 					'otp'       => $otp,
@@ -80,7 +82,6 @@ class ForgotPasswordController extends Controller
         }
 
     }
-
     public function forgotverifyOtp(Request $request)
     {
         try {
