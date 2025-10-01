@@ -328,12 +328,12 @@ class EmailOtpController extends Controller
 
 				if (isset($data['phone']) && trim($data['phone']) === trim($user->phone)) {
 
-					if (isset($data['name']) && trim($data['name']) !== '') {
-						$user->name = $data['name'];
+					if (isset($updatedFields['name']) && trim($updatedFields['name']) !== '') {
+						$user->name = $updatedFields['name'];
 					}
 
-					if (isset($data['image']) && trim($data['image']) !== '') {
-						$user->image = $data['image'];
+					if (isset($updatedFields['image']) && trim($updatedFields['image']) !== '') {
+						$user->image = $updatedFields['image'];
 					}
 
 					$user->save(); // changes persist in DB
@@ -400,7 +400,23 @@ class EmailOtpController extends Controller
                 $pendingData['otp'] = $otp;
                 $pendingData['otp_token'] = $otpToken;
 
-                EmailOtp::create($pendingData);
+               $condition = [];
+
+				if (!empty($pendingData['email'])) {
+					$condition = ['email' => $pendingData['email']];
+				} elseif (!empty($pendingData['phone'])) {
+					$condition = ['phone' => $pendingData['phone']];
+				}
+
+				EmailOtp::updateOrCreate(
+					$condition, // search by email OR phone
+					[
+						'otp' => $pendingData['otp'], 
+						'name' => $pendingData['name'],
+						'image' => $pendingData['image'],
+						'country' => $pendingData['country'],
+					]
+				);
 
                 if ($sendOtpTo === 'phone') {
                     $phone = $pendingData['phone'];
