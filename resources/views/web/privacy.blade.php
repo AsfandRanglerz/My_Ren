@@ -113,5 +113,10 @@
     <h1>Privacy Policy</h1>
 </div>
 <div class="container">
-    {!! $data->description !!}
+    @if(!empty($data->description))
+        {!! $data->description !!}
+    @else
+        <p>No Privacy Policy</p>
+    @endif
 </div>
+

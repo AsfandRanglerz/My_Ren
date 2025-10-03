@@ -39,11 +39,6 @@ class AuthController extends Controller
     public function Login(Request $request)
 
     {
-
-
-
-        
-
         // return $request->password;
 
         $request->validate([
@@ -60,27 +55,7 @@ class AuthController extends Controller
 
 
 
-    // $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
-
-    //     'secret' => config('services.recaptcha.secret_key'),
-
-    //     'response' => $request->input('g-recaptcha-response'),
-
-    //     'remoteip' => $request->ip(),
-
-    // ]);
-
-
-
-    // $responseData = $response->json();
-
-
-
-    // if (!($responseData['success'] ?? false)) {
-
-    //     return back()->withErrors(['g-recaptcha-response' => 'reCAPTCHA verification failed.']);
-
-    // }
+    
 
         $remember_me = ($request->remember_me) ? true : false;
 
@@ -134,7 +109,7 @@ class AuthController extends Controller
 
                 
 
-                return redirect('admin/')->with('error', 'Your account is deactivated. Please contact the admin.');
+                return redirect('admin-login/')->with('error', 'Your account is deactivated. Please contact the admin.');
 
             }
 

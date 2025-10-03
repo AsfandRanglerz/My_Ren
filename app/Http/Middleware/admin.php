@@ -23,7 +23,7 @@ class admin
             return $next($request);
         }else{
 
-        return redirect('admin');
+        return redirect('admin-login');
      }
 
 

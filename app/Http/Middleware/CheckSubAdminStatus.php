@@ -24,7 +24,7 @@ class CheckSubAdminStatus
             if ($subAdmin->status == 0) {
                 Auth::guard('subadmin')->logout();
 
-                return redirect('admin/')->with('error', 'Your account is deactivated. Please contact the admin.');
+                return redirect('/admin-login')->with('error', 'Your account is deactivated. Please contact the admin.');
             }
         }
 

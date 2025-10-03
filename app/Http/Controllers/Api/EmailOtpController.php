@@ -67,7 +67,7 @@ class EmailOtpController extends Controller
             );
 
             if (!empty($request->email)) {
-                Mail::to($request->email)->send(new UserEmailOtp($otp));
+                // Mail::to($request->email)->send(new UserEmailOtp($otp));
             } else {
                 // Here you can implement sending OTP via SMS if needed
                 $phone = $request->phone;
@@ -166,6 +166,7 @@ class EmailOtpController extends Controller
                 'country' => $otpRecord->country,
                 'password' => Hash::make($request->password),
                 'status' => is_null($otpRecord->phone) ? 1 : (is_null($otpRecord->email) ? 2 : null),
+				'toggle' => 1,
             ]);
 
             // ✅ Signup reward points read karo

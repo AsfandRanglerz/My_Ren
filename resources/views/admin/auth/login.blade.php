@@ -25,7 +25,7 @@
 
                         <div class="card-body">
 
-                            <form method="POST" action="{{ url('login') }}" class="mb-0 needs-validation" novalidate>
+                            <form method="POST" action="{{ url('/login') }}" class="mb-0 needs-validation" novalidate>
 
                                 @csrf
 

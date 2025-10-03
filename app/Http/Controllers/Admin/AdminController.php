@@ -155,7 +155,7 @@ class AdminController extends Controller
 
         }
 
-        return redirect('admin')->with('success', 'Logged Out Successfully');
+        return redirect('admin-login')->with('success', 'Logged Out Successfully');
 
     }
 
