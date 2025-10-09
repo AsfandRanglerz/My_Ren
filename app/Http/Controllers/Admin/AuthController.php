@@ -103,13 +103,9 @@ class AuthController extends Controller
 
             } else {
 
-                // Check if user is already logged in
+                // Check if user is already logged in                
 
-                
-
-                
-
-                return redirect('admin-login/')->with('error', 'Your account is deactivated. Please contact the admin.');
+                return redirect('admin-login')->with('error', 'Your account is deactivated. Please contact the admin.');
 
             }
 

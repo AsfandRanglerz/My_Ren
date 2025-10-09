@@ -124,7 +124,7 @@ class ScanController extends Controller
 
                 // DB Notification (always create record)
                 \App\Models\Notification::create([
-                    'customer_id' => $user->id,
+                    'user_id' => $user->id,
                     'title' => $title,
                     'description' => $description,
                     'seenByUser' => 0, // unseen by default

@@ -67,7 +67,7 @@ class EmailOtpController extends Controller
             );
 
             if (!empty($request->email)) {
-                // Mail::to($request->email)->send(new UserEmailOtp($otp));
+                Mail::to($request->email)->send(new UserEmailOtp($otp));
             } else {
                 // Here you can implement sending OTP via SMS if needed
                 $phone = $request->phone;
@@ -242,7 +242,7 @@ class EmailOtpController extends Controller
 
             return response()->json([
                 'name' => $user->name ?? null,
-                'image' => $user->image ? 'public/'.$user->image : 'https://ranglerzwp.xyz/myren/public/admin/assets/images/avator.png',
+				'image' => $user->image ? 'public/'.$user->image : asset('admin/assets/images/avator.png'),
                 'country' => $user->country ?? null,
                 'email' => $user->email ?? null,
                 'phone' => $user->phone ?? null,

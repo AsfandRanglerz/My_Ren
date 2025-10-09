@@ -10,7 +10,7 @@
         style="max-width: 600px; margin: 0 auto; background: #fff; border-radius: 8px; padding: 30px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
         <div style="text-align: center;">
             <img src="{{ asset('public/admin/assets/img/logo.png') }}" alt="Logo"
-                style="margin-bottom: 30px; height: 100px;">
+                style="margin-bottom: 15px; height: 65px;">
             <h2 style="color: #d881fb; margin-bottom: 20px;">Your One Time Password (OTP)</h2>
         </div>
 
