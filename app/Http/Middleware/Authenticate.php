@@ -23,20 +23,20 @@ class Authenticate extends Middleware
     /**
      * Override handle to check user toggle status
      */
-    // public function handle($request, \Closure $next, ...$guards)
-    // {
-    //     $this->authenticate($request, $guards);
+    public function handle($request, \Closure $next, ...$guards)
+    {
+        $this->authenticate($request, $guards);
 
     //     // ✅ Check user status
-    //     $user = Auth::user();
-    //     if ($user && $user->toggle == 0) {
-    //         $user->currentAccessToken()->delete();  // logout user
+        $user = Auth::user();
+        if ($user && $user->toggle == 0) {
+            $user->currentAccessToken()->delete();  // logout user
 
-    //         return response()->json([
-    //             'message' => 'Your account has been deactivated. Please check your email for details or contact the administrator for further assistance.'
-    //         ], 403);
-    //     }
+            return response()->json([
+                'message' => 'Your account has been deactivated. Please check your email for details or contact the administrator for further assistance.'
+            ], 401);
+        }
 
-    //     return $next($request);
-    // }
+        return $next($request);
+    }
 }

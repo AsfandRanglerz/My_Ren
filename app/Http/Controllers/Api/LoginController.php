@@ -91,11 +91,11 @@ class LoginController extends Controller
         }
 
         // ✅ Toggle check
-        // if ($user->toggle == 0) {
-        //     return response()->json([
-        //         'message' => 'Your account has been deactivated. Please check your email for details or contact the administrator.'
-        //     ], 403);
-        // }
+        if ($user->toggle == 0) {
+            return response()->json([
+                'message' => 'Your account has been deactivated. Please check your email for details or contact the administrator.'
+            ], 401);
+        }
 
         // Update FCM token
         $user->fcm = $request->fcm;

@@ -242,7 +242,7 @@ class EmailOtpController extends Controller
 
             return response()->json([
                 'name' => $user->name ?? null,
-				'image' => $user->image ? 'public/'.$user->image : asset('admin/assets/images/avator.png'),
+				'image' => $user->image ? 'public/'.$user->image : asset('public/admin/assets/images/avator.png'),
                 'country' => $user->country ?? null,
                 'email' => $user->email ?? null,
                 'phone' => $user->phone ?? null,
