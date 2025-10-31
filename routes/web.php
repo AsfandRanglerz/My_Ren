@@ -73,7 +73,7 @@ use App\Http\Controllers\Admin\RolePermissionController;
 
 
 
-Route::get('/admin', [AuthController::class, 'getLoginPage']);
+Route::get('/admin-login', [AuthController::class, 'getLoginPage']);
 
 Route::post('/login', [AuthController::class, 'Login']);
 
@@ -401,22 +401,6 @@ Route::get('/signup-reward-setting', [SignupRewardSettingController::class, 'ind
 
 
     // ############ Voucher Routes #################
-
-Route::get('/voucher-index', [VoucherController::class, 'index'])->name('voucher.index') ->middleware('check.permission:Voucher Settings,view');
-
-Route::get('/voucher-create', [VoucherController::class, 'create'])
-    ->name('voucher.create')
-    ->middleware('check.permission:Voucher Settings,create');
-
-
-Route::post('/voucher-store', [VoucherController::class, 'store'])->name('voucher.store') ->middleware('check.permission:Voucher Settings,create');
-
-Route::get('/voucher-edit/{id}', [VoucherController::class, 'edit'])->name('voucher.edit') ->middleware('check.permission:Voucher Settings,edit');
-
-Route::post('admin/voucher-update/{id}', [VoucherController::class, 'update'])->name('voucher.update') ->middleware('check.permission:Voucher Settings,edit');
-
-Route::delete('voucher-destroy/{id}', [VoucherController::class, 'destroy'])->name('voucher.destroy') ->middleware('check.permission:Voucher Settings,delete');
-
 Route::get('/claimed-vocher', [VoucherController::class, 'ClaimVoucher'])->name('voucher.claimed') ->middleware('check.permission:Generated Coupons,view');
     // ############ Rankings Routes #################
 

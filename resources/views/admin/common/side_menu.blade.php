@@ -173,28 +173,6 @@
             </li>
             @endif
 
-
-
-
-
-            {{-- Voucher Settings --}}
-
-
-
-            @if (Auth::guard('admin')->check() ||
-            ($sideMenuPermissions->has('Voucher Settings') && $sideMenuPermissions['Voucher Settings']->contains('view')))
-            <li class="dropdown {{ request()->is('admin/voucher*') ? 'active' : '' }}">
-
-                <a href="{{ url('admin/voucher-index') }}" class="nav-link">
-
-                    <i data-feather="tag"></i>
-                    <span>Voucher Settings</span>
-
-                </a>
-
-            </li>
-            @endif
-
               {{-- Generated Coupons --}}
 
              @if (Auth::guard('admin')->check() ||

@@ -1,222 +1,162 @@
 @extends('admin.layout.app')
-
 @section('title', 'Edit Device/Product')
-
 @section('content')
+<div class="main-content">
+    <section class="section">
+        <div class="section-body">
+            <a class="btn btn-primary mb-3" href="{{ url('admin/devices') }}">Back</a>
 
+            <form action="{{ route('product.update', $product->id) }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                @method('POST')
+                
+                <div class="card">
+                    <h4 class="text-center my-4">Edit Device/Product</h4>
+                    <div class="row px-4">
 
-
-    <div class="main-content">
-
-        <section class="section">
-
-            <div class="section-body">
-
-                <a class="btn btn-primary mb-3" href="{{ url('admin/devices') }}">Back</a>
-
-
-
-                <form action="{{ route('product.update', $product->id) }}" method="POST" enctype="multipart/form-data">
-
-                    @csrf
-
-                    @method('POST') <!-- Correct method -->
-
-
-
-                    <div class="card">
-
-                        <h4 class="text-center my-4">Edit Device/Product</h4>
-
-                        <div class="row px-4">
-
-
-
-                            <!-- Name -->
-
-                            <div class="col-sm-6">
-
-                                <div class="form-group">
-
-                                    <label for="name">Name <span style="color: red;">*</span></label>
-
-                                    <input type="text" name="name" id="name"
-
-                                        class="form-control @error('name') is-invalid @enderror"
-
-                                        value="{{ old('name', $product->name) }}" required placeholder="Enter product name">
-
-                                    @error('name')
-
-                                        <div class="invalid-feedback">{{ $message }}</div>
-
-                                    @enderror
-
-                                </div>
-
+                        <!-- Name -->
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="name">Name <span style="color: red;">*</span></label>
+                                <input type="text" name="name" id="name"
+                                    class="form-control @error('name') is-invalid @enderror"
+                                    value="{{ old('name', $product->name) }}" placeholder="Enter device name" required>
+                                @error('name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
+                        </div>
 
-
-
-
-
-
-
-                            <!-- Earn Points -->
-
-                            <div class="col-sm-6">
-
-                                <div class="form-group">
-
-                                    <label for="points">Earn Points <span style="color: red;">*</span></label>
-
-                                    <input type="number" name="points" id="points"
-
-                                        class="form-control @error('points') is-invalid @enderror"
-
-                                        value="{{ old('points', $product->points_per_sale) }}" placeholder="Enter points"
-
-                                        required>
-
-                                    @error('points')
-
-                                        <div class="invalid-feedback">{{ $message }}</div>
-
-                                    @enderror
-
-                                </div>
-
-                            </div>
-
-
-
-                            <!-- Demissions -->
-
-                            <div class="col-sm-6">
-
-                                <div class="form-group">
-
-                                    <label for="demissions">Specification <span style="color: red;">*</span></label>
-
-                                    <input type="text" name="demissions" id="demissions"
-
-                                        class="form-control @error('demissions') is-invalid @enderror"
-
-                                        value="{{ old('demissions', $product->demissions) }}" placeholder="Enter specification"
-
-                                        required>
-
-                                    @error('demissions')
-
-                                        <div class="invalid-feedback">{{ $message }}</div>
-
-                                    @enderror
-
-                                </div>
-
-                            </div>
-
-
-
-                            <!-- Image -->
-
-                            <div class="col-sm-6">
-
-                                <div class="form-group">
-
-                                    <label for="image">Image <span style="color: red;">*</span></label>
-
-                                    <input type="file" name="image" id="image"
-
-                                        class="form-control @error('image') is-invalid @enderror"
-
-                                        placeholder="Upload image">
-
-                                    @error('image')
-
-                                        <div class="invalid-feedback">{{ $message }}</div>
-
-                                    @enderror
-
-
-
+                        <!-- Image -->
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="image">Image</label>
+                                <input type="file" name="image" id="image"
+                                    class="form-control @error('image') is-invalid @enderror">
+                                @error('image')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                                
+                                <!-- Current Image Preview -->
+                                <div class="mt-2">
                                     <img src="{{ !empty($product->image) && file_exists(public_path($product->image)) ? asset('public/' . $product->image) : asset('public/admin/assets/images/default.png') }}"
-
-                                        alt="product image" style="width: 100px; height: 100px; object-fit: cover;"
-
-                                        class="mt-2">
-
+                                        alt="product image" style="width: 100px; height: 100px; object-fit: cover;">
+                                    <small class="d-block text-muted">Current Image</small>
                                 </div>
-
                             </div>
-
-
-
                         </div>
 
-
-
-                        <div class="card-footer text-center">
-
-                            <button type="submit" class="btn btn-primary">Save Changes</button>
-
+                        <!-- Specification -->
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="demissions">Specification <span style="color: red;">*</span></label>
+                                <input type="text" name="demissions" id="demissions"
+                                    class="form-control @error('demissions') is-invalid @enderror"
+                                    value="{{ old('demissions', $product->demissions) }}" placeholder="Enter specification" required>
+                                @error('demissions')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
 
+                        <!-- Profit Margin -->
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="profit_margin">Profit Margin (PKR) <span style="color: red;">*</span></label>
+                                <input type="number" step="0.01" name="profit_margin" id="profit_margin"
+                                    class="form-control @error('profit_margin') is-invalid @enderror"
+                                    value="{{ old('profit_margin', $product->profit_margin) }}" placeholder="Enter profit margin in PKR" required>
+                                @error('profit_margin')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                                <small class="text-muted">1 Point = 1 Rupee PKR</small>
+                            </div>
+                        </div>
 
+                        <!-- Discount -->
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="discount">Discount (%) <span style="color: red;">*</span></label>
+                                <input type="number" step="0.01" name="discount" id="discount"
+                                    class="form-control @error('discount') is-invalid @enderror"
+                                    value="{{ old('discount', $product->discount) }}" placeholder="Enter discount percentage" required>
+                                @error('discount')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
 
+                        <!-- Earn Points -->
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="points">Earn Points (Auto) <span style="color: red;">*</span></label>
+                                <input type="text" name="points" id="points"
+                                    class="form-control @error('points') is-invalid @enderror"
+                                    value="{{ old('points', $product->points_per_sale) }}" placeholder="Auto calculated" readonly required>
+                                @error('points')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                                <small id="points-status" class="text-success" style="display:none;">✅ Updated</small>
+                                <small class="text-muted">Calculated as: (Profit Margin × Discount %) / 100</small>
+                            </div>
+                        </div>
                     </div>
 
-                </form>
-
-            </div>
-
-        </section>
-
-    </div>
-
-
+                    <div class="card-footer text-center">
+                        <button type="submit" class="btn btn-primary">Update Product</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>
 
 @endsection
-
-
 
 @section('js')
+<script>
+$(document).ready(function() {
+    // Function to calculate points
+    function calculatePoints() {
+        let profit = parseFloat($('#profit_margin').val()) || 0;
+        let discount = parseFloat($('#discount').val()) || 0;
+        
+        // Show loading state
+        $('#points').val('Calculating...');
+        $('#points-status').hide();
+        
+        // ✅ CORRECT CALCULATION:
+        // Earn Points = (Profit Margin × Discount %) / 100
+        // Example: 100 × 10 / 100 = 10 Points
+        let earnPoints = (profit * discount) / 100;
+        
+        // Update the points field with the calculated value
+        $('#points').val(earnPoints.toFixed(0) + ' Points'); // 0 decimal places
+        $('#points-status').fadeIn(300).delay(1000).fadeOut(400);
+    }
+    
+    // Calculate points when profit margin or discount changes
+    $('#profit_margin, #discount').on('input', function() {
+        calculatePoints();
+    });
+    
+    // Also calculate on page load with existing values
+    calculatePoints();
+    
+    // Hide validation errors on focus
+    $('input, select, textarea').on('focus', function() {
+        const $feedback = $(this).parent().find('.invalid-feedback');
+        if ($feedback.length) {
+            $feedback.hide();
+            $(this).removeClass('is-invalid');
+        }
+    });
+});
+</script>
 
-    @if (session('message'))
-
-        <script>
-
-            toastr.success('{{ session('message') }}');
-
-        </script>
-
-    @endif
-
-
-
+@if (session('message'))
     <script>
-
-        // Hide validation errors on focus
-
-        $(document).ready(function() {
-
-            $('input, select, textarea').on('focus', function() {
-
-                const $feedback = $(this).parent().find('.invalid-feedback');
-
-                if ($feedback.length) {
-
-                    $feedback.hide();
-
-                    $(this).removeClass('is-invalid');
-
-                }
-
-            });
-
-        });
-
+        toastr.success('{{ session('message') }}');
     </script>
-
+@endif
 @endsection
-

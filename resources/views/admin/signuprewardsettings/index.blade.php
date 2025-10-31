@@ -14,11 +14,6 @@
 
                             <div class="card-body table-striped table-bordered table-responsive">
                                 <div class="clearfix mb-3">
-                                    <!-- @if (Auth::guard('admin')->check() ||
-                                            ($sideMenuPermissions->has('Voucher Settings') && $sideMenuPermissions['Voucher Settings']->contains('create')))
-                                        <a class="btn btn-primary text-white"
-                                            href="{{ route('voucher.create') }}">Create</a>
-                                    @endif -->
                                 </div>
 
                                 <table class="table" id="table_id_events">

@@ -11,79 +11,10 @@ use Illuminate\Support\Facades\Auth;
 
 class VoucherController extends Controller
 {
-    //
-
-    public function index()
-    {
-        $vouchers = Voucher::orderBy('id', 'desc')->get();
-
-        return view('admin.voucher.index', compact('vouchers'));
-    }
-
-    public function create()
-    {
-        return view('admin.voucher.create');
-    }
-
-    public function store(Request $request)
-    {
-        $request->validate([
-            'points' => 'required|integer|unique:vouchers,required_points',
-            'rupees' => 'required|numeric',
-        ], [
-            'points.unique' => 'Against these number of points voucher has already been created.',
-        ]);
-
-        // 4 digit unique voucher code
-        $voucherCode = '#'.str_pad(rand(0, 9999), 4, '0', STR_PAD_LEFT);
-
-        Voucher::create([
-            'required_points' => $request->points,
-            'rupees' => $request->rupees,
-            'voucher_code' => $voucherCode,
-        ]);
-
-        return redirect()->route('voucher.index')->with('success', 'Voucher created successfully');
-    }
-
-    public function edit($id)
-    {
-        $voucher = Voucher::findOrFail($id);
-
-        return view('admin.voucher.edit', compact('voucher'));
-    }
-
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'points' => 'required|integer|unique:vouchers,required_points,'.$id,
-            'rupees' => 'required|numeric',
-        ], [
-            'points.unique' => 'Against these number of points voucher has been already created.',
-
-        ]);
-
-        $voucher = Voucher::findOrFail($id);
-        $voucher->update([
-            'required_points' => $request->points,
-            'rupees' => $request->rupees,
-        ]);
-
-        return redirect()->route('voucher.index')->with('success', 'Voucher updated successfully');
-    }
-
-    public function destroy($id)
-    {
-        $voucher = Voucher::findOrFail($id);
-        $voucher->delete();
-
-        return redirect()->route('voucher.index')->with('success', 'Voucher deleted successfully');
-
-    }
 
     public function ClaimVoucher()
     {
-        $data = ClaimVoucher::with('user', 'voucher')
+        $data = ClaimVoucher::with('user')
             ->orderBy('created_at', 'desc')
             ->get();
 

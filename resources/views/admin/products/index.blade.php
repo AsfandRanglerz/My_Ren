@@ -32,6 +32,9 @@
                                             <th>Image</th>
                                             <th>Name</th>
                                             <th>Specification</th>
+                                            <th>Profit Margin</th>
+											<th>Discount</th>
+											<th>Points Per Scan</th>
                                             <th scope="col">View Detail</th>
                                             <th scope="col">Actions</th>
                                         </tr>
@@ -48,6 +51,8 @@
                                                 </td>
                                                 <td>{{ $product->name }}</td>
                                                 <td>{{ $product->demissions }}</td>
+                                                <td>{{ $product->profit_margin }}</td>
+                                                <td>{{ $product->discount }}</td>	
                                                 <td>{{ $product->points_per_sale }}</td>
                                                 <td>
                                                     <a href="{{ route('product.detail', $product->id) }}"

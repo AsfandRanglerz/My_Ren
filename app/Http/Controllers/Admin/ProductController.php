@@ -22,37 +22,50 @@ class ProductController extends Controller
         return view('admin.products.create');
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'demissions' => 'required|string',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'points' => 'required|integer|min:0',
-        ], [
-            'name.required' => 'Product name is required.',
-            'demissions.required' => 'Demissions are required.',
-            'image.required' => 'Product image is required.',
-            'image.max' => 'Image size must not exceed 2MB.',
-            'points.required' => 'Earn Points are required.',
-        ]);
+  public function store(Request $request)
+{
+	
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'demissions' => 'required|string',
+        'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        'profit_margin' => 'required|numeric|min:0',
+        'discount' => 'required|numeric|min:0|max:100',
+        'points' => 'nullable|string',
+    ], [
+        'name.required' => 'Product name is required.',
+        'demissions.required' => 'Specification is required.',
+        'image.required' => 'Product image is required.',
+        'image.image' => 'The image must be an image file.',
+        'image.max' => 'Image size must not exceed 2MB.',
+        'profit_margin.required' => 'Profit margin is required.',
+        'discount.required' => 'Discount percentage is required.',
+    ]);
 
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time().'_'.$image->getClientOriginalName();
-            $image->move(public_path('admin/assets/products'), $imageName);
-            $imagePath = 'admin/assets/products/'.$imageName;
-        }
-
-        Product::create([
-            'name' => $request->name,
-            'demissions' => $request->demissions,
-            'image' => $imagePath ?? null,
-            'points_per_sale' => $request->points,
-        ]);
-
-        return redirect()->route('product.index')->with('success', 'Product created successfully.');
+    // ✅ Image Upload
+    $imagePath = null;
+    if ($request->hasFile('image')) {
+        $image = $request->file('image');
+        $imageName = time() . '_' . $image->getClientOriginalName();
+        $image->move(public_path('admin/assets/products'), $imageName);
+        $imagePath = 'admin/assets/products/' . $imageName;
     }
+
+    // ✅ Clean points (remove "Points" text etc.)
+    $cleanPoints = preg_replace('/[^0-9.]/', '', $request->points);
+    // ✅ Create Product
+    Product::create([
+        'name' => $request->name,
+        'demissions' => $request->demissions,
+        'image' => $imagePath,
+        'profit_margin' => $request->profit_margin,
+        'discount' => $request->discount,
+        'points_per_sale' => $cleanPoints,
+    ]);
+
+    return redirect()->route('product.index')->with('success', 'Product created successfully.');
+}
+
 
     public function edit($id)
     {
@@ -61,37 +74,48 @@ class ProductController extends Controller
         return view('admin.products.edit', compact('product'));
     }
 
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'demissions' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'points' => 'required|integer|min:0',
-        ], [
-            'name.required' => 'Product name is required.',
-            'demissions.required' => 'Demissions are required.',
-            'image.image' => 'The image must be an image file.',
-            'image.max' => 'Image size must not exceed 2MB.',
-            'points.required' => 'Points per sale are required.',
-        ]);
+public function update(Request $request, $id)
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'demissions' => 'required|string',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        'profit_margin' => 'required|numeric|min:0',
+        'discount' => 'required|numeric|min:0|max:100',
+        // ✅ points can come with "100 Points" (string), so no numeric rule here
+        'points' => 'nullable|string',
+    ], [
+        'name.required' => 'Product name is required.',
+        'demissions.required' => 'Demissions are required.',
+        'image.image' => 'The image must be an image file.',
+        'image.max' => 'Image size must not exceed 2MB.',
+        'points.required' => 'Points per sale are required.',
+        'profit_margin.required' => 'Profit margin is required.',
+        'discount.required' => 'Discount percentage is required.',
+    ]);
 
-        $product = Product::findOrFail($id);
+    $product = Product::findOrFail($id);
 
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time().'_'.$image->getClientOriginalName();
-            $image->move(public_path('admin/assets/products'), $imageName);
-            $product->image = 'admin/assets/products/'.$imageName;
-        }
-
-        $product->name = $request->name;
-        $product->demissions = $request->demissions;
-        $product->points_per_sale = $request->points;
-        $product->save();
-
-        return redirect()->route('product.index')->with('success', 'Product updated successfully.');
+    if ($request->hasFile('image')) {
+        $image = $request->file('image');
+        $imageName = time().'_'.$image->getClientOriginalName();
+        $image->move(public_path('admin/assets/products'), $imageName);
+        $product->image = 'admin/assets/products/'.$imageName;
     }
+
+    // ✅ Clean "Points" from input
+    $cleanPoints = preg_replace('/[^0-9.]/', '', $request->points);
+
+    $product->name = $request->name;
+    $product->demissions = $request->demissions;
+    $product->profit_margin = $request->profit_margin;
+    $product->discount = $request->discount;
+    $product->points_per_sale = $cleanPoints;
+
+    $product->save();
+
+    return redirect()->route('product.index')->with('success', 'Product updated successfully.');
+}
 
     public function delete($id)
     {

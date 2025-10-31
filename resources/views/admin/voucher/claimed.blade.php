@@ -22,9 +22,8 @@
                                     <tr>
                                         <th>Sr.</th>
                                         <th>User Name</th>
-                                        <th>Voucher Id</th>
                                         <th>Coupon Code</th>
-                                        <th>Rupees Off</th>
+                                        <th>Points</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -32,9 +31,8 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $data->user->name}}</td>
-                                        <td>{{ $data->voucher->voucher_code}}</td>
                                         <td>{{ $data->coupon_code }}</td>
-                                        <td>{{ $data->voucher->rupees }}</td>
+                                        <td>{{ $data->points }}</td>
                                     </tr>
                                     @empty
                                     <tr>

@@ -9,13 +9,7 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'name',
-        'price',
-        'demissions',
-        'points_per_sale',
-        'image',
-    ];
+    protected $guarded = [];
     protected $table = 'products';
 
     public function batches()
