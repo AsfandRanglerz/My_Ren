@@ -21,7 +21,7 @@
                                 <thead>
                                     <tr>
                                         <th>Sr.</th>
-                                        <th>User Name</th>
+                                        <th>Identity</th>
                                         <th>Coupon Code</th>
                                         <th>Points</th>
                                     </tr>
@@ -30,7 +30,7 @@
                                     @forelse ($data as $data)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $data->user->name}}</td>
+                                        <td>{{ $data->user->identity }}</td>
                                         <td>{{ $data->coupon_code }}</td>
                                         <td>{{ $data->points }}</td>
                                     </tr>

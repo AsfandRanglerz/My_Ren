@@ -15,13 +15,15 @@ class CreatePointDeductionHistoriesTable extends Migration
     {
         Schema::create('point_deduction_histories', function (Blueprint $table) {
             $table->id();
-			$table->unsignedBigInteger('subadmin_id');
+			$table->string('Admin_name');
+			$table->string('Admin_type');
 			$table->unsignedBigInteger('user_id');
 			$table->string('deducted_points');
 			$table->string('remaining_points');
 			$table->string('total_points');
+			$table->string('gross_remaining_points');
+			$table->string('gross_total_points');
 			$table->string('date_time');
-			$table->foreign('subadmin_id')->references('id')->on('sub_admins')->onDelete('cascade');
 			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');	
             $table->timestamps();
         });

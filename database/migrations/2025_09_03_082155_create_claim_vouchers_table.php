@@ -17,9 +17,6 @@ class CreateClaimVouchersTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-
-            $table->unsignedBigInteger('voucher_id');
-            $table->foreign('voucher_id')->references('id')->on('vouchers')->onDelete('cascade');
              $table->string('coupon_code');
             $table->timestamps();
         });

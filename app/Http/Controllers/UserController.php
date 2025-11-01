@@ -207,27 +207,99 @@ class UserController extends Controller
         }
     }
 
-    public function sales($id)
-    {
-        $data = User::with('sales')->where('id', $id)->first();
-        if (! $data) {
-            return response()->json(['message' => 'User not found'], 404);
-        }
-        $totalPoints = $data->sales->sum('points_earned');
-        // ✅ UserWallet update or create
-        $wallet = UserWallet::where('user_id', $id)->first();
-        if ($wallet) {
-            // Agar wallet already exist karta hai, to points add karo
-            $wallet->total_points += $totalPoints;
-            $wallet->save();
-        } else {
-            // Wallet exist nahi karta, to new create karo
-            UserWallet::create([
-                'user_id' => $id,
-                'total_points' => $totalPoints,
-            ]);
-        }
+    // public function sales($id)
+    // {
+    //     $data = User::with('sales')->where('id', $id)->first();
+    //     if (! $data) {
+    //         return response()->json(['message' => 'User not found'], 404);
+    //     }
+    //     $totalPoints = $data->sales->sum('points_earned');
+    //     // ✅ UserWallet update or create
+    //     $wallet = UserWallet::where('user_id', $id)->first();
+    //     if ($wallet) {
+    //         // Agar wallet already exist karta hai, to points add karo
+    //         $wallet->total_points += $totalPoints;
+    //         $wallet->save();
+    //     } else {
+    //         // Wallet exist nahi karta, to new create karo
+    //         UserWallet::create([
+    //             'user_id' => $id,
+    //             'total_points' => $totalPoints,
+    //         ]);
+    //     }
 
-        return view('admin.sales.index', compact('data', 'totalPoints'));
+    //     return view('admin.sales.index', compact('data', 'totalPoints'));
+    // }
+
+public function sales($id)
+{
+    $data = User::with(['sales', 'pointDeductionHistories'])->find($id);
+
+    if (! $data) {
+        return response()->json(['message' => 'User not found'], 404);
     }
+
+    // Total points earned from sales (gross total)
+    $grossTotalPoints = UserWallet::find($id);
+	return $grossTotalPoints = $grossTotalPoints ? $grossTotalPoints->total_points : 0;
+	
+
+    // Current wallet points
+   
+
+    // Last deduction history
+    $deduction = $data->pointDeductionHistories()->latest()->first();
+
+    if ($deduction) {
+        $deductedPoints = $deduction->deducted_points ?? 0;
+        $remainingPoints = $deduction->remaining_points ?? $wallet->total_points;
+    } else {
+        $deductedPoints = 0;
+        $remainingPoints = 0; // abhi deduct koi nahi hua
+    }
+
+    return view('admin.sales.index', compact(
+        'data',
+        'grossTotalPoints',
+        'deductedPoints',
+        'remainingPoints'
+    ));
+}
+
+
+public function deductPoints(Request $request)
+{
+    $user = User::find($request->user_id);
+    $wallet = UserWallet::where('user_id', $user->id)->first();
+
+    if($wallet->total_points < $request->deduct_points){
+        return response()->json(['message' => 'Insufficient points'], 400);
+    }
+
+    // Deduct points from wallet
+    $wallet->total_points -= $request->deduct_points;
+    $wallet->save();
+
+    // Save to PointDeductionHistory
+    PointDeductionHistory::create([
+        'user_id' => $user->id,
+        'Admin_name' => auth()->user()->name,
+        'Admin_type' => auth()->guard('admin')->check() ? 'admin' : 'subadmin',
+        'deducted_points' => $request->deduct_points,
+        'remaining_points' => $wallet->total_points,
+        'total_points' => $wallet->total_points + $request->deduct_points,
+        'gross_remaining_points' => $wallet->total_points,
+        'gross_total_points' => $wallet->total_points + $request->deduct_points,
+        'date_time' => now(),
+    ]);
+
+    return response()->json([
+        'message' => 'Points deducted successfully',
+        'remainingPoints' => $wallet->total_points,
+        'deductedPoints' => $request->deduct_points
+    ]);
+}
+
+
+
 }

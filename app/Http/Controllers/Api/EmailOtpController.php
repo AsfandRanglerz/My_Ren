@@ -159,6 +159,20 @@ class EmailOtpController extends Controller
                 ], 404);
             }
 
+			// Generate sequential identity
+			$lastUser = \App\Models\User::orderBy('id', 'desc')->first();
+			$lastNumber = 0;
+
+			if ($lastUser && $lastUser->identity) {
+				// Extract numeric part from "#user-0001"
+				$lastNumber = (int) str_replace('#user-', '', $lastUser->identity);
+			}	
+
+			$newNumber = str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
+			$identity = '#user-' . $newNumber;
+
+
+
             // ✅ User Create
             $user = User::create([
                 'email' => $otpRecord->email,
@@ -167,6 +181,7 @@ class EmailOtpController extends Controller
                 'password' => Hash::make($request->password),
                 'status' => is_null($otpRecord->phone) ? 1 : (is_null($otpRecord->email) ? 2 : null),
 				'toggle' => 1,
+				'identity' => $identity,
             ]);
 
             // ✅ Signup reward points read karo

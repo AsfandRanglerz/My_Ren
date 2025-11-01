@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddQuestionsToFaqsTable extends Migration
+class AddUserIdToUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,8 @@ class AddQuestionsToFaqsTable extends Migration
      */
     public function up()
     {
-        Schema::table('faqs', function (Blueprint $table) {
-            //
-         $table->text('questions')->nullable()->after('id'); // after('id') optional hai
-
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('identity')->nullable()->after('id');
         });
     }
 
@@ -27,8 +25,8 @@ class AddQuestionsToFaqsTable extends Migration
      */
     public function down()
     {
-        Schema::table('faqs', function (Blueprint $table) {
-            //
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('identity');
         });
     }
 }

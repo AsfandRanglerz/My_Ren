@@ -12,8 +12,8 @@ class PointDeductionHistory extends Model
 
 	protected $guarded = [];
 	
-	public function subadmin()
+	public function users()
 	{
-		return $this->belongsTo(SubAdmin::class, 'subadmin_id');
+		return $this->belongsTo(User::class, 'user_id');
 	}
 }

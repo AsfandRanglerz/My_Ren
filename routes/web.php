@@ -248,6 +248,7 @@ Route::post('/users/toggle-status', [UserController::class, 'toggleStatus'])->na
 
 
     Route::get('/user-sales-details/{id}', [UserController::class, 'sales'])->name('user.saledetails') ->middleware('check.permission:Users,view');
+	Route::post('/admin/deduct-points', [UserController::class, 'deductPoints'])->name('admin.deduct.points');
 
 
 

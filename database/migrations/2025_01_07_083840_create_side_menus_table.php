@@ -27,6 +27,6 @@ class CreateSideMenusTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('side_menu_permissions');
+        Schema::dropIfExists('side_menus');
     }
 }

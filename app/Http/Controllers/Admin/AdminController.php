@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers\admin;
 
-use App\Http\Controllers\Controller;
-use App\Mail\ResetPasswordMail;
+use App\Models\User;
 use App\Models\Admin;
 use App\Models\Product;
 use App\Models\SubAdmin;
-use App\Models\SubAdminPermission;
-use App\Models\User;
-use App\Models\Voucher;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use App\Models\ClaimVoucher;
+use Illuminate\Http\Request;
+use App\Mail\ResetPasswordMail;
+use App\Models\SubAdminPermission;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class AdminController extends Controller
 {
@@ -22,9 +22,9 @@ class AdminController extends Controller
     {
         $users = User::all()->count();
         $Products = Product::all()->count();
-        $WithdrawalRequests = Voucher::all()->count();
+        $totalGeneratedCoupons = ClaimVoucher::all()->count();
 
-        return view('admin.index', compact('users', 'Products', 'WithdrawalRequests'));
+        return view('admin.index', compact('users', 'Products', 'totalGeneratedCoupons'));
 
     }
 
