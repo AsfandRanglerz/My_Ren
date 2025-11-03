@@ -20,15 +20,9 @@
                                 </div>
 
                                 <!-- Remaining Points Button -->
-                                <div class="btn btn-info mx-1">
+                                <div class="btn btn-warning mx-1">
                                     Remaining Points: {{ $remainingPoints }}
                                 </div>
-
-                                <!-- Deducted Points Button -->
-                                <div class="btn btn-warning mx-1">
-                                    Deducted Points: {{ $deductedPoints }}
-                                </div>
-
                                 <!-- Deduct Points Button -->
                                 <button class="btn btn-danger mx-1" data-bs-toggle="modal" data-bs-target="#deductModal">
                                     Deduct Points
@@ -70,7 +64,7 @@
 <!-- Deduct Points Modal -->
 <div class="modal fade" id="deductModal" tabindex="-1" aria-labelledby="deductModalLabel" aria-hidden="true">
   <div class="modal-dialog">
-    <form id="deductPointsForm">
+    <form id="deductPointsForm" method="POST" action="{{ route('admin.deduct.points') }}">
         @csrf
         <input type="hidden" name="user_id" value="{{ $data->id }}">
         <div class="modal-content">
@@ -79,8 +73,11 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <label>Enter Points to Deduct</label>
-                <input type="number" class="form-control" name="deduct_points" min="1" max="{{ $remainingPoints }}">
+                <div class="mb-3">
+                    <label>Enter Points to Deduct</label>
+                    <input type="number" class="form-control" name="deduct_points" id="deduct_points">
+                    <small class="text-danger d-none" id="deduct_points_error"></small>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="submit" class="btn btn-danger">Submit</button>
@@ -97,35 +94,52 @@
 <script>
 $(document).ready(function() {
     $('#table_id_events').DataTable();
+	  // ✅ Reset modal on close (clear input & error)
+    $('#deductModal').on('hidden.bs.modal', function () {
+        $('#deductPointsForm')[0].reset();
+        $('#deduct_points_error').addClass('d-none').text('');
+    });
 
+    // ✅ Hide error when user focuses input again
+    $('#deduct_points').on('focus input', function() {
+        $('#deduct_points_error').addClass('d-none').text('');
+    });
+
+    // ✅ Form submit validation
     $('#deductPointsForm').on('submit', function(e) {
         e.preventDefault();
-
-        let user_id = $('input[name="user_id"]').val();
-        let points = $('input[name="deduct_points"]').val();
-
-        if(points <= 0){
-            alert('Points must be greater than 0');
+        let points = $('#deduct_points').val();
+        let maxPoints = parseInt($('#deduct_points').attr('max'));
+        
+        // frontend validation
+        if (points === '' || points <= 0) {
+            $('#deduct_points_error').removeClass('d-none').text('Please enter a valid number of points.');
+            return;
+        }
+        if (points > maxPoints) {
+            $('#deduct_points_error').removeClass('d-none').text('You cannot deduct more than remaining points.');
             return;
         }
 
+        // ✅ Submit via AJAX
         $.ajax({
-            url: "{{ route('admin.deduct.points') }}",
+            url: $(this).attr('action'),
             method: "POST",
             data: $(this).serialize(),
             success: function(res) {
-                $('#deductModal').modal('hide');
                 alert(res.message);
-
-                // Blade top buttons update
-                $('.btn-info').text('Remaining Points: ' + res.remainingPoints);
-                $('.btn-warning').text('Deducted Points: ' + res.deductedPoints);
+                $('#deductModal').modal('hide');
+                $('#deductPointsForm')[0].reset();
+                $('#deduct_points_error').addClass('d-none').text('');
+                $('.btn-warning').text('Remaining Points: ' + res.remainingPoints);
             },
             error: function(err) {
-                alert(err.responseJSON.message ?? 'Something went wrong');
+                const errorMsg = err.responseJSON?.message ?? 'Something went wrong';
+                $('#deduct_points_error').removeClass('d-none').text(errorMsg);
             }
         });
     });
+
 });
 </script>
 @endsection

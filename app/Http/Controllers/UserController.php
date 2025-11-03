@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\UserDeactivation;
 use App\Models\User;
-use App\Models\UserRolePermission;
 use App\Models\UserWallet;
 use Illuminate\Http\Request;
+use App\Mail\UserDeactivation;
+use Illuminate\Validation\Rule;
+use App\Models\UserRolePermission;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Validation\Rule;
+use App\Models\PointDeductionHistory;
+use App\Models\TempPointDeductionHistory;
 
 class UserController extends Controller
 {
@@ -233,72 +235,128 @@ class UserController extends Controller
 
 public function sales($id)
 {
+    // Step 1: User ko fetch karo saare relations ke sath
     $data = User::with(['sales', 'pointDeductionHistories'])->find($id);
 
     if (! $data) {
         return response()->json(['message' => 'User not found'], 404);
     }
 
-    // Total points earned from sales (gross total)
-    $grossTotalPoints = UserWallet::find($id);
-	return $grossTotalPoints = $grossTotalPoints ? $grossTotalPoints->total_points : 0;
-	
+    // Step 2: UserWallet se total points nikalo
+    $wallet = UserWallet::where('user_id', $id)->first();
+    $walletPoints = $wallet ? $wallet->total_points : 0;
 
-    // Current wallet points
-   
+    // Step 3: PointDeductionHistory se last record nikalo
+    $deduction = PointDeductionHistory::where('user_id', $id)->latest()->first();
 
-    // Last deduction history
-    $deduction = $data->pointDeductionHistories()->latest()->first();
+    if (! $deduction) {
+        // Record exist nahi karta to naya create karo
+        $deduction = PointDeductionHistory::create([
+            'user_id' => $id,
+            'gross_total_points' => $walletPoints,
+            'gross_remaining_points' => $walletPoints,
+            'deducted_points' => 0,
+        ]);
 
-    if ($deduction) {
-        $deductedPoints = $deduction->deducted_points ?? 0;
-        $remainingPoints = $deduction->remaining_points ?? $wallet->total_points;
-    } else {
+        $grossTotalPoints = $walletPoints;
+        $remainingPoints = $walletPoints;
         $deductedPoints = 0;
-        $remainingPoints = 0; // abhi deduct koi nahi hua
+
+    } else {
+        // Record exist karta hai to current values lo
+        $grossTotalPoints = $deduction->gross_total_points;
+        $remainingPoints = $deduction->gross_remaining_points;
+        $deductedPoints = $deduction->deducted_points;
+
+        // ✅ Wallet points change handle karo (increase or decrease dono)
+        if ($walletPoints != $deduction->gross_remaining_points) {
+
+            // Agar points badhe to gross_total_points bhi badhao
+            if ($walletPoints > $deduction->gross_remaining_points) {
+                $earnedDifference = $walletPoints - $deduction->gross_remaining_points;
+                $deduction->gross_total_points += $earnedDifference;
+            }
+
+            // Wallet ke current points ko always sync rakho
+            $deduction->gross_remaining_points = $walletPoints;
+
+            // Deducted points ko recalc karo
+            $deduction->deducted_points = $deduction->gross_total_points - $walletPoints;
+
+            $deduction->save();
+
+            // Updated values set karo
+            $grossTotalPoints = $deduction->gross_total_points;
+            $remainingPoints = $deduction->gross_remaining_points;
+            $deductedPoints = $deduction->deducted_points;
+        }
     }
 
+    // Step 4: View return karo
     return view('admin.sales.index', compact(
         'data',
         'grossTotalPoints',
-        'deductedPoints',
-        'remainingPoints'
+        'remainingPoints',
+        'deductedPoints'
     ));
 }
 
 
 public function deductPoints(Request $request)
 {
+    // ✅ Determine which guard is logged in (admin or subadmin)
+    if (auth()->guard('admin')->check()) {
+        $type = 'admin';
+        $adminName = auth()->guard('admin')->user()->name;
+    } elseif (auth()->guard('subadmin')->check()) {
+        $type = 'subadmin';
+        $adminName = auth()->guard('subadmin')->user()->name;
+    } else {
+        return response()->json(['message' => 'Unauthorized access'], 403);
+    }
+
+    // ✅ Fetch user and wallet
     $user = User::find($request->user_id);
+    if (!$user) {
+        return response()->json(['message' => 'User not found'], 404);
+    }
+
     $wallet = UserWallet::where('user_id', $user->id)->first();
 
-    if($wallet->total_points < $request->deduct_points){
+    if (!$wallet) {
+        return response()->json(['message' => 'User wallet not found'], 404);
+    }
+
+    // ✅ Check if user has enough points
+    if ($wallet->total_points < $request->deduct_points) {
         return response()->json(['message' => 'Insufficient points'], 400);
     }
 
-    // Deduct points from wallet
-    $wallet->total_points -= $request->deduct_points;
-    $wallet->save();
+	// ✅ Calculate total deducted points (sum from existing records)
+  $totalDeducted = TempPointDeductionHistory::where('user_id', $user->id)->sum('deducted_points');
 
-    // Save to PointDeductionHistory
-    PointDeductionHistory::create([
+// ab total requested + pehle se deducted points ka sum
+$totalAfterRequest = $totalDeducted + $request->deduct_points;
+
+// agar yeh wallet ke total se zyada hai to insufficient
+if ($totalAfterRequest > $wallet->total_points) {
+    return response()->json(['message' => 'Insufficient points'], 400);
+}
+
+
+    // ✅ Save record in TempPointDeductionHistory
+    TempPointDeductionHistory::create([
         'user_id' => $user->id,
-        'Admin_name' => auth()->user()->name,
-        'Admin_type' => auth()->guard('admin')->check() ? 'admin' : 'subadmin',
+        'Admin_name' => $adminName,
+        'Admin_type' => $type,
         'deducted_points' => $request->deduct_points,
-        'remaining_points' => $wallet->total_points,
-        'total_points' => $wallet->total_points + $request->deduct_points,
-        'gross_remaining_points' => $wallet->total_points,
-        'gross_total_points' => $wallet->total_points + $request->deduct_points,
         'date_time' => now(),
     ]);
 
-    return response()->json([
-        'message' => 'Points deducted successfully',
-        'remainingPoints' => $wallet->total_points,
-        'deductedPoints' => $request->deduct_points
-    ]);
+    // ✅ Redirect with success message
+    return redirect()->back()->with('success', 'Points deduction request sent successfully');
 }
+
 
 
 

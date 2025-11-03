@@ -1,30 +1,31 @@
 <?php
 
-use App\Http\Controllers\Api\AllProductController;
-use App\Http\Controllers\Api\ContactUsController;
-use App\Http\Controllers\Api\EmailOtpController;
-use App\Http\Controllers\Api\ForgotPasswordController;
-use App\Http\Controllers\Api\InstallRewardController;
-use App\Http\Controllers\Api\LoginController;
-use App\Http\Controllers\Api\LoginRewardRuleController;
-use App\Http\Controllers\Api\NotificationController;
-use App\Http\Controllers\Api\ProductDetailController;
-use App\Http\Controllers\Api\RankingController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\Api\SaleController;
 use App\Http\Controllers\Api\ScanController;
-use App\Http\Controllers\Api\SearchHistoryController;
+use App\Http\Controllers\Api\LoginController;
+use App\Http\Controllers\SideMenueController;
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\Api\RankingController;
 use App\Http\Controllers\Api\TwillioController;
-use App\Http\Controllers\Api\UpdateProfileController;
-use App\Http\Controllers\Api\UserActivePointsController;
+use App\Http\Controllers\Api\EmailOtpController;
+use App\Http\Controllers\Api\ContactUsController;
+use App\Http\Controllers\Api\AllProductController;
 use App\Http\Controllers\Api\UserRankingController;
+use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\InstallRewardController;
+use App\Http\Controllers\Api\ProductDetailController;
+use App\Http\Controllers\Api\SearchHistoryController;
+use App\Http\Controllers\Api\UpdateProfileController;
 use App\Http\Controllers\Api\VoucherDetailController;
+use App\Http\Controllers\Api\ForgotPasswordController;
+use App\Http\Controllers\SideMenuPermissionController;
+use App\Http\Controllers\Api\LoginRewardRuleController;
 use App\Http\Controllers\Api\WalletUserPointController;
 use App\Http\Controllers\Api\WithdrawRequestController;
-use App\Http\Controllers\PermissionController;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\SideMenueController;
-use App\Http\Controllers\SideMenuPermissionController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\PointRedeemptionController;
+use App\Http\Controllers\Api\UserActivePointsController;
 
 /*
 
@@ -112,8 +113,8 @@ Route::post('/clearnotification', [NotificationController::class, 'clearAll'])->
 Route::post('/notifications-seen', [NotificationController::class, 'seenNotification'])
     ->name('notifications.seen');
 // User Withdraw Requests
-Route::post('/withdraw-request', [WithdrawRequestController::class, 'store'])->middleware('auth:sanctum');
-
+Route::get('/pending-deduction', [PointRedeemptionController::class, 'getPendingDeduction'])->middleware('auth:sanctum');
+Route::post('/approved-pending-deduction', [PointRedeemptionController::class, 'approveDeduction'])->middleware('auth:sanctum');
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/userwithdrawdata', [WalletUserPointController::class, 'withdrawRequest']);
 
