@@ -265,30 +265,26 @@ public function sales($id)
     } else {
         // Record exist karta hai to current values lo
         $grossTotalPoints = $deduction->gross_total_points;
-        $remainingPoints = $deduction->gross_remaining_points;
-        $deductedPoints = $deduction->deducted_points;
+        $remainingPoints = $walletPoints;
+        // $deductedPoints = $deduction->deducted_points;
 
         // ✅ Wallet points change handle karo (increase or decrease dono)
         if ($walletPoints != $deduction->gross_remaining_points) {
 
             // Agar points badhe to gross_total_points bhi badhao
-            if ($walletPoints > $deduction->gross_remaining_points) {
-                $earnedDifference = $walletPoints - $deduction->gross_remaining_points;
+            if ($walletPoints > $deduction->remaining_points) {
+                $earnedDifference = $walletPoints - $deduction->remaining_points;
                 $deduction->gross_total_points += $earnedDifference;
             }
 
             // Wallet ke current points ko always sync rakho
-            $deduction->gross_remaining_points = $walletPoints;
-
-            // Deducted points ko recalc karo
-            $deduction->deducted_points = $deduction->gross_total_points - $walletPoints;
-
+            $deduction->remaining_points = $walletPoints;
             $deduction->save();
 
             // Updated values set karo
             $grossTotalPoints = $deduction->gross_total_points;
-            $remainingPoints = $deduction->gross_remaining_points;
-            $deductedPoints = $deduction->deducted_points;
+            $remainingPoints = $walletPoints;
+            // $deductedPoints = $deduction->deducted_points;
         }
     }
 
@@ -297,13 +293,13 @@ public function sales($id)
         'data',
         'grossTotalPoints',
         'remainingPoints',
-        'deductedPoints'
     ));
 }
 
 
 public function deductPoints(Request $request)
 {
+	
     // ✅ Determine which guard is logged in (admin or subadmin)
     if (auth()->guard('admin')->check()) {
         $type = 'admin';
@@ -354,7 +350,10 @@ if ($totalAfterRequest > $wallet->total_points) {
     ]);
 
     // ✅ Redirect with success message
-    return redirect()->back()->with('success', 'Points deduction request sent successfully');
+    return response()->json([
+		'status' => true,
+		'message' => 'Points deduction request sent successfully',
+	], 200);
 }
 
 

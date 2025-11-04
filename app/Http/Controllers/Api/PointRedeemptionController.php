@@ -68,72 +68,88 @@ public function getPendingDeduction(Request $request)
 
 public function approveDeduction(Request $request)
 {
-	$userId = auth()->id();
-    try {
-        $temp = TempPointDeductionHistory::where('user_id', $userId)->latest()->first();
+    $userId = auth()->id();
 
-        if (!$temp) {
-            return response()->json(['message' => 'No pending deduction request found.'], 404);
+    try {
+        // ✅ Get all pending deduction records for this user
+        $deductions = TempPointDeductionHistory::where('user_id', $userId)->get();
+
+        if ($deductions->isEmpty()) {
+            return response()->json(['status' => false, 'message' => 'No pending deduction request found.'], 404);
         }
 
-        $wallet = UserWallet::where('user_id', $temp->user_id)->first();
+        // ✅ Sum total points to deduct
+        $totalDeductedPoints = $deductions->sum('deducted_points');
+
+        // ✅ Get first record for reference fields like Admin_name, etc.
+        $firstRecord = $deductions->first();
+
+        // ✅ Find user's wallet
+        $wallet = UserWallet::where('user_id', $userId)->first();
 
         if (!$wallet) {
-            return response()->json(['message' => 'Wallet not found.'], 404);
+            return response()->json(['status' => false, 'message' => 'Wallet not found.'], 404);
         }
 
         // ✅ If user approves the deduction
         if ($request->action === 'yes') {
-            // Deduct points from wallet
-            $wallet->total_points -= $temp->deducted_points;
+            // Deduct total points from wallet
+            $wallet->total_points -= $totalDeductedPoints;
             $wallet->save();
 
-            // Move data to main PointDeductionHistory
+			$lastHistory = PointDeductionHistory::where('user_id', $userId)->latest()->first();
+       		$grossTotalPoints = $lastHistory ? $lastHistory->gross_total_points : $wallet->total_points;
+			
+
+			$wallet = UserWallet::where('user_id', $userId)->first();
+    		$walletPoints = $wallet ? $wallet->total_points : 0;
+            // ✅ Store record in main history
             PointDeductionHistory::create([
-                'user_id' => $temp->user_id,
-                'Admin_name' => $temp->Admin_name,
-                'Admin_type' => $temp->Admin_type,
-                'deducted_points' => $temp->deducted_points,
-                'status' => 'approved',
+                'user_id' => $userId,
+                'Admin_name' => $firstRecord->Admin_name,
+                'Admin_type' => $firstRecord->Admin_type,
+				'gross_total_points' => $grossTotalPoints,
+				'remaining_points' => $walletPoints,
+                'deducted_points' => $totalDeductedPoints,
+                'status' => 'allowed',
                 'date_time' => now(),
             ]);
 
-            // ✅ Delete temp record after approval
-            $temp->delete();
+            // ✅ Delete all temp records after approval
+            TempPointDeductionHistory::where('user_id', $userId)->delete();
 
             return response()->json([
                 'status' => true,
                 'message' => 'Points deducted successfully.',
                 'remaining_points' => $wallet->total_points,
-            ], 200);
+            ]);
         }
 
-        //  If user denies deduction
+        // ✅ If user denies deduction
         if ($request->action === 'no') {
-            // Just delete the temp request
-            $temp->delete();
+            TempPointDeductionHistory::where('user_id', $userId)->delete();
 
             return response()->json([
                 'status' => true,
                 'message' => 'Points deduction request denied successfully.',
-            ], 200);
+            ]);
         }
 
-        // ⚠️ If invalid action is sent
+        // ⚠️ Invalid action
         return response()->json([
             'status' => false,
-            'message' => 'Invalid action provided.'
+            'message' => 'Invalid action provided.',
         ], 400);
 
     } catch (\Exception $e) {
-        // ⚠️ Catch any unexpected errors
         return response()->json([
             'status' => false,
             'message' => 'An error occurred while processing your request.',
-            'error' => $e->getMessage()
+            'error' => $e->getMessage(),
         ], 500);
     }
 }
+
 
 
 

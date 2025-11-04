@@ -29,9 +29,7 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\AdminController;
 
 use App\Http\Controllers\Admin\SalesController;
-use App\Http\Controllers\SignupRewardSettingController;
 use App\Http\Controllers\Admin\ContactController;
-
 use App\Http\Controllers\Admin\ProductController;
 
 use App\Http\Controllers\Admin\RankingController;
@@ -39,10 +37,13 @@ use App\Http\Controllers\Admin\RankingController;
 use App\Http\Controllers\Admin\VoucherController;
 
 use App\Http\Controllers\Admin\SecurityController;
+
 use App\Http\Controllers\Admin\SubAdminController;
 use App\Http\Controllers\PointConversionController;
 use App\Http\Controllers\WithdrawRequestController;
+use App\Http\Controllers\Admin\RedeemptionController;
 use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\SignupRewardSettingController;
 use App\Http\Controllers\Admin\RolePermissionController;
 
 
@@ -249,6 +250,8 @@ Route::post('/users/toggle-status', [UserController::class, 'toggleStatus'])->na
 
     Route::get('/user-sales-details/{id}', [UserController::class, 'sales'])->name('user.saledetails') ->middleware('check.permission:Users,view');
 	Route::post('/admin/deduct-points', [UserController::class, 'deductPoints'])->name('admin.deduct.points');
+	//Redeemption History
+	Route::get('/redeemption-history', [RedeemptionController::class, 'index'])->name('redeemption.history')->middleware('check.permission:Point Redeemption History,view');
 
 
 

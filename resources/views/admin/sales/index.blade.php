@@ -1,6 +1,5 @@
 @extends('admin.layout.app')
 @section('title', 'Reward Details')
-
 @section('content')
 <div class="main-content" style="min-height: 562px;">
     <section class="section">
@@ -14,15 +13,16 @@
                             <h4 class="mb-0">{{ $data->name ?? 'N/A' }} - Reward Detail</h4>
                             <div class="text-end">
 
-                                <!-- Total Points Button (Gross) -->
+                                <!-- Total Points Button -->
                                 <div class="btn btn-success mx-1">
                                     Total Points: {{ $grossTotalPoints }}
                                 </div>
 
                                 <!-- Remaining Points Button -->
-                                <div class="btn btn-warning mx-1">
+                                <div class="btn btn-warning mx-1" id="remainingPointsBtn">
                                     Remaining Points: {{ $remainingPoints }}
                                 </div>
+
                                 <!-- Deduct Points Button -->
                                 <button class="btn btn-danger mx-1" data-bs-toggle="modal" data-bs-target="#deductModal">
                                     Deduct Points
@@ -87,59 +87,67 @@
     </form>
   </div>
 </div>
-
 @endsection
 
 @section('js')
 <script>
 $(document).ready(function() {
     $('#table_id_events').DataTable();
-	  // ✅ Reset modal on close (clear input & error)
+
+    // ✅ Reset modal on close
     $('#deductModal').on('hidden.bs.modal', function () {
         $('#deductPointsForm')[0].reset();
         $('#deduct_points_error').addClass('d-none').text('');
     });
 
-    // ✅ Hide error when user focuses input again
-    $('#deduct_points').on('focus input', function() {
+	// ✅ Hide error on click or input
+    $('#deduct_points').on('click input', function() {
         $('#deduct_points_error').addClass('d-none').text('');
     });
 
-    // ✅ Form submit validation
+    
+    // ✅ Submit AJAX form
     $('#deductPointsForm').on('submit', function(e) {
         e.preventDefault();
+
         let points = $('#deduct_points').val();
-        let maxPoints = parseInt($('#deduct_points').attr('max'));
-        
-        // frontend validation
         if (points === '' || points <= 0) {
             $('#deduct_points_error').removeClass('d-none').text('Please enter a valid number of points.');
             return;
         }
-        if (points > maxPoints) {
-            $('#deduct_points_error').removeClass('d-none').text('You cannot deduct more than remaining points.');
-            return;
-        }
 
-        // ✅ Submit via AJAX
         $.ajax({
             url: $(this).attr('action'),
             method: "POST",
             data: $(this).serialize(),
             success: function(res) {
-                alert(res.message);
-                $('#deductModal').modal('hide');
-                $('#deductPointsForm')[0].reset();
-                $('#deduct_points_error').addClass('d-none').text('');
-                $('.btn-warning').text('Remaining Points: ' + res.remainingPoints);
+                if (res.status) {
+                    // ✅ Save message in localStorage
+                    localStorage.setItem('successMessage', res.message);
+
+                    // ✅ Reload after 0.5 seconds
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 500);
+                } else {
+                    toastr.warning(res.message);
+                }
             },
             error: function(err) {
-                const errorMsg = err.responseJSON?.message ?? 'Something went wrong';
-                $('#deduct_points_error').removeClass('d-none').text(errorMsg);
+                const msg = err.responseJSON?.message ?? 'Something went wrong';
+                $('#deduct_points_error').removeClass('d-none').text(msg);
             }
         });
     });
 
+    // ✅ Show toastr after reload
+    const successMsg = localStorage.getItem('successMessage');
+    if (successMsg) {
+        setTimeout(() => {
+            toastr.success(successMsg);
+            localStorage.removeItem('successMessage');
+        }, 600); // Show toastr after reload
+    }
 });
 </script>
 @endsection

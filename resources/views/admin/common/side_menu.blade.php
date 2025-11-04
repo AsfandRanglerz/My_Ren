@@ -92,6 +92,26 @@
             </li>
             @endif
 
+			{{-- Redeemption History --}}
+			
+			 @if (Auth::guard('admin')->check() ||
+            ($sideMenuPermissions->has('Point Redeemption History') && $sideMenuPermissions['Point Redeemption History']->contains('view')))
+			
+			<li class="dropdown {{ request()->is('admin/redeemption-history*') ? 'active' : '' }}">
+
+                <a href="{{ url('admin/redeemption-history') }}" class="nav-link">
+
+                    <i data-feather="credit-card"></i>
+
+                    <span>Points Redeemption History</span>
+
+                </a>
+
+            </li>
+			@endif
+
+
+
 
               @if (Auth::guard('admin')->check() ||
             ($sideMenuPermissions->has('Install Rewards') && $sideMenuPermissions['Install Rewards']->contains('view')))
