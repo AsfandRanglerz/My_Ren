@@ -18,6 +18,11 @@
                                     Total Points: {{ $grossTotalPoints }}
                                 </div>
 
+								<!-- Requested Points Button -->
+								<div class="btn btn-info mx-1">
+									Requested Points: {{ $requestedAmount }}
+								</div>
+
                                 <!-- Remaining Points Button -->
                                 <div class="btn btn-warning mx-1" id="remainingPointsBtn">
                                     Remaining Points: {{ $remainingPoints }}

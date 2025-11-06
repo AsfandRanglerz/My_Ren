@@ -288,11 +288,15 @@ public function sales($id)
         }
     }
 
+	 // ✅ Step 4: Requested Amount (from TempPointDeductionHistory)
+    $requestedAmount = TempPointDeductionHistory::where('user_id', $id)->sum('deducted_points');
+
     // Step 4: View return karo
     return view('admin.sales.index', compact(
         'data',
         'grossTotalPoints',
         'remainingPoints',
+		'requestedAmount'
     ));
 }
 
@@ -336,8 +340,11 @@ $totalAfterRequest = $totalDeducted + $request->deduct_points;
 
 // agar yeh wallet ke total se zyada hai to insufficient
 if ($totalAfterRequest > $wallet->total_points) {
-    return response()->json(['message' => 'Insufficient points'], 400);
+    return response()->json([
+        'message' => "You have already requested a total of {$totalDeducted} points. Adding this new request ({$request->deduct_points} points) would exceed your available balance of {$wallet->total_points} points. Insufficient points for this request."
+    ], 400);
 }
+
 
 
     // ✅ Save record in TempPointDeductionHistory

@@ -99,7 +99,7 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::post('/user-login', [LoginController::class, 'login']);
 
 Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth:sanctum');
-
+   
 // Forgot Password
 Route::post('/forgotpassword', [ForgotPasswordController::class, 'forgotPassword']);
 Route::post('/forgotverifyotp', [ForgotPasswordController::class, 'forgotverifyOtp']);
