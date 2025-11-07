@@ -10,4 +10,8 @@ class TempPointDeductionHistory extends Model
     use HasFactory;
 	protected $table = 'temp_point_deduction_histories';
 	protected $guarded = [];
+
+	public function users() {
+		return $this->belongsTo(User::class, 'user_id', 'id');
+	}
 }

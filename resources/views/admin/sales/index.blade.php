@@ -112,38 +112,50 @@ $(document).ready(function() {
 
     
     // ✅ Submit AJAX form
-    $('#deductPointsForm').on('submit', function(e) {
-        e.preventDefault();
+    $// ✅ Submit AJAX form
+$('#deductPointsForm').on('submit', function(e) {
+    e.preventDefault();
 
-        let points = $('#deduct_points').val();
-        if (points === '' || points <= 0) {
-            $('#deduct_points_error').removeClass('d-none').text('Please enter a valid number of points.');
-            return;
-        }
+    let points = $('#deduct_points').val();
+    if (points === '' || points <= 0) {
+        $('#deduct_points_error').removeClass('d-none').text('Please enter a valid number of points.');
+        return;
+    }
 
-        $.ajax({
-            url: $(this).attr('action'),
-            method: "POST",
-            data: $(this).serialize(),
-            success: function(res) {
-                if (res.status) {
-                    // ✅ Save message in localStorage
-                    localStorage.setItem('successMessage', res.message);
+    // ✅ Get user's local date & time (Pakistan / current system time)
+    const now = new Date();
+    const formattedDateTime = now.toLocaleString('en-GB', { 
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit', hour12: true 
+    }).replace(',', ''); // Example: 07-11-2025  4:10 pm
 
-                    // ✅ Reload after 0.5 seconds
-                    setTimeout(function() {
-                        window.location.reload();
-                    }, 500);
-                } else {
-                    toastr.warning(res.message);
-                }
-            },
-            error: function(err) {
-                const msg = err.responseJSON?.message ?? 'Something went wrong';
-                $('#deduct_points_error').removeClass('d-none').text(msg);
+    // ✅ Serialize form data + append date_time
+    let formData = $(this).serializeArray();
+    formData.push({ name: 'date_time', value: formattedDateTime });
+
+    $.ajax({
+        url: $(this).attr('action'),
+        method: "POST",
+        data: formData,
+        success: function(res) {
+            if (res.status) {
+                // ✅ Save message in localStorage
+                localStorage.setItem('successMessage', res.message);
+
+                // ✅ Reload after 0.5 seconds
+                setTimeout(function() {
+                    window.location.reload();
+                }, 500);
+            } else {
+                toastr.warning(res.message);
             }
-        });
+        },
+        error: function(err) {
+            const msg = err.responseJSON?.message ?? 'Something went wrong';
+            $('#deduct_points_error').removeClass('d-none').text(msg);
+        }
     });
+});
 
     // ✅ Show toastr after reload
     const successMsg = localStorage.getItem('successMessage');

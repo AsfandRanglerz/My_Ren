@@ -103,12 +103,25 @@
 
                     <i data-feather="credit-card"></i>
 
-                    <span>Points Redeemption History</span>
+                    <span>Points Deduction History</span>
 
                 </a>
 
             </li>
 			@endif
+
+
+			<li class="dropdown {{ request()->is('admin/deduction-request-history*') ? 'active' : '' }}">
+
+                <a href="{{ url('admin/deduction-request-history') }}" class="nav-link">
+
+                    <i data-feather="archive"></i>
+
+                    <span>Points Deduction Requests</span>
+
+                </a>
+
+            </li>
 
 
 

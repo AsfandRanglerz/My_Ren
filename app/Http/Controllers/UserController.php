@@ -256,6 +256,8 @@ public function sales($id)
             'gross_total_points' => $walletPoints,
             'gross_remaining_points' => $walletPoints,
             'deducted_points' => 0,
+			'status' => 'initial',
+			'date_time' => now(),
         ]);
 
         $grossTotalPoints = $walletPoints;
@@ -346,6 +348,8 @@ if ($totalAfterRequest > $wallet->total_points) {
 }
 
 
+  $grossTotalPoints = PointDeductionHistory::where('user_id', $user->id)->latest()->value('gross_total_points') ?? $wallet->total_points;
+
 
     // ✅ Save record in TempPointDeductionHistory
     TempPointDeductionHistory::create([
@@ -353,9 +357,8 @@ if ($totalAfterRequest > $wallet->total_points) {
         'Admin_name' => $adminName,
         'Admin_type' => $type,
         'deducted_points' => $request->deduct_points,
-        'date_time' => now(),
+        'date_time' => $request->date_time ?? now(),
     ]);
-
     // ✅ Redirect with success message
     return response()->json([
 		'status' => true,

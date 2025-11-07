@@ -1,5 +1,5 @@
 @extends('admin.layout.app')
-@section('title', 'Points Deduction History')
+@section('title', 'Points Deduction Requests')
 
 @section('content')
     <div class="main-content" style="min-height: 562px;">
@@ -9,7 +9,7 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4>Points Deduction History</h4>
+                                <h4>Points Deduction Requests</h4>
                             </div>
                             <div class="card-body table-striped table-bordered table-responsive">
                                 <table class="table" id="table_id_events">
@@ -24,7 +24,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($deductions as $data)
+                                        @foreach ($deduction as $data)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $data->users->identity }}</td>

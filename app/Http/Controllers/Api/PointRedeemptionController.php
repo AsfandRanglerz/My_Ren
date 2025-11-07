@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\User;
 use App\Models\UserWallet;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -78,6 +79,7 @@ public function getPendingDeduction(Request $request)
 
         // ✅ Get all pending deductions for this user
         $pendings = TempPointDeductionHistory::where('user_id', $userId)
+		->where('status', 'pending')
             ->orderBy('created_at', 'asc')
             ->get();
 
@@ -117,54 +119,63 @@ public function getPendingDeduction(Request $request)
 public function approveDeduction(Request $request)
 {
     $userId = auth()->id();
-
     try {
-        // ✅ Get all pending deduction records for this user
-        $deductions = TempPointDeductionHistory::where('user_id', $userId)->get();
-
-        if ($deductions->isEmpty()) {
-            return response()->json(['status' => false, 'message' => 'No pending deduction request found.'], 404);
+        // ✅ Validate request
+        if (!$request->has(['request_id', 'action'])) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Missing required fields (request_id, action).'
+            ], 400);
         }
 
-        // ✅ Sum total points to deduct
-        $totalDeductedPoints = $deductions->sum('deducted_points');
+        // ✅ Fetch specific temp request
+        $deduction = TempPointDeductionHistory::where('id', $request->request_id)
+            ->where('user_id', $userId)
+            ->first();
 
-        // ✅ Get first record for reference fields like Admin_name, etc.
-        $firstRecord = $deductions->first();
+        if (!$deduction) {
+            return response()->json([
+                'status' => false,
+                'message' => 'No pending deduction request found.'
+            ], 404);
+        }
 
-        // ✅ Find user's wallet
+        // ✅ Fetch wallet
         $wallet = UserWallet::where('user_id', $userId)->first();
-
         if (!$wallet) {
             return response()->json(['status' => false, 'message' => 'Wallet not found.'], 404);
         }
 
-        // ✅ If user approves the deduction
+        // ✅ Common values
+        $pointsToDeduct =  $deduction->deducted_points;
+	
+        $lastHistory = PointDeductionHistory::where('user_id', $userId)->latest()->first();
+        $grossTotalPoints = $lastHistory ? $lastHistory->gross_total_points : $wallet->total_points;
+        // ✅ Action = YES → Deduct and mark allowed
         if ($request->action === 'yes') {
-            // Deduct total points from wallet
-            $wallet->total_points -= $totalDeductedPoints;
+
+            if ($wallet->total_points < $pointsToDeduct) {
+                return response()->json(['status' => false, 'message' => 'Insufficient wallet points. You have only ' . $wallet->total_points . ' points available in your wallet.'], 400);
+            }
+
+            // Deduct points
+            $wallet->total_points -= $pointsToDeduct;
             $wallet->save();
 
-			$lastHistory = PointDeductionHistory::where('user_id', $userId)->latest()->first();
-       		$grossTotalPoints = $lastHistory ? $lastHistory->gross_total_points : $wallet->total_points;
-			
-
-			$wallet = UserWallet::where('user_id', $userId)->first();
-    		$walletPoints = $wallet ? $wallet->total_points : 0;
-            // ✅ Store record in main history
+            // Add to main history
             PointDeductionHistory::create([
                 'user_id' => $userId,
-                'Admin_name' => $firstRecord->Admin_name,
-                'Admin_type' => $firstRecord->Admin_type,
-				'gross_total_points' => $grossTotalPoints,
-				'remaining_points' => $walletPoints,
-                'deducted_points' => $totalDeductedPoints,
+                'Admin_name' => $deduction->Admin_name,
+                'Admin_type' => $deduction->Admin_type,
+                'gross_total_points' => $grossTotalPoints,
+                'remaining_points' => $wallet->total_points,
+                'deducted_points' => $pointsToDeduct,
                 'status' => 'allowed',
-                'date_time' => now(),
+                'date_time' => $request->date_time ?? now(),
             ]);
 
-            // ✅ Delete all temp records after approval
-            TempPointDeductionHistory::where('user_id', $userId)->delete();
+            // Delete temp record
+            $deduction->delete();
 
             return response()->json([
                 'status' => true,
@@ -173,17 +184,30 @@ public function approveDeduction(Request $request)
             ]);
         }
 
-        // ✅ If user denies deduction
-        if ($request->action === 'no') {
-            TempPointDeductionHistory::where('user_id', $userId)->delete();
+        // ✅ Action = LATER → No deduction, mark pending_later
+        if ($request->action === 'later') {
+
+			$deduction->status = 'pending_later';
+			$deduction->save();
+
+            PointDeductionHistory::create([
+                'user_id' => $userId,
+                'Admin_name' => $deduction->Admin_name,
+                'Admin_type' => $deduction->Admin_type,
+                'gross_total_points' => $grossTotalPoints,
+                'remaining_points' => $wallet->total_points,
+                'deducted_points' => $pointsToDeduct,
+                'status' => 'pending_later',
+                'date_time' => $request->date_time ?? now(),
+            ]);
 
             return response()->json([
                 'status' => true,
-                'message' => 'Points deduction request denied successfully.',
+                'message' => 'Points deduction saved as pending later.',
             ]);
         }
 
-        // ⚠️ Invalid action
+        // ⚠️ Invalid Action
         return response()->json([
             'status' => false,
             'message' => 'Invalid action provided.',
@@ -198,6 +222,55 @@ public function approveDeduction(Request $request)
     }
 }
 
+
+public function PointsDeductionData()
+{
+    try {
+		$userId = auth()->id();
+        // ✅ Validate user
+        if (!User::find($userId)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'User not found.',
+            ], 404);
+        }
+
+        // ✅ Allowed Deductions
+        $allowedData = PointDeductionHistory::with('users')
+            ->where('user_id', $userId)
+            ->where('status', 'allowed')
+            ->orderBy('id', 'desc')
+            ->get();
+
+        // ✅ Pending Later Deductions
+        $pendingLaterData = PointDeductionHistory::with('users')
+            ->where('user_id', $userId)
+            ->where('status', 'pending_later')
+            ->orderBy('id', 'desc')
+            ->get();
+
+        // ✅ Temporary Pending Deductions (from Temp table)
+        $tempPendingData = TempPointDeductionHistory::with('users')
+            ->where('user_id', $userId)
+            ->orderBy('id', 'desc')
+            ->get();
+
+        // ✅ Response
+        return response()->json([
+            'status' => true,
+            'Approved' => $allowedData,
+            'Later' => $pendingLaterData,
+            'Pending' => $tempPendingData,
+        ], 200);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Something went wrong while fetching points deduction data.',
+            'error' => $e->getMessage(),
+        ], 500);
+    }	
+}
 
 
 

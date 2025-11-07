@@ -252,7 +252,7 @@ Route::post('/users/toggle-status', [UserController::class, 'toggleStatus'])->na
 	Route::post('/admin/deduct-points', [UserController::class, 'deductPoints'])->name('admin.deduct.points');
 	//Redeemption History
 	Route::get('/redeemption-history', [RedeemptionController::class, 'index'])->name('redeemption.history')->middleware('check.permission:Point Redeemption History,view');
-
+	Route::get('/deduction-request-history', [RedeemptionController::class, 'show'])->name('deduction.request.history.show')->middleware('check.permission:Point Redeemption History,view');
 
 
 
