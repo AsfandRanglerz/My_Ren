@@ -33,6 +33,7 @@ public function show()
     // fetch as collection but store in $deduction (so view's $deduction exists)
     $deduction = TempPointDeductionHistory::with('users')
         ->where('status', 'pending')
+		->orWhere('status', 'pending_later')
         ->orderBy('id', 'desc')
         ->get();
 

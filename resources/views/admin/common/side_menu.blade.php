@@ -95,7 +95,7 @@
 			{{-- Redeemption History --}}
 			
 			 @if (Auth::guard('admin')->check() ||
-            ($sideMenuPermissions->has('Point Redeemption History') && $sideMenuPermissions['Point Redeemption History']->contains('view')))
+            ($sideMenuPermissions->has('Points Deduction History') && $sideMenuPermissions['Points Deduction History']->contains('view')))
 			
 			<li class="dropdown {{ request()->is('admin/redeemption-history*') ? 'active' : '' }}">
 
@@ -110,7 +110,9 @@
             </li>
 			@endif
 
-
+ 			@if (Auth::guard('admin')->check() ||
+            ($sideMenuPermissions->has('Points Deduction Requests') && $sideMenuPermissions['Points Deduction Requests']->contains('view')))
+			
 			<li class="dropdown {{ request()->is('admin/deduction-request-history*') ? 'active' : '' }}">
 
                 <a href="{{ url('admin/deduction-request-history') }}" class="nav-link">
@@ -122,8 +124,7 @@
                 </a>
 
             </li>
-
-
+			@endif
 
 
               @if (Auth::guard('admin')->check() ||

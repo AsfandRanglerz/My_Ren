@@ -251,10 +251,8 @@ Route::post('/users/toggle-status', [UserController::class, 'toggleStatus'])->na
     Route::get('/user-sales-details/{id}', [UserController::class, 'sales'])->name('user.saledetails') ->middleware('check.permission:Users,view');
 	Route::post('/admin/deduct-points', [UserController::class, 'deductPoints'])->name('admin.deduct.points');
 	//Redeemption History
-	Route::get('/redeemption-history', [RedeemptionController::class, 'index'])->name('redeemption.history')->middleware('check.permission:Point Redeemption History,view');
-	Route::get('/deduction-request-history', [RedeemptionController::class, 'show'])->name('deduction.request.history.show')->middleware('check.permission:Point Redeemption History,view');
-
-
+	Route::get('/redeemption-history', [RedeemptionController::class, 'index'])->name('redeemption.history')->middleware('check.permission:Points Deduction History,view');
+	Route::get('/deduction-request-history', [RedeemptionController::class, 'show'])->name('deduction.request.history.show')->middleware('check.permission:Points Deduction Requests,view');
 
 
         // ############ Login Rewards Points #################

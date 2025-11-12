@@ -80,7 +80,7 @@ public function getPendingDeduction(Request $request)
         // ✅ Get all pending deductions for this user
         $pendings = TempPointDeductionHistory::where('user_id', $userId)
 		->where('status', 'pending')
-            ->orderBy('created_at', 'asc')
+            ->orderBy('created_at', 'desc')
             ->get();
 
         if ($pendings->isEmpty()) {
