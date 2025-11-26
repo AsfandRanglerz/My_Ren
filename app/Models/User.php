@@ -19,11 +19,6 @@ class User extends Authenticatable
         return $this->hasMany(Sale::class);
     }
 
-    public function withdrawRequests()
-    {
-        return $this->hasMany(WithdrawRequest::class);
-    }
-
 	public function pointDeductionHistories()
 	{
 		return $this->hasMany(PointDeductionHistory::class, 'user_id');

@@ -197,20 +197,17 @@ public function getVoucherDetail()
         // 3. Fetch created record
         $data = DB::table('claim_vouchers')->where('id', $id)->first();
 
-        //   // Voucher amount from DB
-        //     $voucher = DB::table('vouchers')
-        //         ->where('id', $request->voucher_id)
-        //         ->select('rupees')
-        //         ->first();
-        //     $clamingVoucherAmountOff = $voucher->rupees; 
-        //     $value = number_format((float) $clamingVoucherAmountOff, 2, '.', ''); 
-        //     // Shopify API call via private function
-        //     $shopifyResponse = $this->createShopifyDiscount($user->id, $couponCode, $value);
-        //     if (isset($shopifyResponse['error'])) {
-        //         DB::rollBack();
-        //         return response()->json($shopifyResponse, 500);
-        //     }
-        //     DB::commit();
+          // Voucher amount from DB
+            $voucher = $data->points;
+            $clamingVoucherAmountOff = $voucher; 
+            $value = number_format((float) $clamingVoucherAmountOff, 2, '.', ''); 
+            // Shopify API call via private function
+            $shopifyResponse = $this->createShopifyDiscount($user->id, $couponCode, $value);
+            if (isset($shopifyResponse['error'])) {
+                DB::rollBack();
+                return response()->json($shopifyResponse, 500);
+            }
+            DB::commit();
               return response()->json([
             'message' => 'Voucher Claimed Successfully',
             'data'    => $data,
@@ -228,76 +225,76 @@ public function getVoucherDetail()
 }    
 
   
-    // private function createShopifyDiscount($customerId, $couponCode, $discountValue)
-    // {
-    //     $shopUrl = config('services.shopify.store_url');
-    //     $accessToken = config('services.shopify.access_token');
-    //     $apiVersion = config('services.shopify.api_version', '2025-01');
-    //     // Step 1: Price Rule
-    //     $priceRuleData = [
-    //         "price_rule" => [
-    //             "title" => "Customer-Discount-{$customerId} | {$couponCode}",
-    //             "value_type" => "fixed_amount",
-    //             "value" => "-" . $discountValue,
-    //             "customer_selection" => "all",
-    //             "target_type" => "line_item",
-    //             "target_selection" => "all",
-    //             "allocation_method" => "across",
-    //             "usage_limit" => 1,
-    //             "once_per_customer" => true,
-    //             "starts_at" => now()->toIso8601String()
-    //         ]
-    //     ];
-    //     $ch = curl_init("https://$shopUrl/admin/api/$apiVersion/price_rules.json");
-    //     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    //     curl_setopt($ch, CURLOPT_POST, true);
-    //     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($priceRuleData));
-    //     curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    //         "Content-Type: application/json",
-    //         "X-Shopify-Access-Token: $accessToken"
-    //     ]);
-    //     $response = curl_exec($ch);
-    //     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    //     $curlError = curl_error($ch);
-    //     curl_close($ch);
-    //     $priceRule = json_decode($response, true);
-    //     $priceRuleId = $priceRule['price_rule']['id'] ?? null;
-    //     if (!$priceRuleId) {
-    //         return [
-    //             'error' => 'Price Rule creation failed',
-    //             'http_code' => $httpCode,
-    //             'curl_error' => $curlError,
-    //             'shopify_response' => $priceRule
-    //         ];
-    //     }
-    //     // Step 2: Discount Code
-    //     $discountData = [
-    //         "discount_code" => [
-    //             "code" => $couponCode
-    //         ]
-    //     ];
-    //     $ch = curl_init("https://$shopUrl/admin/api/$apiVersion/price_rules/$priceRuleId/discount_codes.json");
-    //     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    //     curl_setopt($ch, CURLOPT_POST, true);
-    //     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($discountData));
-    //     curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    //         "Content-Type: application/json",
-    //         "X-Shopify-Access-Token: $accessToken"
-    //     ]);
-    //     $discountResponse = curl_exec($ch);
-    //     curl_close($ch);
-    //     $discountCode = json_decode($discountResponse, true);
-    //     if (!isset($discountCode['discount_code']['id'])) {
-    //         return [
-    //             'error' => 'Discount Code creation failed',
-    //             'shopify_response' => $discountCode
-    //         ];
-    //     }
-    //     return [
-    //         'price_rule_id' => $priceRuleId,
-    //         'discount_code' => $discountCode['discount_code']
-    //     ];
-    // }
+    private function createShopifyDiscount($customerId, $couponCode, $discountValue)
+    {
+        $shopUrl = config('services.shopify.store_url');
+        $accessToken = config('services.shopify.access_token');
+        $apiVersion = config('services.shopify.api_version', '2025-01');
+        // Step 1: Price Rule
+        $priceRuleData = [
+            "price_rule" => [
+                "title" => "Customer-Discount-{$customerId} | {$couponCode}",
+                "value_type" => "fixed_amount",
+                "value" => "-" . $discountValue,
+                "customer_selection" => "all",
+                "target_type" => "line_item",
+                "target_selection" => "all",
+                "allocation_method" => "across",
+                "usage_limit" => 1,
+                "once_per_customer" => true,
+                "starts_at" => now()->toIso8601String()
+            ]
+        ];
+        $ch = curl_init("https://$shopUrl/admin/api/$apiVersion/price_rules.json");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($priceRuleData));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            "Content-Type: application/json",
+            "X-Shopify-Access-Token: $accessToken"
+        ]);
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curlError = curl_error($ch);
+        curl_close($ch);
+        $priceRule = json_decode($response, true);
+        $priceRuleId = $priceRule['price_rule']['id'] ?? null;
+        if (!$priceRuleId) {
+            return [
+                'error' => 'Price Rule creation failed',
+                'http_code' => $httpCode,
+                'curl_error' => $curlError,
+                'shopify_response' => $priceRule
+            ];
+        }
+        // Step 2: Discount Code
+        $discountData = [
+            "discount_code" => [
+                "code" => $couponCode
+            ]
+        ];
+        $ch = curl_init("https://$shopUrl/admin/api/$apiVersion/price_rules/$priceRuleId/discount_codes.json");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($discountData));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            "Content-Type: application/json",
+            "X-Shopify-Access-Token: $accessToken"
+        ]);
+        $discountResponse = curl_exec($ch);
+        curl_close($ch);
+        $discountCode = json_decode($discountResponse, true);
+        if (!isset($discountCode['discount_code']['id'])) {
+            return [
+                'error' => 'Discount Code creation failed',
+                'shopify_response' => $discountCode
+            ];
+        }
+        return [
+            'price_rule_id' => $priceRuleId,
+            'discount_code' => $discountCode['discount_code']
+        ];
+    }
 
 
 

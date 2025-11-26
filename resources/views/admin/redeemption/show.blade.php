@@ -27,7 +27,7 @@
                                         @foreach ($deduction as $data)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $data->users->identity }}</td>
+                                                <td>{{ $data->users->identity ?? "-" }}</td>
                                                 <td>{{ $data->Admin_name }}</td>
 												<td>{{ $data->Admin_type }}</td>
 												<td>{{ $data->deducted_points }}</td>

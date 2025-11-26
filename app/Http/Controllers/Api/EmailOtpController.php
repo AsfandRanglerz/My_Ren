@@ -255,14 +255,37 @@ class EmailOtpController extends Controller
                 ->where('user_id', $user->id)
                 ->first();
 
-            return response()->json([
-                'name' => $user->name ?? null,
-				'image' => $user->image ? 'public/'.$user->image : asset('public/admin/assets/images/avator.png'),
-                'country' => $user->country ?? null,
-                'email' => $user->email ?? null,
-                'phone' => $user->phone ?? null,
-                'points' => $totalPoints ?? 0,
-            ]);
+             return response()->json([
+            'name' => $user->name ?? null,
+            'image' => $user->image ? 'public/'.$user->image : asset('public/admin/assets/images/avator.png'),
+            'country' => $user->country ?? null,
+            'email' => $user->email ?? null,
+            'phone' => $user->phone ?? null,
+            'user_identity' => $user->identity ?? null,
+            'points' => $totalPoints ? [
+                'id' => $totalPoints->id,
+                'total_points' => $totalPoints->total_points,
+                'created_at' => $totalPoints->created_at,
+                'updated_at' => $totalPoints->updated_at,
+                'user' => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'phone' => $user->phone,
+                    'email' => $user->email,
+                    'status' => $user->status,
+                    'country' => $user->country,
+                    'password' => $user->password,
+                    'image' => $user->image,
+                    'created_at' => $user->created_at,
+                    'updated_at' => $user->updated_at,
+                    'deleted_at' => $user->deleted_at,
+                    'toggle' => $user->toggle,
+                    'deactivation_reason' => $user->deactivation_reason,
+                    'fcm' => $user->fcm,
+                ]
+            ] : 0,
+        ]);
+
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Something Went Wrong.',

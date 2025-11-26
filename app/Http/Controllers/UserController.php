@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\UserWallet;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use App\Mail\UserDeactivation;
 use Illuminate\Validation\Rule;
@@ -303,69 +304,204 @@ public function sales($id)
 }
 
 
+// public function deductPoints(Request $request)
+// {
+	
+//     // ✅ Determine which guard is logged in (admin or subadmin)
+//     if (auth()->guard('admin')->check()) {
+//         $type = 'admin';
+//         $adminName = auth()->guard('admin')->user()->name;
+//     } elseif (auth()->guard('subadmin')->check()) {
+//         $type = 'subadmin';
+//         $adminName = auth()->guard('subadmin')->user()->name;
+//     } else {
+//         return response()->json(['message' => 'Unauthorized access'], 403);
+//     }
+
+//     // ✅ Fetch user and wallet
+//     $user = User::find($request->user_id);
+//     if (!$user) {
+//         return response()->json(['message' => 'User not found'], 404);
+//     }
+
+//     $wallet = UserWallet::where('user_id', $user->id)->first();
+
+//     if (!$wallet) {
+//         return response()->json(['message' => 'User wallet not found'], 404);
+//     }
+
+//     // ✅ Check if user has enough points
+//     if ($wallet->total_points < $request->deduct_points) {
+//         return response()->json(['message' => 'Insufficient points'], 400);
+//     }
+
+// 	// ✅ Calculate total deducted points (sum from existing records)
+//   $totalDeducted = TempPointDeductionHistory::where('user_id', $user->id)->sum('deducted_points');
+
+// // ab total requested + pehle se deducted points ka sum
+// $totalAfterRequest = $totalDeducted + $request->deduct_points;
+
+// // agar yeh wallet ke total se zyada hai to insufficient
+// if ($totalAfterRequest > $wallet->total_points) {
+//     return response()->json([
+//         'message' => "You have already requested a total of {$totalDeducted} points. Adding this new request ({$request->deduct_points} points) would exceed your available balance of {$wallet->total_points} points. Insufficient points for this request."
+//     ], 400);
+// }
+
+
+//   $grossTotalPoints = PointDeductionHistory::where('user_id', $user->id)->latest()->value('gross_total_points') ?? $wallet->total_points;
+  
+// 				 $notification = Notification::create([
+//                 'user_id' => $adminName,
+//                 'title' => 'Points Deduction Requested',
+//                 'description' => "Shopkeeper {$adminName} wants to redeem your {$request->deduct_points} points. Do you allow this?",
+//                 'seenByUser' => 0, // default unseen
+//                 'created_at' => now(),
+//             ]);
+			
+//     if ($customer && $customer->fcm) {
+//                 // dd($customer->fcm);
+//                 $data = [
+//                     'id' => $notification->id,
+//                     'type' => 'admin_notification', // optional type field
+//                     'title' => $request->title,
+//                     'body' => $request->description,
+//                 ];
+
+//                 // dd($data);
+
+//                 // Dispatch the notification job
+//                 dispatch(new JobNotification(
+//                     $customer->fcm,
+//                     $request->title,
+//                     $request->description,
+//                     $data
+//                 ));
+
+
+//     // ✅ Save record in TempPointDeductionHistory
+//     TempPointDeductionHistory::create([
+//         'user_id' => $user->id,
+//         'Admin_name' => $adminName,
+//         'Admin_type' => $type,
+//         'deducted_points' => $request->deduct_points,
+//         'date_time' => $request->date_time ?? now(),
+//     ]);
+//     // ✅ Redirect with success message
+//     return response()->json([
+// 		'status' => true,
+// 		'message' => 'Points deduction request sent successfully',
+// 	], 200);
+// }
+
 public function deductPoints(Request $request)
 {
-	
-    // ✅ Determine which guard is logged in (admin or subadmin)
-    if (auth()->guard('admin')->check()) {
-        $type = 'admin';
-        $adminName = auth()->guard('admin')->user()->name;
-    } elseif (auth()->guard('subadmin')->check()) {
-        $type = 'subadmin';
-        $adminName = auth()->guard('subadmin')->user()->name;
-    } else {
-        return response()->json(['message' => 'Unauthorized access'], 403);
+    DB::beginTransaction();
+
+    try {
+
+        // ✅ Determine which guard is logged in (admin or subadmin)
+        if (auth()->guard('admin')->check()) {
+            $type = 'admin';
+            $adminName = auth()->guard('admin')->user()->name;
+            $customer = auth()->guard('admin')->user();
+        } elseif (auth()->guard('subadmin')->check()) {
+            $type = 'subadmin';
+            $adminName = auth()->guard('subadmin')->user()->name;
+            $customer = auth()->guard('subadmin')->user();
+        } else {
+            return response()->json(['message' => 'Unauthorized access'], 403);
+        }
+
+        // ✅ Fetch user and wallet
+        $user = User::find($request->user_id);
+
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        $wallet = UserWallet::where('user_id', $user->id)->first();
+
+        if (!$wallet) {
+            return response()->json(['message' => 'User wallet not found'], 404);
+        }
+
+        // ✅ Check if user has enough points
+        if ($wallet->total_points < $request->deduct_points) {
+            return response()->json(['message' => 'Insufficient points'], 400);
+        }
+
+        // 👉 Already deducted points
+        $totalDeducted = TempPointDeductionHistory::where('user_id', $user->id)->sum('deducted_points');
+
+        // 👉 New total after new request
+        $totalAfterRequest = $totalDeducted + $request->deduct_points;
+
+        if ($totalAfterRequest > $wallet->total_points) {
+            return response()->json([
+                'message' => "You have already requested a total of {$totalDeducted} points. Adding this new request ({$request->deduct_points} points) would exceed available balance of {$wallet->total_points}. Insufficient points."
+            ], 400);
+        }
+
+        // 👇 Current gross total
+        $grossTotalPoints = PointDeductionHistory::where('user_id', $user->id)
+            ->latest()
+            ->value('gross_total_points') ?? $wallet->total_points;
+
+        // ✅ Create notification
+        $notification = Notification::create([
+            'user_id' => $request->user_id,
+            'title' => 'Points Deduction Requested Notification',
+            'description' => "Shopkeeper {$adminName} wants to redeem your {$request->deduct_points} points. Do you allow this?",
+            'seenByUser' => 0,
+            'created_at' => now(),
+        ]);
+
+        // 👉 Send FCM Notification (if exists)
+        if ($adminName && $user->fcm) {
+
+            $data = [
+                'id' => $notification->id,
+                'type' => 'admin_notification',
+                'title' => 'Points Deduction Requested Notification',
+                'body' => "Shopkeeper {$adminName} wants to redeem your {$request->deduct_points} points. Do you allow this?",
+            ];
+
+            dispatch(new JobNotification(
+                $user->fcm,
+                'Points Deduction Requested Notification',
+                "Shopkeeper {$adminName} wants to redeem your {$request->deduct_points} points. Do you allow this?",
+                $data
+            ));
+        }
+
+        // 👉 Save temporary deduction record
+        TempPointDeductionHistory::create([
+            'user_id' => $user->id,
+            'Admin_name' => $adminName,
+            'Admin_type' => $type,
+            'deducted_points' => $request->deduct_points,
+            'date_time' => $request->date_time ?? now(),
+        ]);
+
+        DB::commit();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Points deduction request sent successfully',
+        ], 200);
+
+    } catch (\Exception $e) {
+
+        DB::rollBack();
+
+        return response()->json([
+            'status' => false,
+            'message' => 'Something went wrong. Please try again.',
+            'error' => $e->getMessage(), // remove in production
+        ], 500);
     }
-
-    // ✅ Fetch user and wallet
-    $user = User::find($request->user_id);
-    if (!$user) {
-        return response()->json(['message' => 'User not found'], 404);
-    }
-
-    $wallet = UserWallet::where('user_id', $user->id)->first();
-
-    if (!$wallet) {
-        return response()->json(['message' => 'User wallet not found'], 404);
-    }
-
-    // ✅ Check if user has enough points
-    if ($wallet->total_points < $request->deduct_points) {
-        return response()->json(['message' => 'Insufficient points'], 400);
-    }
-
-	// ✅ Calculate total deducted points (sum from existing records)
-  $totalDeducted = TempPointDeductionHistory::where('user_id', $user->id)->sum('deducted_points');
-
-// ab total requested + pehle se deducted points ka sum
-$totalAfterRequest = $totalDeducted + $request->deduct_points;
-
-// agar yeh wallet ke total se zyada hai to insufficient
-if ($totalAfterRequest > $wallet->total_points) {
-    return response()->json([
-        'message' => "You have already requested a total of {$totalDeducted} points. Adding this new request ({$request->deduct_points} points) would exceed your available balance of {$wallet->total_points} points. Insufficient points for this request."
-    ], 400);
 }
-
-
-  $grossTotalPoints = PointDeductionHistory::where('user_id', $user->id)->latest()->value('gross_total_points') ?? $wallet->total_points;
-
-
-    // ✅ Save record in TempPointDeductionHistory
-    TempPointDeductionHistory::create([
-        'user_id' => $user->id,
-        'Admin_name' => $adminName,
-        'Admin_type' => $type,
-        'deducted_points' => $request->deduct_points,
-        'date_time' => $request->date_time ?? now(),
-    ]);
-    // ✅ Redirect with success message
-    return response()->json([
-		'status' => true,
-		'message' => 'Points deduction request sent successfully',
-	], 200);
-}
-
 
 
 

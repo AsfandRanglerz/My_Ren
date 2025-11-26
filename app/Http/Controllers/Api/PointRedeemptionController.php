@@ -85,7 +85,7 @@ public function getPendingDeduction(Request $request)
 
         if ($pendings->isEmpty()) {
             return response()->json([
-                'status' => false,
+                'status' => 404,
                 'message' => 'No pending deduction.',
             ], 404);
         }
@@ -102,13 +102,13 @@ public function getPendingDeduction(Request $request)
         });
 
         return response()->json([
-            'status' => true,
+            'status' => 200,
             'pending_requests' => $requests,
         ], 200);
 
     } catch (\Exception $e) {
         return response()->json([
-            'status' => false,
+            'status' => 500,
             'message' => 'An error occurred while checking for pending deductions.',
             'error' => $e->getMessage(),
         ], 500);
