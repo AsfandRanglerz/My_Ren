@@ -105,57 +105,73 @@ $(document).ready(function() {
         $('#deduct_points_error').addClass('d-none').text('');
     });
 
-	// ✅ Hide error on click or input
+    // ✅ Hide error on click or input
     $('#deduct_points').on('click input', function() {
         $('#deduct_points_error').addClass('d-none').text('');
     });
 
-    
-    // ✅ Submit AJAX form
-    $// ✅ Submit AJAX form
-$('#deductPointsForm').on('submit', function(e) {
-    e.preventDefault();
+    // ✅ Helper: Get current date & time in MySQL format
+    function getMySQLDateTime() {
+        const now = new Date();
+        if (isNaN(now.getTime())) {
+            console.error("Error: Invalid date detected!");
+            return null; // will handle in submit
+        }
 
-    let points = $('#deduct_points').val();
-    if (points === '' || points <= 0) {
-        $('#deduct_points_error').removeClass('d-none').text('Please enter a valid number of points.');
-        return;
+        const yyyy = now.getFullYear();
+        const mm = String(now.getMonth() + 1).padStart(2, '0');
+        const dd = String(now.getDate()).padStart(2, '0');
+        const hh = String(now.getHours()).padStart(2, '0');
+        const min = String(now.getMinutes()).padStart(2, '0');
+        const ss = String(now.getSeconds()).padStart(2, '0');
+
+        return `${yyyy}-${mm}-${dd} ${hh}:${min}:${ss}`;
     }
 
-    // ✅ Get user's local date & time (Pakistan / current system time)
-    const now = new Date();
-    const formattedDateTime = now.toLocaleString('en-GB', { 
-        day: '2-digit', month: '2-digit', year: 'numeric',
-        hour: '2-digit', minute: '2-digit', hour12: true 
-    }).replace(',', ''); // Example: 07-11-2025  4:10 pm
+    // ✅ Submit AJAX form
+    $('#deductPointsForm').on('submit', function(e) {
+        e.preventDefault();
 
-    // ✅ Serialize form data + append date_time
-    let formData = $(this).serializeArray();
-    formData.push({ name: 'date_time', value: formattedDateTime });
-
-    $.ajax({
-        url: $(this).attr('action'),
-        method: "POST",
-        data: formData,
-        success: function(res) {
-            if (res.status) {
-                // ✅ Save message in localStorage
-                localStorage.setItem('successMessage', res.message);
-
-                // ✅ Reload after 0.5 seconds
-                setTimeout(function() {
-                    window.location.reload();
-                }, 500);
-            } else {
-                toastr.warning(res.message);
-            }
-        },
-        error: function(err) {
-            const msg = err.responseJSON?.message ?? 'Something went wrong';
-            $('#deduct_points_error').removeClass('d-none').text(msg);
+        let points = $('#deduct_points').val();
+        if (points === '' || points <= 0) {
+            $('#deduct_points_error').removeClass('d-none').text('Please enter a valid number of points.');
+            return;
         }
+
+        // ✅ Get MySQL formatted date
+        const formattedDateTime = getMySQLDateTime();
+        if (!formattedDateTime) {
+            $('#deduct_points_error').removeClass('d-none').text('Error: Unable to get current date/time!');
+            return; // Stop submission if time invalid
+        }
+
+        // ✅ Serialize form data + append date_time
+        let formData = $(this).serializeArray();
+        formData.push({ name: 'date_time', value: formattedDateTime });
+
+        $.ajax({
+            url: $(this).attr('action'),
+            method: "POST",
+            data: formData,
+            success: function(res) {
+                if (res.status) {
+                    // ✅ Save message in localStorage
+                    localStorage.setItem('successMessage', res.message);
+
+                    // ✅ Reload after 0.5 seconds
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 500);
+                } else {
+                    toastr.warning(res.message);
+                }
+            },
+            error: function(err) {
+                const msg = err.responseJSON?.message ?? 'Something went wrong';
+                $('#deduct_points_error').removeClass('d-none').text(msg);
+            }
+        });
     });
-});
 
     // ✅ Show toastr after reload
     const successMsg = localStorage.getItem('successMessage');
@@ -166,5 +182,6 @@ $('#deductPointsForm').on('submit', function(e) {
         }, 600); // Show toastr after reload
     }
 });
+
 </script>
 @endsection

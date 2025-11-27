@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Mail\UserDeactivation;
 use Illuminate\Validation\Rule;
 use App\Models\UserRolePermission;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use App\Models\PointDeductionHistory;

@@ -16,7 +16,7 @@
                                     <thead>
                                         <tr role="row" class="odd">
                                             <th>Sr.</th>
-                                            <th>User Identity</th>
+                                            <th>User Id</th>
                                             <th>Admin</th>
                                             <th>Admin Type</th>
                                             <th>Deducted Points</th>
