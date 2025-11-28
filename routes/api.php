@@ -115,7 +115,7 @@ Route::post('/notifications-seen', [NotificationController::class, 'seenNotifica
 // User Withdraw Requests
 Route::get('/pending-deduction', [PointRedeemptionController::class, 'getPendingDeduction'])->middleware('auth:sanctum');
 Route::post('/approved-pending-deduction', [PointRedeemptionController::class, 'approveDeduction'])->middleware('auth:sanctum');
-Route::get('/points-deduction-data', [PointRedeemptionController::class, 'PointsDeductionData'])->middleware('auth:sanctum');
+Route::get('/points-deduction-list', [PointRedeemptionController::class, 'PointsDeductionData'])->middleware('auth:sanctum');
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/userwithdrawdata', [WalletUserPointController::class, 'withdrawRequest']);
 

@@ -110,6 +110,7 @@
             </li>
 			@endif
 
+			{{-- Deduction Requests --}}
  			@if (Auth::guard('admin')->check() ||
             ($sideMenuPermissions->has('Points Deduction Requests') && $sideMenuPermissions['Points Deduction Requests']->contains('view')))
 			

@@ -458,26 +458,9 @@ public function deductPoints(Request $request)
             'created_at' => now(),
         ]);
 
-        // 👉 Send FCM Notification (if exists)
-        if ($adminName && $user->fcm) {
-
-            $data = [
-                'id' => $notification->id,
-                'type' => 'admin_notification',
-                'title' => 'Points Deduction Requested Notification',
-                'body' => "Shopkeeper {$adminName} wants to redeem your {$request->deduct_points} points. Do you allow this?",
-            ];
-
-            dispatch(new JobNotification(
-                $user->fcm,
-                'Points Deduction Requested Notification',
-                "Shopkeeper {$adminName} wants to redeem your {$request->deduct_points} points. Do you allow this?",
-                $data
-            ));
-        }
-
+      
         // 👉 Save temporary deduction record
-        TempPointDeductionHistory::create([
+       $record = TempPointDeductionHistory::create([
             'user_id' => $user->id,
             'Admin_name' => $adminName,
             'Admin_type' => $type,
@@ -486,6 +469,46 @@ public function deductPoints(Request $request)
         ]);
 
         DB::commit();
+
+		$requestedId = $record->id;
+
+		  // 👉 Send FCM Notification (if exists)
+       if ($adminName && $user->fcm) {
+
+    $data = [
+        'pendingDeduction' => 'true',
+		'request_id' => $requestedId,
+    ];
+
+    // Return data if needed
+    // return $data;
+
+    try {
+
+        // 🔥 Direct Helper Call Instead of Job
+        NotificationHelper::sendFcmNotification(
+            $user->fcm,
+            'Points Deduction Requested Notification',
+            "Shopkeeper {$adminName} wants to redeem your {$request->deduct_points} points. Do you allow this?",
+            $data
+        );
+
+        // OPTIONAL: Log success
+        Log::info('FCM sent successfully to user: '.$user->id);
+
+    } catch (Exception $e) {
+
+        // 🔥 Log error for debugging
+        Log::error('FCM Sending Failed: '.$e->getMessage());
+
+        // 🔥 Return error so you can see it in networking
+        return response()->json([
+            'status' => false,
+            'message' => 'FCM sending failed',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
 
         return response()->json([
             'status' => true,
@@ -503,7 +526,5 @@ public function deductPoints(Request $request)
         ], 500);
     }
 }
-
-
 
 }

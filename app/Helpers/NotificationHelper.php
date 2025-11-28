@@ -34,7 +34,9 @@ class NotificationHelper
                         'title' => $title,
                         'body' => $description,
                     ],
+					'data' => array_map('strval', $data),
                 ],
+				
             ];
 
             $url = 'https://fcm.googleapis.com/v1/projects/my-ren-99bdd/messages:send';
