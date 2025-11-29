@@ -257,12 +257,10 @@ public function PointsDeductionData()
 
         // ✅ Response
         return response()->json([
-            'pendding_request_total' => [
 			'status' => true,
             'Approved' => $allowedData,
             'Later' => $pendingLaterData,
             'Pending' => $tempPendingData,
-			]
         ], 200);
 
     } catch (\Exception $e) {
