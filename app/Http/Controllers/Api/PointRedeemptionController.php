@@ -226,8 +226,8 @@ public function approveDeduction(Request $request)
 public function PointsDeductionData()
 {
     try {
-		$userId = auth()->id();
-        // ✅ Validate user
+        $userId = auth()->id();
+
         if (!User::find($userId)) {
             return response()->json([
                 'status' => false,
@@ -235,29 +235,42 @@ public function PointsDeductionData()
             ], 404);
         }
 
-        // ✅ Allowed Deductions
+        // Allowed
         $allowedData = PointDeductionHistory::with('users')
             ->where('user_id', $userId)
             ->where('status', 'allowed')
             ->orderBy('id', 'desc')
             ->get();
 
-        // ✅ Pending Later Deductions
+        // Pending Later
         $pendingLaterData = PointDeductionHistory::with('users')
             ->where('user_id', $userId)
             ->where('status', 'pending_later')
             ->orderBy('id', 'desc')
             ->get();
 
-        // ✅ Temporary Pending Deductions (from Temp table)
+        // Wallet Total Points
+        $wallet = UserWallet::where('user_id', $userId)->first();
+        $totalPoints = $wallet ? $wallet->total_points : 0;
+
+        // TEMP Pending (Modify Each Item)
         $tempPendingData = TempPointDeductionHistory::with('users')
             ->where('user_id', $userId)
             ->orderBy('id', 'desc')
-            ->get();
+            ->get()
+            ->map(function ($item) use ($totalPoints) {
+                // IAS Time Format
+                $item->ias_time = \Carbon\Carbon::parse($item->date_time)->format('d-m-Y g:i A');
 
-        // ✅ Response
+                // Add total points inside each item
+                $item->total_points = $totalPoints;
+
+                return $item;
+            });
+
+        // Final Response
         return response()->json([
-			'status' => true,
+            'status' => true,
             'Approved' => $allowedData,
             'Later' => $pendingLaterData,
             'Pending' => $tempPendingData,
@@ -269,8 +282,9 @@ public function PointsDeductionData()
             'message' => 'Something went wrong while fetching points deduction data.',
             'error' => $e->getMessage(),
         ], 500);
-    }	
+    }
 }
+
 
 
 

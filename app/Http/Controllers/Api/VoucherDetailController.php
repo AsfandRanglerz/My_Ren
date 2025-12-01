@@ -13,54 +13,7 @@ use Illuminate\Support\Str;
 
 class VoucherDetailController extends Controller
 {
-//     public function getVoucherDetail()
-// {
-//     try {
-//         $user = Auth::user();
-
-//         if (!$user) {
-//             return response()->json([
-//                 'message' => 'Unauthorized'
-//             ], 401);
-//         }
-
-//         // User ke points
-//         $totalPoints = DB::table('user_wallets')
-//             ->where('user_id', $user->id)
-//             ->value('total_points');
-
-//         // Sirf required fields select karo
-//      $claimedVouchers = DB::table('claim_vouchers')
-//             ->join('vouchers', 'claim_vouchers.voucher_id', '=', 'vouchers.id')
-//             ->where('claim_vouchers.user_id', $user->id)
-//             ->select(
-//                 'claim_vouchers.coupon_code',
-//                 'vouchers.voucher_code',
-//                 'vouchers.rupees',
-//             )
-//              ->orderBy('claim_vouchers.id', 'desc')
-//             ->get();
-
-//         if (!$claimedVouchers) {
-//             return response()->json([
-//                 'message' => 'Voucher Not Found'
-//             ], 404);
-//         }
-//     return response()->json([
-//             'message' => 'Claimed vouchers fetched successfully',
-//             'data' => $claimedVouchers,
-//             'user_points' => $totalPoints ?? 0
-//         ], 200);
-
-//     } catch (Exception $e) {
-//         return response()->json([
-//             'message' => 'Something Went Wrong',
-//             'error' => $e->getMessage()
-//         ], 500);
-//     }
-// }
-
-public function getVoucherDetail()
+    public function getVoucherDetail()
 {
     try {
         $user = Auth::user();
@@ -71,25 +24,29 @@ public function getVoucherDetail()
             ], 401);
         }
 
-        // User ke total points
+        // User ke points
         $totalPoints = DB::table('user_wallets')
             ->where('user_id', $user->id)
             ->value('total_points');
 
-        // Sirf claim_vouchers table se data lo (fresh/top first)
-        $claimedVouchers = DB::table('claim_vouchers')
-            ->where('user_id', $user->id)
-            ->select('coupon_code', 'points')
-            ->orderBy('id', 'desc') // latest first
+        // Sirf required fields select karo
+     $claimedVouchers = DB::table('claim_vouchers')
+            ->join('vouchers', 'claim_vouchers.voucher_id', '=', 'vouchers.id')
+            ->where('claim_vouchers.user_id', $user->id)
+            ->select(
+                'claim_vouchers.coupon_code',
+                'vouchers.voucher_code',
+                'vouchers.rupees',
+            )
+             ->orderBy('claim_vouchers.id', 'desc')
             ->get();
 
-        if ($claimedVouchers->isEmpty()) {
+        if (!$claimedVouchers) {
             return response()->json([
                 'message' => 'Voucher Not Found'
             ], 404);
         }
-
-        return response()->json([
+    return response()->json([
             'message' => 'Claimed vouchers fetched successfully',
             'data' => $claimedVouchers,
             'user_points' => $totalPoints ?? 0
@@ -102,7 +59,6 @@ public function getVoucherDetail()
         ], 500);
     }
 }
-
 
 
    public function getVoucher()
@@ -151,7 +107,7 @@ public function getVoucherDetail()
     }
 }
 
-      public function ClaimVoucher(Request $request)
+       public function ClaimVoucher(Request $request)
 {
     try {
         $user = Auth::user();
@@ -222,7 +178,7 @@ public function getVoucherDetail()
             'error'   => $e->getMessage()
         ], 500);
     }
-}    
+}     
 
   
     private function createShopifyDiscount($customerId, $couponCode, $discountValue)
