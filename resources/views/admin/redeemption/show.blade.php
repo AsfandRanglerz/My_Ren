@@ -19,7 +19,7 @@
                                             <th>User Id</th>
                                             <th>Admin</th>
                                             <th>Admin Type</th>
-                                            <th>Deducted Points</th>
+                                            <th>Requested Deducted Points</th>
 											<th>Date & Time</th>
                                         </tr>
                                     </thead>

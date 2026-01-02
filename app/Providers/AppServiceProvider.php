@@ -29,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
         View::composer('*', function ($view) {
             $sideMenuPermissions = collect();
             $countClaimedVoucher = 0;
+			$Deduction = 0;
 
             if (Auth::guard('subadmin')->check()) {
                 $user = Auth::guard('subadmin')->user();
@@ -53,11 +54,13 @@ class AppServiceProvider extends ServiceProvider
 
             // Claimed Vouchers count
             $countClaimedVoucher = \App\Models\ClaimVoucher::where('is_seen', 0)->count();
+			$Deduction = \App\Models\TempPointDeductionHistory::where('status', 'pending')->count();
 
             // Pass variables to all views
             $view->with([
                 'sideMenuPermissions' => $sideMenuPermissions,
                 'countClaimedVoucher' => $countClaimedVoucher,
+				'countPendingDeduction' => $Deduction,
             ]);
         });
     }

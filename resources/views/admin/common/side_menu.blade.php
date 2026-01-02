@@ -116,15 +116,29 @@
 			
 			<li class="dropdown {{ request()->is('admin/deduction-request-history*') ? 'active' : '' }}">
 
-                <a href="{{ url('admin/deduction-request-history') }}" class="nav-link">
+    <a href="{{ url('admin/deduction-request-history') }}" class="nav-link">
 
-                    <i data-feather="archive"></i>
+        <i data-feather="archive"></i>
 
-                    <span>Points Deduction Requests</span>
+        <span>
+            Points Deduction 
+            <br>Requests
+        </span>
 
-                </a>
+        <span
+            class="badge position-absolute w-auto rounded"
+            style="
+                right: 10%;
+                background: {{ request()->is('admin/deduction-request-history*') ? '#ffffff' : '#d881fb' }};
+                color: {{ request()->is('admin/deduction-request-history*') ? '#000000' : '#ffffff' }};
+            ">
+            {{ ($countPendingDeduction ?? 0) > 99 ? '99+' : ($countPendingDeduction ?? 0) }}
+        </span>
 
-            </li>
+    </a>
+</li>
+
+
 			@endif
 
 

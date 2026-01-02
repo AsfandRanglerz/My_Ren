@@ -78,7 +78,6 @@ Route::post('/send', [TwillioController::class, 'sendSms']);
 Route::post('/send-otp', [EmailOtpController::class, 'sendOtp']);
 Route::post('/verify-otp', [EmailOtpController::class, 'verifyOtp']);
 Route::post('/register-user', [EmailOtpController::class, 'registerUser']);
-Route::post('/submit-contact-us', [ContactUsController::class, 'Submitcontact'])->name('contact.send');
 
 
 // get user profile
@@ -90,8 +89,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/update-profile-verify', [EmailOtpController::class, 'verifyAndUpdateContact']);
     Route::get('/get-logged-in-user-info', [EmailOtpController::class, 'getLoggedInUserInfo']);
 	Route::post('/submit-contact-us', [ContactUsController::class, 'Submitcontact'])->name('contact.send');
-
-
 });
 
 // user login
@@ -99,7 +96,7 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::post('/user-login', [LoginController::class, 'login']);
 
 Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth:sanctum');
-   
+
 // Forgot Password
 Route::post('/forgotpassword', [ForgotPasswordController::class, 'forgotPassword']);
 Route::post('/forgotverifyotp', [ForgotPasswordController::class, 'forgotverifyOtp']);
@@ -113,9 +110,11 @@ Route::post('/clearnotification', [NotificationController::class, 'clearAll'])->
 Route::post('/notifications-seen', [NotificationController::class, 'seenNotification'])
     ->name('notifications.seen');
 // User Withdraw Requests
+Route::post('/withdraw-request', [WithdrawRequestController::class, 'store'])->middleware('auth:sanctum');
 Route::get('/pending-deduction', [PointRedeemptionController::class, 'getPendingDeduction'])->middleware('auth:sanctum');
 Route::post('/approved-pending-deduction', [PointRedeemptionController::class, 'approveDeduction'])->middleware('auth:sanctum');
 Route::get('/points-deduction-list', [PointRedeemptionController::class, 'PointsDeductionData'])->middleware('auth:sanctum');
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/userwithdrawdata', [WalletUserPointController::class, 'withdrawRequest']);
 
