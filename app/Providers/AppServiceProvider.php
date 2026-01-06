@@ -54,7 +54,15 @@ class AppServiceProvider extends ServiceProvider
 
             // Claimed Vouchers count
             $countClaimedVoucher = \App\Models\ClaimVoucher::where('is_seen', 0)->count();
-			$Deduction = \App\Models\TempPointDeductionHistory::where('status', 'pending')->count();
+			$tempCount = \App\Models\TempPointDeductionHistory::where('status', 'pending')
+				->count();
+
+			$pendingLaterCount = \App\Models\PointDeductionHistory::where('status', 'pending_later')
+				->count();
+
+			// ✅ Total deduction count
+			$Deduction = $tempCount + $pendingLaterCount;
+
 
             // Pass variables to all views
             $view->with([
