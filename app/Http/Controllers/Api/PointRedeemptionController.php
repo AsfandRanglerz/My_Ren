@@ -13,57 +13,7 @@ class PointRedeemptionController extends Controller
 {
     //
 
-	// public function getPendingDeduction(Request $request)
-	// {
-	// 	try {
-	// 		$userId = auth()->id(); // ✅ Logged-in user ID
-
-	// 		if (!$userId) {
-	// 			return response()->json([
-	// 				'status' => false,
-	// 				'message' => 'User not authenticated.',
-	// 			], 401);
-	// 		}
-
-	// 		// ✅ Get all pending deductions for this user
-	// 		$pendings = TempPointDeductionHistory::where('user_id', $userId)->get();
-
-	// 		if ($pendings->isEmpty()) {
-	// 			return response()->json([
-	// 				'status' => false,
-	// 				'message' => 'No pending deduction.',
-	// 			], 404);
-	// 		}
-
-	// 		// ✅ Calculate total points pending
-	// 		$totalPendingPoints = $pendings->sum('deducted_points');
-
-	// 		// Optional: create a combined message for all pending requests
-	// 		$adminNames = $pendings->pluck('Admin_name')->unique()->join(', ');
-	// 		$message = "There is a Shopkeeper {$adminNames} wants to redeem your points ({$totalPendingPoints}). Do you allow this?";
-
-	// 		return response()->json([
-	// 			'status' => true,
-	// 			'message' => $message,
-	// 			'total_pending_points' => $totalPendingPoints,
-	// 			'requests' => $pendings->map(function($item){
-	// 				return [
-	// 					'request_id' => $item->id,
-	// 					'points' => $item->deducted_points,
-	// 					'admin_name' => $item->Admin_name,
-	// 					'admin_type' => $item->Admin_type,
-	// 				];
-	// 			}),
-	// 		], 200);
-
-	// 	} catch (\Exception $e) {
-	// 		return response()->json([
-	// 			'status' => false,
-	// 			'message' => 'An error occurred while checking for pending deductions.',
-	// 			'error' => $e->getMessage(),
-	// 		], 500);
-	// 	}
-	// }
+	
 
 public function getPendingDeduction(Request $request)
 {
@@ -273,7 +223,7 @@ public function PointsDeductionData()
             'status' => true,
             'Approved' => $allowedData,
             'Later' => $pendingLaterData,
-            'Pending' => $tempPendingData,
+            // 'Pending' => $tempPendingData,
         ], 200);
 
     } catch (\Exception $e) {

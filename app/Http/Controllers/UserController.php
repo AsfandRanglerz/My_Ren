@@ -293,7 +293,17 @@ public function sales($id)
     }
 
 	 // ✅ Step 4: Requested Amount (from TempPointDeductionHistory)
-    $requestedAmount = TempPointDeductionHistory::where('user_id', $id)->sum('deducted_points');
+		// Temp table points
+		$tempPoints = TempPointDeductionHistory::where('user_id', $id)
+			->sum('deducted_points');
+
+		// Main history points (only pending_later)
+		$pendingLaterPoints = PointDeductionHistory::where('user_id', $id)
+			->where('status', 'pending_later')
+			->sum('deducted_points');
+
+		// ✅ Combined requested amount
+		$requestedAmount = $tempPoints + $pendingLaterPoints;
 
     // Step 4: View return karo
     return view('admin.sales.index', compact(

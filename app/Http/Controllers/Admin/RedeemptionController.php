@@ -28,26 +28,37 @@ public function index()
     return view('admin.redeemption.index', compact('deductions'));
 }
 
+
 public function show()
 {
-    // fetch as collection but store in $deduction (so view's $deduction exists)
-    $deduction = TempPointDeductionHistory::with('users')
-        ->where('status', 'pending')
-		->orWhere('status', 'pending_later')
+    // ✅ Temp table records
+    $tempDeductions = TempPointDeductionHistory::with('users')
+        ->whereIn('status', ['pending', 'pending_later'])
         ->orderBy('id', 'desc')
         ->get();
 
-    // format date_time for each record
+    // ✅ Main history records (ONLY pending_later)
+    $mainDeductions = PointDeductionHistory::with('users')
+        ->where('status', 'pending_later')
+        ->orderBy('id', 'desc')
+        ->get();
+
+    // ✅ Merge both collections
+    $deduction = $tempDeductions->merge($mainDeductions);
+
+    // ✅ Sort merged data again (latest first)
+    $deduction = $deduction->sortByDesc('id')->values();
+
+    // ✅ Format date_time
     foreach ($deduction as $item) {
-        // if date_time can be null/empty, guard against it
         $item->date_time = $item->date_time
-            ? date('d-m-Y  g:i a', strtotime($item->date_time))
+            ? date('d-m-Y g:i a', strtotime($item->date_time))
             : null;
     }
 
-    // pass $deduction to the view (same name the view expects)
     return view('admin.redeemption.show', compact('deduction'));
 }
+
 
 
 }
