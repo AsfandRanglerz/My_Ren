@@ -18,7 +18,7 @@ class NotificationController extends Controller
             $user = Auth::id(); // Get the authenticated user
 
             if (! $user) {
-                return response()->json(['message' => 'Unauthorized'], 401);
+                return response()->json(['message' => 'Unauthorized'], 403);
             }
 
             // Fetch notifications for sales user
@@ -117,7 +117,7 @@ class NotificationController extends Controller
             $userId = Auth::id();
 
             if (! $userId) {
-                return response()->json(['message' => 'Unauthorized'], 401);
+                return response()->json(['message' => 'Unauthorized'], 403);
             }
 
             // Delete all notifications for the authenticated user

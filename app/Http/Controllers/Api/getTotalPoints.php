@@ -19,7 +19,7 @@ class getTotalPoints extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'Unauthorized user',
-            ], 401);
+            ], 403);
         }
 
         $totalPoints = DB::table('user_wallets')

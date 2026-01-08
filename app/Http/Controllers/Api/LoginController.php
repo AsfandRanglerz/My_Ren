@@ -35,7 +35,7 @@ class LoginController extends Controller
     //         }
 
     //         if (! Hash::check($request->password, $user->password)) {
-    //             return response()->json(['message' => 'Invalid password'], 401);
+    //             return response()->json(['message' => 'Invalid password'], 403);
     //         }
 
     //         // Update FCM token
@@ -87,7 +87,7 @@ class LoginController extends Controller
         }
 
         if (! Hash::check($request->password, $user->password)) {
-            return response()->json(['message' => 'Invalid password'], 401);
+            return response()->json(['message' => 'Invalid password'], 403);
         }
 
         // ✅ Toggle check
@@ -135,7 +135,7 @@ class LoginController extends Controller
                 return response()->json([
                     'message' => 'User not authenticated',
 
-                ], 401);
+                ], 403);
             }
 
             // Revoke all tokens

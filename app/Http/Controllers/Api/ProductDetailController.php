@@ -17,7 +17,7 @@ class ProductDetailController extends Controller
         if (!$user) {
             return response()->json([
                 'message' => 'Unauthorized'
-            ], 401);
+            ], 403);
         }
 
         // user ke sales ke saath product relation ko eager load karein

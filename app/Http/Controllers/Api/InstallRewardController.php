@@ -20,7 +20,7 @@ class InstallRewardController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Unauthorized'
-            ], 401);
+            ], 403);
         }
 
         // agar relation ka naam 'sales' hai to ok, warna yahan relation ka name change karna parega

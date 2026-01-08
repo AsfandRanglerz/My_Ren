@@ -19,7 +19,7 @@ class UserRankingController extends Controller
             if (!$user) {
                 return response()->json([
                     'message' => 'Unauthorized'
-                ], 401);
+                ], 403);
             }
 
             // Get month and year from request or fallback to current month/year
@@ -88,7 +88,7 @@ class UserRankingController extends Controller
         try {
             $user = Auth::user();
             if (!$user) {
-                return response()->json(['message' => 'Unauthorized'], 401);
+                return response()->json(['message' => 'Unauthorized'], 403);
             }
 
             // Params

@@ -21,7 +21,7 @@ class VoucherDetailController extends Controller
         if (!$user) {
             return response()->json([
                 'message' => 'Unauthorized'
-            ], 401);
+            ], 403);
         }
 
         // User ke points
@@ -69,7 +69,7 @@ class VoucherDetailController extends Controller
         if (!$user) {
             return response()->json([
                 'message' => 'Unauthorized'
-            ], 401);
+            ], 403);
         }
 
         // User total points get karo
@@ -115,7 +115,7 @@ class VoucherDetailController extends Controller
         if (!$user) {
             return response()->json([
                 'message' => 'Unauthorized'
-            ], 401);
+            ], 403);
         }
         // User wallet se current points lo
         $wallet = DB::table('user_wallets')->where('user_id', $user->id)->first();

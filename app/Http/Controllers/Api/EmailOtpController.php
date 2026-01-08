@@ -248,7 +248,7 @@ class EmailOtpController extends Controller
             $user = Auth::user();
 
             if (! $user) {
-                return response()->json(['error' => 'Unauthorized'], 401);
+                return response()->json(['error' => 'Unauthorized'], 403);
             }
 
             $totalPoints = UserWallet::with('user')
@@ -300,7 +300,7 @@ class EmailOtpController extends Controller
         try {
             $user = Auth::user();
             if (! $user) {
-                return response()->json(['error' => 'Unauthorized'], 401);
+                return response()->json(['error' => 'Unauthorized'], 403);
             }
 
             // ======= ✅ CUSTOM VALIDATION (Unique Email/Phone) =======
@@ -506,7 +506,7 @@ class EmailOtpController extends Controller
             $user = Auth::user();
 
             if (! $user) {
-                return response()->json(['error' => 'Unauthorized'], 401);
+                return response()->json(['error' => 'Unauthorized'], 403);
             }
 
 

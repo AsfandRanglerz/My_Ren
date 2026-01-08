@@ -20,7 +20,7 @@ class WalletUserPointController extends Controller
             if (!$user) {
                 return response()->json([
                     'message' => 'Unauthorized'
-                ], 401);
+                ], 403);
             }
 
            
@@ -73,7 +73,7 @@ class WalletUserPointController extends Controller
         if (!$user) {
             return response()->json([
                 'message' => 'Unauthorized',
-            ], 401);
+            ], 403);
         }
 
         $withdrawRequests = $user->withdrawRequests()
@@ -105,7 +105,7 @@ public function getTotalPoints(Request $request)
             return response()->json([
                 'status' => false,
                 'message' => 'Unauthorized user.',
-            ], 401);
+            ], 403);
         }
 
         $totalPoints = DB::table('user_wallets')

@@ -20,7 +20,7 @@ class RankingController extends Controller
             if (!$authUser) {
                 return response()->json([
                     'message' => 'Unauthorized'
-                ], 401);
+                ], 403);
             }
 
             $type = $request->query('type'); // 'monthly' or 'yearly'

@@ -24,7 +24,7 @@ public function getPendingDeduction(Request $request)
             return response()->json([
                 'status' => false,
                 'message' => 'User not authenticated.',
-            ], 401);
+            ], 403);
         }
 
         // ✅ Get all pending deductions for this user
